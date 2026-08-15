@@ -3,6 +3,8 @@
 import { h, mount } from './dom.js';
 import { progressBar, speakButton, feedback, statCard, chip } from './widgets.js';
 import { buildSession } from '../lib/session.js';
+import { buildExercise, typesFor } from '../lib/exercises.js';
+import { sample } from '../lib/shuffle.js';
 import { getState, answerItem, learnItem, completeSession } from '../store.js';
 import { speak, stopSpeaking } from '../lib/speech.js';
 
@@ -18,21 +20,65 @@ export function renderSession({ onExit }) {
     answered: false,
     correctCount: 0,
     exerciseTotal: 0,
+    // قائمة العناصر التي أخطأ فيها المستخدم ويجب تصحيحها قبل إنهاء الجلسة.
+    retryQueue: [],
+    currentStep: null,
   };
+  st.currentStep = st.plan.steps[0] || null;
 
   function exit() {
     stopSpeaking();
     onExit();
   }
 
+  // عدد الأخطاء التي ما زالت بحاجة إلى تصحيح (لمنع/تنبيه الخروج المبكر).
+  function pendingCorrections() {
+    const currentIsUnansweredRetry = st.currentStep && st.currentStep.isRetry && !st.answered ? 1 : 0;
+    return st.retryQueue.length + currentIsUnansweredRetry;
+  }
+
+  // زر الإغلاق ✕: لا نُنهي الجلسة بصمت إن بقيت أخطاء — نطلب تأكيدًا واضحًا.
+  function requestExit() {
+    if (pendingCorrections() > 0) {
+      const ok = window.confirm(
+        'لا تزال لديك إجابات خاطئة تحتاج إلى تصحيح.\nإذا خرجت الآن فلن تكتمل الجلسة. هل تريد الخروج فعلًا؟',
+      );
+      if (!ok) return;
+    }
+    exit();
+  }
+
+  // إضافة عنصر أخطأ فيه المستخدم إلى قائمة الإعادة ليُعاد سؤاله عليه لاحقًا.
+  function queueWrong(item) {
+    st.retryQueue.push(item);
+  }
+
+  // تحديد الخطوة التالية: الخطوات الأساسية أولًا، ثم أسئلة تصحيح الأخطاء حتى تنتهي.
+  function nextStep() {
+    const steps = st.plan.steps;
+    if (st.index + 1 < steps.length) {
+      st.index += 1;
+      return steps[st.index];
+    }
+    // انتهت الخطوات الأساسية — لا ننهي الجلسة قبل تصحيح كل الأخطاء.
+    if (st.retryQueue.length) {
+      st.index += 1;
+      const item = st.retryQueue.shift();
+      const type = sample(typesFor(item));
+      return { kind: 'exercise', exercise: buildExercise(item, type), isReview: true, isRetry: true };
+    }
+    return null; // كل شيء أُجيب بشكل صحيح — يمكن إنهاء الجلسة.
+  }
+
   function goNext() {
     stopSpeaking();
     st.answered = false;
-    if (st.index + 1 >= st.plan.steps.length) {
+    const next = nextStep();
+    if (!next) {
       completeSession(st.correctCount * POINTS_PER_CORRECT);
       renderSummary();
     } else {
-      st.index += 1;
+      st.currentStep = next;
       renderStep();
     }
   }
@@ -43,6 +89,8 @@ export function renderSession({ onExit }) {
     st.answered = false;
     st.correctCount = 0;
     st.exerciseTotal = 0;
+    st.retryQueue = [];
+    st.currentStep = st.plan.steps[0] || null;
     renderStep();
   }
 
@@ -111,14 +159,20 @@ export function renderSession({ onExit }) {
 
   // —— إطار الخطوة (شريط علوي + جسم) ——
   function frame(bodyNode) {
-    const pct = st.plan.steps.length === 0 ? 100 : (st.index / st.plan.steps.length) * 100;
+    // التقدّم يحسب المتبقّي من الخطوات الأساسية + أسئلة تصحيح الأخطاء المعلّقة،
+    // حتى لا يبلغ الشريط 100% قبل تصحيح جميع الأخطاء فعلًا.
+    const steps = st.plan.steps;
+    const baseRemaining = Math.max(0, steps.length - (st.index + 1));
+    const pending = baseRemaining + st.retryQueue.length;
+    const done = st.index;
+    const pct = done + pending + 1 === 0 ? 100 : (done / (done + pending + 1)) * 100;
     return h(
       'div',
       { class: 'session page-fade' },
       h(
         'div',
         { class: 'session__top' },
-        h('button', { type: 'button', class: 'session__close', 'aria-label': 'إنهاء الجلسة', onclick: exit }, '✕'),
+        h('button', { type: 'button', class: 'session__close', 'aria-label': 'إنهاء الجلسة', onclick: requestExit }, '✕'),
         h('div', { class: 'session__progress' }, progressBar(pct)),
       ),
       h('div', { class: 'session__body' }, bodyNode),
@@ -236,6 +290,7 @@ export function renderSession({ onExit }) {
             answerItem(ex.item.id, ex.item.kind, opt.correct);
             st.exerciseTotal += 1;
             if (opt.correct) st.correctCount += 1;
+            else queueWrong(ex.item); // خطأ → يعود للسؤال لاحقًا حتى يُجاب بشكل صحيح
 
             // تلوين الخيارات
             Array.from(optionsWrap.children).forEach((child, i) => {
@@ -328,6 +383,7 @@ export function renderSession({ onExit }) {
       answerItem(ex.item.id, ex.item.kind, checked);
       st.exerciseTotal += 1;
       if (checked) st.correctCount += 1;
+      else queueWrong(ex.item); // خطأ → يعود للسؤال لاحقًا حتى يُجاب بشكل صحيح
       footer.replaceChildren(feedback(checked, { correctAnswer: checked ? undefined : answer }));
       renderAction();
     }
@@ -368,11 +424,11 @@ export function renderSession({ onExit }) {
 
   // —— رسم الخطوة الحالية ——
   function renderStep() {
-    if (st.plan.steps.length === 0) {
+    const step = st.currentStep;
+    if (!step) {
       renderEmpty();
       return;
     }
-    const step = st.plan.steps[st.index];
     let body;
     if (step.kind === 'learn') {
       body = learnCard(step.item);
@@ -380,6 +436,19 @@ export function renderSession({ onExit }) {
       body = wordOrderExercise(step.exercise);
     } else {
       body = choiceExercise(step.exercise);
+    }
+    // شارة توضّح أن هذا سؤال تصحيح لخطأ سابق.
+    if (step.isRetry) {
+      body = h(
+        'div',
+        {},
+        h(
+          'div',
+          { class: 'text-center', style: { marginBottom: 'var(--space-4)' } },
+          chip('🔁 صحّح خطأك السابق للمتابعة', 'primary'),
+        ),
+        body,
+      );
     }
     mount(container, frame(body));
   }
