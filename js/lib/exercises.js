@@ -31,12 +31,32 @@ function distractors(item, pool, n) {
   return unique.slice(0, n);
 }
 
+// توحيد نص الخيار لمقارنة عدم التكرار (تجاهل الحالة والمسافات الطرفية).
+function normLabel(s) {
+  return String(s).trim().toLowerCase();
+}
+
+// يجمّع الخيارات مع ضمان: خيار صحيح واحد + خيارات فريدة النص (بلا تكرار)، ثم يخلطها.
+// candidates: قائمة خيارات خاطئة محتملة (قد تكون أكثر من المطلوب) — نأخذ الفريد منها فقط.
+function assembleOptions(correct, candidates, n = 3) {
+  const seen = new Set([normLabel(correct.label)]);
+  const opts = [{ ...correct, correct: true }];
+  for (const c of candidates) {
+    const k = normLabel(c.label);
+    if (seen.has(k)) continue;
+    seen.add(k);
+    opts.push({ ...c, correct: false });
+    if (opts.length >= n + 1) break;
+  }
+  return shuffle(opts);
+}
+
 function buildChooseMeaning(item) {
-  const wrong = distractors(item, ALL_ITEMS, 3);
-  const options = shuffle([
-    { id: item.id, label: item.arabic, correct: true, lang: 'ar' },
-    ...wrong.map((w) => ({ id: w.id, label: w.arabic, correct: false, lang: 'ar' })),
-  ]);
+  const wrong = distractors(item, ALL_ITEMS, 8);
+  const options = assembleOptions(
+    { id: item.id, label: item.arabic, lang: 'ar' },
+    wrong.map((w) => ({ id: w.id, label: w.arabic, lang: 'ar' })),
+  );
   return {
     key: nextKey(),
     type: 'choose-meaning',
@@ -49,11 +69,11 @@ function buildChooseMeaning(item) {
 
 function buildChooseEnglish(item) {
   const pool = item.kind === 'word' ? WORD_ITEMS : ALL_ITEMS;
-  const wrong = distractors(item, pool, 3);
-  const options = shuffle([
-    { id: item.id, label: item.english, correct: true, lang: 'en' },
-    ...wrong.map((w) => ({ id: w.id, label: w.english, correct: false, lang: 'en' })),
-  ]);
+  const wrong = distractors(item, pool, 8);
+  const options = assembleOptions(
+    { id: item.id, label: item.english, lang: 'en' },
+    wrong.map((w) => ({ id: w.id, label: w.english, lang: 'en' })),
+  );
   return {
     key: nextKey(),
     type: 'choose-english',
@@ -65,11 +85,11 @@ function buildChooseEnglish(item) {
 
 function buildListenChoose(item) {
   const pool = item.kind === 'word' ? WORD_ITEMS : ALL_ITEMS;
-  const wrong = distractors(item, pool, 3);
-  const options = shuffle([
-    { id: item.id, label: item.english, correct: true, lang: 'en' },
-    ...wrong.map((w) => ({ id: w.id, label: w.english, correct: false, lang: 'en' })),
-  ]);
+  const wrong = distractors(item, pool, 8);
+  const options = assembleOptions(
+    { id: item.id, label: item.english, lang: 'en' },
+    wrong.map((w) => ({ id: w.id, label: w.english, lang: 'en' })),
+  );
   return {
     key: nextKey(),
     type: 'listen-choose',
@@ -92,18 +112,23 @@ function buildFillBlank(item) {
   const answerWord = words[target.i].replace(/[.,!?]/g, '');
   const display = words.map((w, i) => (i === target.i ? '‹___›' : w)).join(' ');
 
-  const pool = ALL_ITEMS.flatMap((it) => it.english.split(' ')).map((w) =>
-    w.replace(/[.,!?]/g, ''),
+  // تجميع كلمات مرشّحة فريدة (تجاهل الحالة) واستبعاد الكلمة الصحيحة.
+  const seenWord = new Set([answerWord.toLowerCase()]);
+  const poolWords = [];
+  for (const it of ALL_ITEMS) {
+    for (const raw of it.english.split(' ')) {
+      const w = raw.replace(/[.,!?]/g, '');
+      const k = w.toLowerCase();
+      if (w.length > 2 && !seenWord.has(k)) {
+        seenWord.add(k);
+        poolWords.push(w);
+      }
+    }
+  }
+  const options = assembleOptions(
+    { id: 'correct', label: answerWord, lang: 'en' },
+    shuffle(poolWords).map((w, i) => ({ id: `w${i}`, label: w, lang: 'en' })),
   );
-  const wrongWords = shuffle(
-    [...new Set(pool)].filter(
-      (w) => w.length > 2 && w.toLowerCase() !== answerWord.toLowerCase(),
-    ),
-  ).slice(0, 3);
-  const options = shuffle([
-    { id: 'correct', label: answerWord, correct: true, lang: 'en' },
-    ...wrongWords.map((w, i) => ({ id: `w${i}`, label: w, correct: false, lang: 'en' })),
-  ]);
 
   return {
     key: nextKey(),
@@ -139,13 +164,13 @@ function buildWordOrder(item) {
 }
 
 function buildSituation(item) {
-  const sameKind = distractors(item, ALL_ITEMS, 6).filter((w) => w.kind === item.kind);
-  const filler = distractors(item, ALL_ITEMS, 3);
-  const pool = (sameKind.length >= 3 ? sameKind : filler).slice(0, 3);
-  const options = shuffle([
-    { id: item.id, label: item.english, correct: true, lang: 'en' },
-    ...pool.map((w) => ({ id: w.id, label: w.english, correct: false, lang: 'en' })),
-  ]);
+  const sameKind = distractors(item, ALL_ITEMS, 10).filter((w) => w.kind === item.kind);
+  const filler = distractors(item, ALL_ITEMS, 10);
+  const pool = sameKind.length >= 3 ? sameKind : [...sameKind, ...filler];
+  const options = assembleOptions(
+    { id: item.id, label: item.english, lang: 'en' },
+    pool.map((w) => ({ id: w.id, label: w.english, lang: 'en' })),
+  );
   return {
     key: nextKey(),
     type: 'situation',
