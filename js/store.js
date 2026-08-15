@@ -50,15 +50,36 @@ export function learnItem(id, kind) {
   emit();
 }
 
+// عدد العناصر المُتقَنة (mastered) ضمن حالة معيّنة.
+function masteredCount(s) {
+  let n = 0;
+  for (const p of Object.values(s.items)) if (isMastered(p)) n++;
+  return n;
+}
+
+const TOTAL_ITEMS = WORD_IDS.size + PHRASE_IDS.size;
+
 // تسجيل إجابة على عنصر.
 export function answerItem(id, kind, correct) {
   const prev = state.items[id] ?? createProgress(id, kind);
   const next = review(prev, correct);
-  state = {
+  let nextState = {
     ...state,
     items: { ...state.items, [id]: next },
     points: state.points + (correct ? POINTS_CORRECT : 0),
   };
+
+  // احتساب إكمال البرنامج مرّة واحدة فقط لكل دورة عند إتقان جميع العناصر (450/450).
+  if (!nextState.currentCycleCompleted && masteredCount(nextState) >= TOTAL_ITEMS && TOTAL_ITEMS > 0) {
+    nextState = {
+      ...nextState,
+      completions: (nextState.completions || 0) + 1,
+      lastCompletedAt: todayKey(),
+      currentCycleCompleted: true,
+    };
+  }
+
+  state = nextState;
   emit();
 }
 
@@ -94,6 +115,19 @@ export function completeSession(earned) {
 
 export function resetAll() {
   state = emptyProgress();
+  emit();
+}
+
+// إعادة البرنامج من البداية: تُصفّر حالة تعلّم العناصر وتبدأ دورة جديدة،
+// مع الاحتفاظ بالنقاط التراكمية وعدد مرات الإكمال وتاريخ آخر إكمال (وسجلّ الاستخدام).
+export function restartProgram() {
+  state = {
+    ...state,
+    items: {},
+    currentCycleCompleted: false,
+    // يُحتفَظ بها عمدًا: points, completions, lastCompletedAt, streak,
+    // sessionsCompleted, achievements.
+  };
   emit();
 }
 
@@ -138,5 +172,8 @@ export function computeStats(s = state) {
     masteryPercent,
     totalItems,
     learnedTotal,
+    masteredTotal,
+    // البرنامج مكتمل فقط عند إتقان جميع العناصر فعليًا (mastered 450/450).
+    programComplete: totalItems > 0 && masteredTotal >= totalItems,
   };
 }

@@ -3,7 +3,12 @@
 //
 // UserProgress:
 // { items: { [id]: ItemProgress }, points, streak, lastSessionDate,
-//   sessionsCompleted, achievements: string[] }
+//   sessionsCompleted, achievements: string[],
+//   completions, lastCompletedAt, currentCycleCompleted }
+//
+// completions            = عدد مرات إكمال البرنامج (إتقان 450/450). دائم لا يُمحى بالإعادة.
+// lastCompletedAt        = تاريخ آخر إكمال (YYYY-MM-DD). دائم.
+// currentCycleCompleted  = هل احتُسِب إكمال الدورة الحالية؟ يمنع تكرار العدّ لنفس الدورة.
 
 const STORAGE_KEY = 'english450:progress:v1';
 
@@ -15,6 +20,9 @@ export function emptyProgress() {
     lastSessionDate: null,
     sessionsCompleted: 0,
     achievements: [],
+    completions: 0,
+    lastCompletedAt: null,
+    currentCycleCompleted: false,
   };
 }
 

@@ -4,8 +4,9 @@ import { h } from './dom.js';
 import { progressBar, progressRing, statCard } from './widgets.js';
 import { getState, computeStats } from '../store.js';
 import { TARGET_WORDS, TARGET_PHRASES } from '../data/index.js';
+import { completionCard } from './completion.js';
 
-export function renderHome({ onStart }) {
+export function renderHome({ onStart, onRestart }) {
   const progress = getState();
   const stats = computeStats(progress);
 
@@ -83,5 +84,11 @@ export function renderHome({ onStart }) {
     ),
   );
 
-  return h('div', { class: 'page-fade' }, hero, cta, ringCard, grid, goals);
+  // عند إتقان البرنامج كاملًا (450/450): تظهر شاشة التهنئة بدل بطاقة "ابدأ جلسة اليوم".
+  // تبقى عدّادات التقدّم ظاهرة كما هي.
+  const top = stats.programComplete
+    ? completionCard({ onRestart })
+    : h('div', {}, hero, cta);
+
+  return h('div', { class: 'page-fade' }, top, ringCard, grid, goals);
 }

@@ -42,7 +42,7 @@ function render() {
 
   const main = h('main', { class: 'app__main' });
   if (view.tab === 'home') {
-    main.appendChild(renderHome({ onStart: () => setView({ name: 'session' }) }));
+    main.appendChild(renderHome({ onStart: () => setView({ name: 'session' }), onRestart: render }));
   } else {
     main.appendChild(renderProgress({ afterReset: render }));
   }

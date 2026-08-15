@@ -5,8 +5,9 @@ import { progressBar, speakButton, feedback, statCard, chip } from './widgets.js
 import { buildSession } from '../lib/session.js';
 import { buildExercise, typesFor } from '../lib/exercises.js';
 import { sample } from '../lib/shuffle.js';
-import { getState, answerItem, learnItem, completeSession } from '../store.js';
+import { getState, answerItem, learnItem, completeSession, computeStats } from '../store.js';
 import { speak, stopSpeaking } from '../lib/speech.js';
+import { renderCompletionScreen } from './completion.js';
 
 const POINTS_PER_CORRECT = 10;
 
@@ -76,7 +77,12 @@ export function renderSession({ onExit }) {
     const next = nextStep();
     if (!next) {
       completeSession(st.correctCount * POINTS_PER_CORRECT);
-      renderSummary();
+      // إن اكتمل البرنامج (إتقان 450/450) بهذه الجلسة، نعرض شاشة التهنئة بدل النتيجة العادية.
+      if (computeStats(getState()).programComplete) {
+        mount(container, renderCompletionScreen({ onRestart: exit, onHome: exit }));
+      } else {
+        renderSummary();
+      }
     } else {
       st.currentStep = next;
       renderStep();
