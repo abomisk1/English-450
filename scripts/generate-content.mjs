@@ -16,6 +16,76 @@ const SRC = process.env.CONTENT_SRC || join(ROOT, 'content-src');
 const { words } = await import(join(SRC, 'words-src.mjs'));
 const { phrases } = await import(join(SRC, 'phrases-src.mjs'));
 
+// —— تصنيف المستويات التعليمية (1..6) ——
+// المنهجية (تقييم تربوي حقيقي، لا تقسيم متساوٍ ولا حسب الترتيب الحالي فقط):
+//   نحسب "درجة صعوبة مركّبة" لكل عنصر تجمع:
+//     • رتبة الثيمة (tier): مدى تقدّم موضوع العنصر (شيوعه وأهميته للمبتدئ) — الوزن الأكبر.
+//     • الصعوبة (difficulty 1..3): التركيب اللغوي.
+//     • الطول/التعقيد: عدد كلمات الجملة أو طول الكلمة.
+//   ثم نرتّب الـ450 عنصرًا حسب الدرجة ونوزّعها على 6 مستويات بأحجام متدرّجة (غير متساوية).
+//   كل عنصر ينتمي إلى مستوى واحد فقط، والتدرّج من 1 (الأسهل) إلى 6 (الأصعب).
+
+// رتبة الثيمة للكلمات (0 = أساس المبتدئ جدًا ... الأعلى = أكثر تقدّمًا).
+const WORD_TIER = {
+  'ضمائر وكلمات وظيفية': 0,
+  'الأرقام': 0,
+  'الألوان': 1,
+  'الأفعال الأساسية': 1,
+  'الصفات الأساسية': 2,
+  'الأشخاص والعائلة': 2,
+  'المنزل': 2,
+  'الطعام والشراب': 3,
+  'الوقت والأيام': 3,
+  'الأماكن': 4,
+  'الدراسة': 4,
+  'المشاعر': 5,
+  'الصحة العامة': 5,
+  'العمل': 6,
+  'السفر': 6,
+  'التسوق': 6,
+};
+// رتبة الثيمة للجمل (الجمل أعلى قليلًا لأنها تراكيب كاملة).
+const PHRASE_TIER = {
+  'التحية': 1,
+  'التعارف': 2,
+  'الشكر': 2,
+  'الاعتذار': 3,
+  'السؤال': 3,
+  'الطلب': 4,
+  'طلب المساعدة': 4,
+  'الاتجاهات': 5,
+  'المطعم': 6,
+  'التسوق': 6,
+  'الفندق': 7,
+  'المطار': 7,
+  'المواعيد': 7,
+  'العمل': 8,
+  'المحادثات اليومية': 8,
+};
+
+// درجة الصعوبة المركّبة (كلما زادت تأخّر العنصر إلى مستوى أعلى).
+function difficultyScore(kind, category, difficulty, english) {
+  const tier = (kind === 'word' ? WORD_TIER : PHRASE_TIER)[category] ?? 4;
+  const words = english.trim().split(/\s+/).length;
+  const lengthFactor = kind === 'phrase' ? Math.min(words * 6, 40) : Math.min(english.length, 12);
+  return tier * 100 + difficulty * 22 + lengthFactor;
+}
+
+// أحجام المستويات (غير متساوية، متدرّجة) — المجموع = 450.
+const LEVEL_SIZES = [80, 80, 78, 74, 70, 68];
+
+// يوزّع قائمة العناصر (لها score) على 6 مستويات حسب الترتيب والأحجام أعلاه.
+function assignLevels(itemsWithScore) {
+  const sorted = [...itemsWithScore].sort((a, b) => a.score - b.score || a.order - b.order);
+  const byId = {};
+  let idx = 0;
+  for (let L = 1; L <= 6; L++) {
+    const size = L === 6 ? sorted.length - idx : LEVEL_SIZES[L - 1];
+    for (let k = 0; k < size && idx < sorted.length; k++, idx++) byId[sorted[idx].id] = L;
+  }
+  return byId;
+}
+
 // —— أدوات ——
 function slug(s) {
   return s
@@ -72,7 +142,7 @@ const wordsOut = wordsSorted.map((w, idx) => {
   let id = 'w-' + slug(w.e);
   while (wordIds.has(id)) id += '-x';
   wordIds.add(id);
-  return { ...w, id, order: idx + 1 };
+  return { ...w, id, order: idx + 1, score: difficultyScore('word', w.c, w.d, w.e) };
 });
 
 // —— الجمل ——
@@ -100,8 +170,13 @@ const phrasesOut = phrasesSorted.map((p, idx) => {
   let id = 'p-' + slug(p.e).slice(0, 40);
   while (phraseIds.has(id)) id += '-x';
   phraseIds.add(id);
-  return { ...p, id, order: idx + 1 };
+  return { ...p, id, order: idx + 1, score: difficultyScore('phrase', p.c, p.d, p.e) };
 });
+
+// —— إسناد المستويات على مجموع الـ450 عنصرًا حسب الدرجة المركّبة ——
+const levelById = assignLevels([...wordsOut, ...phrasesOut]);
+for (const w of wordsOut) w.level = levelById[w.id];
+for (const p of phrasesOut) p.level = levelById[p.id];
 
 // —— تقرير ——
 const wCat = {};
@@ -120,6 +195,15 @@ console.log('عدد الجمل:', phrasesOut.length);
 const pDiff = { 1: 0, 2: 0, 3: 0 };
 for (const p of phrasesOut) pDiff[p.d]++;
 console.log('توزيع الصعوبة (جمل):', pDiff);
+
+// توزيع المستويات
+const lvl = { 1: { w: 0, p: 0 }, 2: { w: 0, p: 0 }, 3: { w: 0, p: 0 }, 4: { w: 0, p: 0 }, 5: { w: 0, p: 0 }, 6: { w: 0, p: 0 } };
+for (const w of wordsOut) lvl[w.level].w++;
+for (const p of phrasesOut) lvl[p.level].p++;
+console.log('توزيع المستويات (كلمات + جمل = الإجمالي):');
+for (let L = 1; L <= 6; L++) {
+  console.log(`  - المستوى ${L}: ${lvl[L].w} كلمة + ${lvl[L].p} جملة = ${lvl[L].w + lvl[L].p}`);
+}
 console.log('مشاكل:', problems);
 
 // —— الكتابة ——
@@ -141,7 +225,7 @@ if (process.argv.includes('--write')) {
             w.p,
           )}', exampleEnglish: '${esc(w.ex)}', exampleArabic: '${esc(w.exa)}', category: '${esc(
             w.c,
-          )}', difficulty: ${w.d}, order: ${w.order} },`,
+          )}', difficulty: ${w.d}, level: ${w.level}, order: ${w.order} },`,
       )
       .join('\n') +
     `\n];\n`;
@@ -156,7 +240,7 @@ if (process.argv.includes('--write')) {
         (p) =>
           `  { id: '${p.id}', english: '${esc(p.e)}', arabic: '${esc(p.a)}', context: '${esc(
             p.ctx,
-          )}', category: '${esc(p.c)}', difficulty: ${p.d}, order: ${p.order} },`,
+          )}', category: '${esc(p.c)}', difficulty: ${p.d}, level: ${p.level}, order: ${p.order} },`,
       )
       .join('\n') +
     `\n];\n`;

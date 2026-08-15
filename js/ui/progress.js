@@ -2,8 +2,8 @@
 
 import { h } from './dom.js';
 import { progressBar, progressRing, statCard } from './widgets.js';
-import { getState, computeStats, resetAll } from '../store.js';
-import { WORDS, PHRASES, TARGET_WORDS, TARGET_PHRASES } from '../data/index.js';
+import { getState, computeStats, resetAll, levelsSummary } from '../store.js';
+import { WORDS, PHRASES, TARGET_WORDS, TARGET_PHRASES, LEVELS, LEVEL_COUNT } from '../data/index.js';
 
 const ACHIEVEMENTS = [
   { id: 'first-session', icon: '🌟', label: 'أول جلسة' },
@@ -44,9 +44,35 @@ export function renderProgress({ afterReset }) {
     statCard(String(stats.wordsLearned), `كلمات مكتسبة من ${TARGET_WORDS}`),
     statCard(String(stats.phrasesLearned), `جمل مكتسبة من ${TARGET_PHRASES}`),
     statCard(String(stats.dueCount), 'بحاجة إلى مراجعة'),
-    statCard(String(progress.sessionsCompleted), 'جلسات مكتملة'),
+    statCard(`${stats.levelsCompleted} / ${LEVEL_COUNT}`, 'مستويات مكتملة'),
     statCard(String(progress.streak), 'أيام متتالية 🔥'),
     statCard(String(progress.points), 'مجموع النقاط'),
+  );
+
+  // تقدّم كل مستوى (نسبة الإتقان) + ✅ عند الاكتمال.
+  const summary = levelsSummary(progress);
+  const levelsSection = h(
+    'div',
+    {},
+    h('div', { class: 'section-title' }, 'تقدّم المستويات'),
+    h(
+      'div',
+      { class: 'stack' },
+      ...LEVELS.map((lvl) => {
+        const s = summary[lvl.id - 1];
+        return h(
+          'div',
+          {},
+          h(
+            'div',
+            { class: 'muted', style: { marginBottom: '6px', display: 'flex', justifyContent: 'space-between' } },
+            h('span', {}, `المستوى ${lvl.id} · ${lvl.name} ${s.complete ? '✅' : ''}`),
+            h('span', {}, `${s.mastered}/${s.total} — ${s.percent}%`),
+          ),
+          progressBar(s.percent),
+        );
+      }),
+    ),
   );
 
   const statusList = h(
@@ -134,6 +160,7 @@ export function renderProgress({ afterReset }) {
     h('h1', { class: 'hero__title', style: { marginBottom: 'var(--space-5)' } }, 'تقدّمي'),
     ringCard,
     grid,
+    levelsSection,
     statusList,
     goals,
     badges,

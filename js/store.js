@@ -1,7 +1,7 @@
 // مخزن الحالة — نمط observable بسيط (بلا مكتبات).
 // يحمّل التقدم من localStorage، ويحفظه تلقائيًا عند كل تغيير، ويُخطر المشتركين.
 
-import { WORD_IDS, PHRASE_IDS } from './data/index.js';
+import { WORD_IDS, PHRASE_IDS, ITEMS_BY_LEVEL, LEVEL_COUNT } from './data/index.js';
 import {
   createProgress,
   review,
@@ -113,6 +113,14 @@ export function completeSession(earned) {
   emit();
 }
 
+// تحديد المستوى الذي يدرسه المستخدم حاليًا (تُسحب منه العناصر الجديدة في الجلسة).
+export function setActiveLevel(level) {
+  const L = Math.min(LEVEL_COUNT, Math.max(1, level | 0));
+  if (state.activeLevel === L) return;
+  state = { ...state, activeLevel: L };
+  emit();
+}
+
 export function resetAll() {
   state = emptyProgress();
   emit();
@@ -125,6 +133,7 @@ export function restartProgram() {
     ...state,
     items: {},
     currentCycleCompleted: false,
+    activeLevel: 1, // تبدأ الدورة الجديدة من المستوى الأول
     // يُحتفَظ بها عمدًا: points, completions, lastCompletedAt, streak,
     // sessionsCompleted, achievements.
   };
@@ -175,5 +184,45 @@ export function computeStats(s = state) {
     masteredTotal,
     // البرنامج مكتمل فقط عند إتقان جميع العناصر فعليًا (mastered 450/450).
     programComplete: totalItems > 0 && masteredTotal >= totalItems,
+    levelsCompleted: countLevelsCompleted(s),
   };
+}
+
+// —— إحصاءات المستويات ——
+
+// إحصاء مستوى واحد: عدد العناصر، المُتقَن، المُكتسَب، النسبة، والاكتمال (✅).
+export function levelStats(level, s = state) {
+  const items = ITEMS_BY_LEVEL[level] || [];
+  let mastered = 0;
+  let learned = 0;
+  for (const it of items) {
+    const p = s.items[it.id];
+    if (!p) continue;
+    if (isLearned(p)) learned++;
+    if (isMastered(p)) mastered++;
+  }
+  const total = items.length;
+  const percent = total === 0 ? 0 : Math.round((mastered / total) * 100);
+  return {
+    level,
+    total,
+    words: items.filter((x) => x.kind === 'word').length,
+    phrases: items.filter((x) => x.kind === 'phrase').length,
+    mastered,
+    learned,
+    percent,
+    complete: total > 0 && mastered >= total,
+  };
+}
+
+export function levelsSummary(s = state) {
+  const out = [];
+  for (let L = 1; L <= LEVEL_COUNT; L++) out.push(levelStats(L, s));
+  return out;
+}
+
+function countLevelsCompleted(s) {
+  let n = 0;
+  for (let L = 1; L <= LEVEL_COUNT; L++) if (levelStats(L, s).complete) n++;
+  return n;
 }

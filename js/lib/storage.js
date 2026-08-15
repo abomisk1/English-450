@@ -23,6 +23,7 @@ export function emptyProgress() {
     completions: 0,
     lastCompletedAt: null,
     currentCycleCompleted: false,
+    activeLevel: 1, // المستوى الذي يدرسه المستخدم حاليًا (1..6)
   };
 }
 

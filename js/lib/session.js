@@ -4,15 +4,15 @@
 //   { kind: 'learn', item }
 //   { kind: 'exercise', exercise, isReview }
 
-import { WORD_ITEMS, PHRASE_ITEMS, ITEMS_BY_ID } from '../data/index.js';
+import { ITEMS_BY_ID, ITEMS_BY_LEVEL, LEVEL_COUNT } from '../data/index.js';
 import { isDue } from './srs.js';
 import { buildExercise, typesFor } from './exercises.js';
 import { sample, shuffle } from './shuffle.js';
 
-const NEW_WORDS_PER_SESSION = 4;
-const NEW_PHRASES_PER_SESSION = 2;
+const NEW_ITEMS_PER_SESSION = 6;
 const MAX_REVIEWS_PER_SESSION = 6;
 
+// أول العناصر غير المتعلَّمة في قائمة مرتّبة حسب order.
 function firstUnlearned(items, progress, limit) {
   const ordered = [...items].sort((a, b) => a.order - b.order);
   const out = [];
@@ -32,15 +32,19 @@ function dueItems(progress, now) {
     .sort((a, b) => progress.items[a.id].dueAt - progress.items[b.id].dueAt);
 }
 
-// بناء خطة جلسة اليوم:
-// 1) مراجعات مستحقة (أولوية).
-// 2) عناصر جديدة (كلمات + جمل) مع بطاقة تعلّم لكل عنصر ثم تمرينين.
+function clampLevel(level, progress) {
+  const L = level || progress.activeLevel || 1;
+  return Math.min(LEVEL_COUNT, Math.max(1, L | 0));
+}
+
+// بناء خطة جلسة:
+// 1) مراجعات مستحقة عالميًا (نظام المراجعة المتباعدة عبر كل ما تعلّمه المستخدم).
+// 2) عناصر جديدة من *المستوى المختار* (activeLevel) مع بطاقة تعلّم لكل عنصر ثم تمرينين.
 // 3) تحدٍّ ختامي قصير على عناصر الجلسة.
-export function buildSession(progress, now = Date.now()) {
+export function buildSession(progress, level, now = Date.now()) {
+  const L = clampLevel(level, progress);
   const reviewItems = dueItems(progress, now).slice(0, MAX_REVIEWS_PER_SESSION);
-  const newWords = firstUnlearned(WORD_ITEMS, progress, NEW_WORDS_PER_SESSION);
-  const newPhrases = firstUnlearned(PHRASE_ITEMS, progress, NEW_PHRASES_PER_SESSION);
-  const newItems = [...newWords, ...newPhrases];
+  const newItems = firstUnlearned(ITEMS_BY_LEVEL[L] || [], progress, NEW_ITEMS_PER_SESSION);
 
   const steps = [];
 
@@ -69,6 +73,6 @@ export function buildSession(progress, now = Date.now()) {
   return { steps, newItems, reviewItems };
 }
 
-export function hasSessionContent(progress, now = Date.now()) {
-  return buildSession(progress, now).steps.length > 0;
+export function hasSessionContent(progress, level, now = Date.now()) {
+  return buildSession(progress, level, now).steps.length > 0;
 }

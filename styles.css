@@ -915,3 +915,135 @@ p {
     font-size: 46px;
   }
 }
+
+/* ==========================================================================
+   المستويات + زر الرجوع + عناصر الرئيسية الجديدة
+   ========================================================================== */
+
+.home-cta__level {
+  font-size: 13px;
+  font-weight: 700;
+  opacity: 0.95;
+  margin-bottom: var(--space-2);
+}
+
+.home-cta__choose {
+  display: block;
+  width: 100%;
+  margin-top: var(--space-3);
+  background: transparent;
+  border: 0;
+  color: var(--c-on-primary);
+  opacity: 0.92;
+  font-weight: 600;
+  font-size: 14px;
+  text-decoration: underline;
+  padding: var(--space-2);
+}
+
+/* زر الرجوع في شريط الجلسة */
+.session__back {
+  border: 0;
+  background: var(--c-surface-2);
+  color: var(--c-primary);
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+}
+.session__back svg {
+  width: 22px;
+  height: 22px;
+}
+.session__back-spacer {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+/* بطاقات المستويات */
+.level-card {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  padding: var(--space-4);
+  box-shadow: var(--shadow-sm);
+}
+
+.level-card.is-active {
+  border-color: var(--c-primary);
+  box-shadow: 0 0 0 2px var(--c-primary-soft);
+}
+
+.level-card.is-complete {
+  background: linear-gradient(0deg, var(--c-success-soft), var(--c-surface));
+}
+
+.level-card__head {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.level-card__num {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: var(--c-primary-soft);
+  color: var(--c-primary);
+  font-weight: 800;
+  font-size: 18px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.level-card__title {
+  font-weight: 800;
+  font-size: 17px;
+}
+
+.level-card__desc {
+  font-size: 13px;
+  color: var(--c-text-soft);
+  margin-top: 2px;
+  line-height: 1.5;
+}
+
+.level-card__done {
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.level-card__meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: var(--c-text-soft);
+  margin: var(--space-3) 0 var(--space-2);
+}
+
+.level-card__mastered {
+  font-weight: 700;
+  color: var(--c-primary);
+}
+
+.level-card__bar {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.level-card__bar .progress-bar {
+  flex: 1;
+}
+
+.level-card__pct {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--c-text-soft);
+  min-width: 40px;
+  text-align: end;
+}
