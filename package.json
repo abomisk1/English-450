@@ -1,0 +1,14 @@
+{
+  "name": "english-450",
+  "version": "0.1.0",
+  "private": true,
+  "description": "تطبيق ويب مجاني وبلا اعتماديات لتعلّم أهم 350 كلمة و100 جملة إنجليزية للناطقين بالعربية.",
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes http-server . -p 8080 -c-1 -o",
+    "dev": "npx --yes http-server . -p 8080 -c-1 -o",
+    "serve": "python3 -m http.server 8080"
+  },
+  "keywords": ["english", "arabic", "learning", "vocabulary", "spaced-repetition", "vanilla-js"],
+  "license": "MIT"
+}
