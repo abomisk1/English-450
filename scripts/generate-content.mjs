@@ -34,10 +34,33 @@ function isStarterPhrase(kind, category, difficulty, wordCount) {
   return kind === 'phrase' && difficulty === 1 && STARTER_CATS.has(category) && wordCount <= 4;
 }
 
+// عبارات انتقالية: أبسط جُمل المحادثة (تقريرية قصيرة، غير مرتبطة بسياق خدمات متقدّم) —
+// تمثّل جسرًا طبيعيًا بين المستوى الثالث والخامس، فتُدفَع إلى المستوى الرابع لتخفيف
+// الانتقال من مفردات المستوى الرابع إلى محادثات المستوى الخامس الأطول.
+// (لا تُنقل الأسئلة ولا الطلبات المركّبة ولا جمل السياقات المتقدّمة؛ تبقى في المستوى الخامس/السادس.)
+const TRANSITIONAL_PHRASES = new Set([
+  'Have a nice day.',
+  'You are welcome.',
+  'This is my friend.',
+  'It is near here.',
+  'Of course.',
+  'Take care.',
+  'Do not worry.',
+  'Okay, no problem.',
+  'I think so.',
+  'Congratulations!',
+  'That is a good idea.',
+]);
+function isTransitionalPhrase(kind, english) {
+  return kind === 'phrase' && TRANSITIONAL_PHRASES.has(english);
+}
+
 // درجة الصعوبة المركّبة (كلما زادت تأخّر العنصر إلى مستوى أعلى).
 function difficultyScore(kind, category, difficulty, english) {
   const wc = english.trim().split(/\s+/).length;
   if (isStarterPhrase(kind, category, difficulty, wc)) return 50 + wc; // قبل أسهل الكلمات → المستوى 1
+  // العبارات الانتقالية تُوضع في قمّة بنك المستوى الرابع (فوق مفرداته مباشرة، ودون جمل المستوى الخامس).
+  if (isTransitionalPhrase(kind, english)) return 202;
 
   // الصعوبة المؤلَّفة (difficulty) هي المحرّك الأساسي للبنوك؛ التركيب عامل ثانوي داخل البنك.
   if (kind === 'word') {
