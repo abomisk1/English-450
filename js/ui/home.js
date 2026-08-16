@@ -3,12 +3,14 @@
 import { h } from './dom.js';
 import { progressBar, progressRing, statCard } from './widgets.js';
 import { getState, computeStats } from '../store.js';
-import { TARGET_WORDS, TARGET_PHRASES } from '../data/index.js';
+import { TARGET_WORDS, TARGET_PHRASES, LEVELS } from '../data/index.js';
 import { completionCard } from './completion.js';
 
-export function renderHome({ onStart, onRestart }) {
+export function renderHome({ onStart, onRestart, onChooseLevel }) {
   const progress = getState();
   const stats = computeStats(progress);
+  const activeLevel = progress.activeLevel || 1;
+  const levelMeta = LEVELS[activeLevel - 1] || LEVELS[0];
 
   const hero = h(
     'div',
@@ -20,14 +22,18 @@ export function renderHome({ onStart, onRestart }) {
   const cta = h(
     'div',
     { class: 'home-cta' },
+    h('div', { class: 'home-cta__level' }, `المستوى ${activeLevel} · ${levelMeta.name}`),
     h(
       'p',
       { class: 'home-cta__hint' },
       stats.dueCount > 0
-        ? `لديك ${stats.dueCount} عنصرًا للمراجعة اليوم، بالإضافة إلى كلمات جديدة.`
+        ? `لديك ${stats.dueCount} عنصرًا للمراجعة اليوم، بالإضافة إلى عناصر جديدة من هذا المستوى.`
         : 'جلسة قصيرة (٥ إلى ١٠ دقائق) تكفي لتتقدّم كل يوم.',
     ),
     h('button', { type: 'button', class: 'btn btn--lg', onclick: onStart }, 'ابدأ جلسة اليوم'),
+    onChooseLevel
+      ? h('button', { type: 'button', class: 'home-cta__choose', onclick: onChooseLevel }, 'اختيار مستوى آخر')
+      : null,
   );
 
   const ringCard = h(

@@ -16,6 +16,82 @@ const SRC = process.env.CONTENT_SRC || join(ROOT, 'content-src');
 const { words } = await import(join(SRC, 'words-src.mjs'));
 const { phrases } = await import(join(SRC, 'phrases-src.mjs'));
 
+// —— تصنيف المستويات التعليمية (1..6) ——
+// المنهجية (تقييم تربوي حقيقي يركّز على الصعوبة الفعلية لا الثيمة/الطول فقط):
+//   "درجة صعوبة مركّبة" لكل عنصر يقودها:
+//     • الصعوبة (difficulty 1..3) — المحرّك الأساسي للبنوك (bands).
+//     • التركيب اللغوي للجمل: عدد الكلمات + السؤال + الأفعال الناقصة (can/would…) + المستقبل (will).
+//     • للكلمات: طول الكلمة عامل ثانوي بسيط.
+//   استثناء تربوي: "عبارات البداية" (أبسط التحيات والشكر والتعريف بالنفس) تُدفع إلى المستوى
+//   الأول ليبدأ المستخدم باستخدام اللغة فورًا.
+//   ثم تُرتّب الـ450 حسب الدرجة وتُوزّع على 6 مستويات بأحجام غير متساوية.
+//   النتيجة: المستوى 1 = كلمات تأسيسية + عبارات بداية بسيطة، والمستوى 6 = أكثر الجمل تركيبًا
+//   (العمل/السفر/الخدمات/الأسئلة المركّبة)، وكل عنصر في مستوى واحد فقط.
+
+// عبارات البداية: أبسط الجمل الاجتماعية (تحية/تعارف/شكر) القصيرة → المستوى الأول.
+const STARTER_CATS = new Set(['التحية', 'التعارف', 'الشكر']);
+function isStarterPhrase(kind, category, difficulty, wordCount) {
+  return kind === 'phrase' && difficulty === 1 && STARTER_CATS.has(category) && wordCount <= 4;
+}
+
+// عبارات انتقالية: أبسط جُمل المحادثة (تقريرية قصيرة، غير مرتبطة بسياق خدمات متقدّم) —
+// تمثّل جسرًا طبيعيًا بين المستوى الثالث والخامس، فتُدفَع إلى المستوى الرابع لتخفيف
+// الانتقال من مفردات المستوى الرابع إلى محادثات المستوى الخامس الأطول.
+// (لا تُنقل الأسئلة ولا الطلبات المركّبة ولا جمل السياقات المتقدّمة؛ تبقى في المستوى الخامس/السادس.)
+const TRANSITIONAL_PHRASES = new Set([
+  'Have a nice day.',
+  'You are welcome.',
+  'This is my friend.',
+  'It is near here.',
+  'Of course.',
+  'Take care.',
+  'Do not worry.',
+  'Okay, no problem.',
+  'I think so.',
+  'Congratulations!',
+  'That is a good idea.',
+]);
+function isTransitionalPhrase(kind, english) {
+  return kind === 'phrase' && TRANSITIONAL_PHRASES.has(english);
+}
+
+// درجة الصعوبة المركّبة (كلما زادت تأخّر العنصر إلى مستوى أعلى).
+function difficultyScore(kind, category, difficulty, english) {
+  const wc = english.trim().split(/\s+/).length;
+  if (isStarterPhrase(kind, category, difficulty, wc)) return 50 + wc; // قبل أسهل الكلمات → المستوى 1
+  // العبارات الانتقالية تُوضع في قمّة بنك المستوى الرابع (فوق مفرداته مباشرة، ودون جمل المستوى الخامس).
+  if (isTransitionalPhrase(kind, english)) return 202;
+
+  // الصعوبة المؤلَّفة (difficulty) هي المحرّك الأساسي للبنوك؛ التركيب عامل ثانوي داخل البنك.
+  if (kind === 'word') {
+    return difficulty * 100 + Math.min(english.length, 12) * 0.4;
+  }
+  // الجمل ترتفع قليلًا فوق الكلمات (تراكيب كاملة)، والتركيب يميّز بينها داخل نفس الصعوبة.
+  const isQuestion = /\?\s*$/.test(english) || /^(what|where|when|why|how|which|who|do|does|is|are|can|could|would)\b/i.test(english);
+  const hasModal = /\b(can|could|would|should|may)\b/i.test(english);
+  const hasFuture = /\b(will)\b/i.test(english);
+  const complexity = wc + (isQuestion ? 1 : 0) + (hasModal ? 1 : 0) + (hasFuture ? 2 : 0);
+  // نُدفعة بسيطة لسياقات "الخدمات والعمل والسفر" لأنها أكثر تقدّمًا في الاستخدام.
+  const ADVANCED_CTX = new Set(['المطعم', 'الفندق', 'المطار', 'العمل', 'المواعيد', 'التسوق']);
+  const ctxBonus = ADVANCED_CTX.has(category) ? 28 : 0;
+  return difficulty * 100 + 55 + complexity * 5 + ctxBonus;
+}
+
+// أحجام المستويات (غير متساوية، متدرّجة) — المجموع = 450.
+const LEVEL_SIZES = [78, 82, 80, 72, 70, 68];
+
+// يوزّع قائمة العناصر (لها score) على 6 مستويات حسب الترتيب والأحجام أعلاه.
+function assignLevels(itemsWithScore) {
+  const sorted = [...itemsWithScore].sort((a, b) => a.score - b.score || a.order - b.order);
+  const byId = {};
+  let idx = 0;
+  for (let L = 1; L <= 6; L++) {
+    const size = L === 6 ? sorted.length - idx : LEVEL_SIZES[L - 1];
+    for (let k = 0; k < size && idx < sorted.length; k++, idx++) byId[sorted[idx].id] = L;
+  }
+  return byId;
+}
+
 // —— أدوات ——
 function slug(s) {
   return s
@@ -72,7 +148,7 @@ const wordsOut = wordsSorted.map((w, idx) => {
   let id = 'w-' + slug(w.e);
   while (wordIds.has(id)) id += '-x';
   wordIds.add(id);
-  return { ...w, id, order: idx + 1 };
+  return { ...w, id, order: idx + 1, score: difficultyScore('word', w.c, w.d, w.e) };
 });
 
 // —— الجمل ——
@@ -100,8 +176,13 @@ const phrasesOut = phrasesSorted.map((p, idx) => {
   let id = 'p-' + slug(p.e).slice(0, 40);
   while (phraseIds.has(id)) id += '-x';
   phraseIds.add(id);
-  return { ...p, id, order: idx + 1 };
+  return { ...p, id, order: idx + 1, score: difficultyScore('phrase', p.c, p.d, p.e) };
 });
+
+// —— إسناد المستويات على مجموع الـ450 عنصرًا حسب الدرجة المركّبة ——
+const levelById = assignLevels([...wordsOut, ...phrasesOut]);
+for (const w of wordsOut) w.level = levelById[w.id];
+for (const p of phrasesOut) p.level = levelById[p.id];
 
 // —— تقرير ——
 const wCat = {};
@@ -120,6 +201,15 @@ console.log('عدد الجمل:', phrasesOut.length);
 const pDiff = { 1: 0, 2: 0, 3: 0 };
 for (const p of phrasesOut) pDiff[p.d]++;
 console.log('توزيع الصعوبة (جمل):', pDiff);
+
+// توزيع المستويات
+const lvl = { 1: { w: 0, p: 0 }, 2: { w: 0, p: 0 }, 3: { w: 0, p: 0 }, 4: { w: 0, p: 0 }, 5: { w: 0, p: 0 }, 6: { w: 0, p: 0 } };
+for (const w of wordsOut) lvl[w.level].w++;
+for (const p of phrasesOut) lvl[p.level].p++;
+console.log('توزيع المستويات (كلمات + جمل = الإجمالي):');
+for (let L = 1; L <= 6; L++) {
+  console.log(`  - المستوى ${L}: ${lvl[L].w} كلمة + ${lvl[L].p} جملة = ${lvl[L].w + lvl[L].p}`);
+}
 console.log('مشاكل:', problems);
 
 // —— الكتابة ——
@@ -141,7 +231,7 @@ if (process.argv.includes('--write')) {
             w.p,
           )}', exampleEnglish: '${esc(w.ex)}', exampleArabic: '${esc(w.exa)}', category: '${esc(
             w.c,
-          )}', difficulty: ${w.d}, order: ${w.order} },`,
+          )}', difficulty: ${w.d}, level: ${w.level}, order: ${w.order} },`,
       )
       .join('\n') +
     `\n];\n`;
@@ -156,7 +246,7 @@ if (process.argv.includes('--write')) {
         (p) =>
           `  { id: '${p.id}', english: '${esc(p.e)}', arabic: '${esc(p.a)}', context: '${esc(
             p.ctx,
-          )}', category: '${esc(p.c)}', difficulty: ${p.d}, order: ${p.order} },`,
+          )}', category: '${esc(p.c)}', difficulty: ${p.d}, level: ${p.level}, order: ${p.order} },`,
       )
       .join('\n') +
     `\n];\n`;
