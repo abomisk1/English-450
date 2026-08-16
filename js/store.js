@@ -169,10 +169,11 @@ export function computeStats(s = state) {
   const totalItems = WORD_IDS.size + PHRASE_IDS.size;
   const learnedTotal = wordsLearned + phrasesLearned;
   const masteredTotal = wordsMastered + phrasesMastered;
+  // نسبة الإنجاز = عدد العناصر التي خرجت من حالة «جديد» (status ≠ new) ÷ الإجمالي × 100.
+  // يُحتسب كل عنصر مرّة واحدة فقط (state.items لا يكرّر العنصر)، فلا تزيده إعادة الجلسات
+  // ولا مراجعة الأخطاء ولا الانتقال بين حالات التعلّم. الإتقان مفهوم منفصل (programComplete).
   const masteryPercent =
-    totalItems === 0
-      ? 0
-      : Math.round(((learnedTotal * 0.5 + masteredTotal * 0.5) / totalItems) * 100);
+    totalItems === 0 ? 0 : Math.round((learnedTotal / totalItems) * 100);
 
   return {
     wordsLearned,
