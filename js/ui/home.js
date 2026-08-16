@@ -39,7 +39,7 @@ export function renderHome({ onStart, onRestart, onChooseLevel }) {
   const ringCard = h(
     'div',
     { class: 'card text-center', style: { marginBottom: 'var(--space-5)' } },
-    progressRing(stats.masteryPercent, { unit: 'نسبة الإتقان' }),
+    progressRing(stats.masteryPercent, { unit: 'نسبة الإنجاز' }),
     progress.streak > 0
       ? h(
           'p',

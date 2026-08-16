@@ -5,6 +5,7 @@ import { renderHome } from './ui/home.js';
 import { renderLevels } from './ui/levels.js';
 import { renderProgress } from './ui/progress.js';
 import { renderSession } from './ui/session.js';
+import { renderQuiz } from './ui/quiz.js';
 import { getState, setActiveLevel } from './store.js';
 
 const root = document.getElementById('root');
@@ -45,12 +46,23 @@ function startLevel(level) {
   setView({ name: 'session', level });
 }
 
+// بدء اختبار (مستوى أو نهائي) — يعود إلى تبويب المستويات عند الخروج.
+function startQuiz(mode, level) {
+  setView({ name: 'quiz', mode, level });
+}
+
 function render() {
   window.scrollTo(0, 0);
 
   if (view.name === 'session') {
     // شاشة الجلسة تأخذ الشاشة كاملة (بلا شريط تنقل سفلي).
     mount(root, renderSession({ level: view.level, onExit: () => setView({ name: 'tabs', tab: 'home' }) }));
+    return;
+  }
+
+  if (view.name === 'quiz') {
+    // شاشة الاختبار تأخذ الشاشة كاملة (بلا شريط تنقل سفلي).
+    mount(root, renderQuiz({ mode: view.mode, level: view.level, onExit: () => setView({ name: 'tabs', tab: 'levels' }) }));
     return;
   }
 
@@ -64,7 +76,13 @@ function render() {
       }),
     );
   } else if (view.tab === 'levels') {
-    main.appendChild(renderLevels({ onStartLevel: (L) => startLevel(L) }));
+    main.appendChild(
+      renderLevels({
+        onStartLevel: (L) => startLevel(L),
+        onStartLevelQuiz: (L) => startQuiz('level', L),
+        onStartFinalQuiz: () => startQuiz('final'),
+      }),
+    );
   } else {
     main.appendChild(renderProgress({ afterReset: render }));
   }
