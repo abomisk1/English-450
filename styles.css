@@ -1234,3 +1234,12 @@ p {
 .quiz-review__correct {
   color: var(--c-success);
 }
+
+/* إشارة مصدر المادة — أسفل الرئيسية، خفيفة وهادئة وغير بارزة */
+.home-credit {
+  margin-top: var(--space-6);
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--c-text-faint);
+}
