@@ -96,5 +96,12 @@ export function renderHome({ onStart, onRestart, onChooseLevel }) {
     ? completionCard({ onRestart })
     : h('div', {}, hero, cta);
 
-  return h('div', { class: 'page-fade' }, top, ringCard, grid, goals);
+  // إشارة خفيفة وهادئة لمصدر المادة في أسفل الصفحة الرئيسية.
+  const credit = h(
+    'p',
+    { class: 'home-credit' },
+    'مادة هذا التطبيق مستفادة من منشورات الأستاذ عبدالرحمن حجازي.',
+  );
+
+  return h('div', { class: 'page-fade' }, top, ringCard, grid, goals, credit);
 }

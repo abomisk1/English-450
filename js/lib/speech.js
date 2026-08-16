@@ -4,6 +4,10 @@
 
 let cachedVoice = null;
 
+// سرعة النطق التعليمية الموحّدة للكلمات والجمل — أبطأ قليلًا من الطبيعي (1.0)
+// لتوضيح النطق للمبتدئ، دون بطء مصطنع مزعج. مصدر واحد لكل مواضع النطق.
+const SPEECH_RATE = 0.75;
+
 export function isSpeechSupported() {
   return typeof window !== 'undefined' && 'speechSynthesis' in window;
 }
@@ -28,7 +32,7 @@ if (isSpeechSupported()) {
 }
 
 // نطق نص إنجليزي بسرعة مناسبة للمبتدئ.
-export function speak(text, rate = 0.9) {
+export function speak(text, rate = SPEECH_RATE) {
   if (!isSpeechSupported() || !text) return;
   try {
     window.speechSynthesis.cancel(); // أوقف أي نطق سابق
