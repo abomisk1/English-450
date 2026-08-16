@@ -13,9 +13,11 @@ import {
   loadProgress,
   saveProgress,
   emptyProgress,
+  emptyQuizRecord,
   todayKey,
   daysBetween,
 } from './lib/storage.js';
+import { isLevelPass, isFinalPass } from './lib/quiz.js';
 
 const POINTS_CORRECT = 10;
 
@@ -225,4 +227,104 @@ function countLevelsCompleted(s) {
   let n = 0;
   for (let L = 1; L <= LEVEL_COUNT; L++) if (levelStats(L, s).complete) n++;
   return n;
+}
+
+// —— حالة الاختبارات (مستقلّة تمامًا عن نسبة الإنجاز/SRS/النقاط) ——
+
+// هل أنهى المستخدم *محتوى* المستوى؟ = رأى/تعلّم جميع عناصره (status ≠ 'new').
+// ملاحظة: هذا يختلف عن «اجتياز المستوى» الذي يتطلّب أيضًا النجاح في اختبار المستوى،
+// ويختلف عن «الإتقان» (levelStats.complete) الذي يتطلّب mastery لكل العناصر.
+export function levelContentFinished(level, s = state) {
+  const items = ITEMS_BY_LEVEL[level] || [];
+  if (items.length === 0) return false;
+  for (const it of items) {
+    const p = s.items[it.id];
+    if (!p || !isLearned(p)) return false;
+  }
+  return true;
+}
+
+function mkResult(score, total) {
+  return { score, total, pct: total === 0 ? 0 : Math.round((score / total) * 100) };
+}
+
+// دمج نتيجة جديدة في سجلّ اختبار: يحفظ آخر نتيجة دائمًا، وأفضل نتيجة (لا تُخفَّض)،
+// وحالة النجاح لاصقة (تبقى ناجحة)، ويحفظ أخطاء آخر محاولة للمراجعة.
+function mergeQuizRecord(prev, score, total, errors, passFn) {
+  const last = mkResult(score, total);
+  const best = !prev.best || score > prev.best.score ? last : prev.best;
+  return {
+    taken: true,
+    passed: Boolean(prev.passed) || passFn(score),
+    attempts: (prev.attempts || 0) + 1,
+    last,
+    best,
+    errors: Array.isArray(errors) ? errors : [],
+  };
+}
+
+// تسجيل نتيجة اختبار مستوى — لا يمسّ items ولا points ولا نسبة الإنجاز.
+export function recordLevelQuizResult(level, { score, total, errors = [] }) {
+  const L = Math.min(LEVEL_COUNT, Math.max(1, level | 0));
+  const quizzes = state.quizzes || { levels: {}, final: emptyQuizRecord() };
+  const prev = quizzes.levels[L] || emptyQuizRecord();
+  const rec = mergeQuizRecord(prev, score, total, errors, isLevelPass);
+  state = {
+    ...state,
+    quizzes: { ...quizzes, levels: { ...quizzes.levels, [L]: rec } },
+  };
+  emit();
+  return rec;
+}
+
+// تسجيل نتيجة الاختبار النهائي — لا يمسّ items ولا points ولا نسبة الإنجاز.
+export function recordFinalQuizResult({ score, total, errors = [] }) {
+  const quizzes = state.quizzes || { levels: {}, final: emptyQuizRecord() };
+  const prev = quizzes.final || emptyQuizRecord();
+  const rec = mergeQuizRecord(prev, score, total, errors, isFinalPass);
+  state = { ...state, quizzes: { ...quizzes, final: rec } };
+  emit();
+  return rec;
+}
+
+// حالة اختبار مستوى واحد للعرض.
+export function levelQuizState(level, s = state) {
+  const rec = (s.quizzes && s.quizzes.levels && s.quizzes.levels[level]) || emptyQuizRecord();
+  const contentFinished = levelContentFinished(level, s);
+  return {
+    level,
+    contentFinished,
+    available: contentFinished, // الاختبار متاح فقط بعد إنهاء المحتوى
+    taken: Boolean(rec.taken),
+    passed: Boolean(rec.passed),
+    attempts: rec.attempts || 0,
+    last: rec.last || null,
+    best: rec.best || null,
+    errors: rec.errors || [],
+  };
+}
+
+// هل استوفى المستخدم شروط فتح الاختبار النهائي؟
+// = إنهاء محتوى المستويات الستة + اجتياز اختبار كل مستوى منها.
+export function isFinalUnlocked(s = state) {
+  for (let L = 1; L <= LEVEL_COUNT; L++) {
+    const rec = s.quizzes && s.quizzes.levels && s.quizzes.levels[L];
+    if (!rec || !rec.passed) return false;
+    if (!levelContentFinished(L, s)) return false;
+  }
+  return true;
+}
+
+// حالة الاختبار النهائي للعرض.
+export function finalQuizState(s = state) {
+  const rec = (s.quizzes && s.quizzes.final) || emptyQuizRecord();
+  return {
+    unlocked: isFinalUnlocked(s),
+    taken: Boolean(rec.taken),
+    passed: Boolean(rec.passed),
+    attempts: rec.attempts || 0,
+    last: rec.last || null,
+    best: rec.best || null,
+    errors: rec.errors || [],
+  };
 }

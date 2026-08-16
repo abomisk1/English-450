@@ -9,8 +9,17 @@
 // completions            = عدد مرات إكمال البرنامج (إتقان 450/450). دائم لا يُمحى بالإعادة.
 // lastCompletedAt        = تاريخ آخر إكمال (YYYY-MM-DD). دائم.
 // currentCycleCompleted  = هل احتُسِب إكمال الدورة الحالية؟ يمنع تكرار العدّ لنفس الدورة.
+// quizzes                = حالة اختبارات المستويات والاختبار النهائي (مستقلّة عن الإنجاز/SRS):
+//                          { levels: { [level]: QuizRecord }, final: QuizRecord }
+//   QuizRecord: { taken, passed, attempts, last: {score,total,pct}|null,
+//                 best: {score,total,pct}|null, errors: ErrorRecord[] }
 
 const STORAGE_KEY = 'english450:progress:v1';
+
+// حالة اختبار افتراضية (لمستوى واحد أو للاختبار النهائي).
+export function emptyQuizRecord() {
+  return { taken: false, passed: false, attempts: 0, last: null, best: null, errors: [] };
+}
 
 export function emptyProgress() {
   return {
@@ -24,6 +33,17 @@ export function emptyProgress() {
     lastCompletedAt: null,
     currentCycleCompleted: false,
     activeLevel: 1, // المستوى الذي يدرسه المستخدم حاليًا (1..6)
+    quizzes: { levels: {}, final: emptyQuizRecord() },
+  };
+}
+
+// دمج آمن لبنية الاختبارات مع بيانات قديمة قد لا تحتوي المفتاح.
+function normalizeQuizzes(q) {
+  const base = { levels: {}, final: emptyQuizRecord() };
+  if (!q || typeof q !== 'object') return base;
+  return {
+    levels: q.levels && typeof q.levels === 'object' ? q.levels : {},
+    final: { ...emptyQuizRecord(), ...(q.final || {}) },
   };
 }
 
@@ -32,7 +52,12 @@ export function loadProgress() {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return emptyProgress();
     const parsed = JSON.parse(raw);
-    return { ...emptyProgress(), ...parsed, items: parsed.items ?? {} };
+    return {
+      ...emptyProgress(),
+      ...parsed,
+      items: parsed.items ?? {},
+      quizzes: normalizeQuizzes(parsed.quizzes),
+    };
   } catch {
     return emptyProgress();
   }

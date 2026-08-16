@@ -34,8 +34,8 @@ export function renderProgress({ afterReset }) {
   const ringCard = h(
     'div',
     { class: 'card text-center', style: { marginBottom: 'var(--space-5)' } },
-    progressRing(stats.masteryPercent, { unit: 'نسبة الإتقان' }),
-    h('p', { class: 'muted mt-3' }, 'الإتقان يعني أنك تتذكّر العنصر وتستخدمه، وليس مجرد رؤيته مرة واحدة.'),
+    progressRing(stats.masteryPercent, { unit: 'نسبة الإنجاز' }),
+    h('p', { class: 'muted mt-3' }, 'نسبة إنجازك من محتوى التطبيق: مقدار ما تعلّمته وأتقنته من أصل ٤٥٠ عنصرًا.'),
   );
 
   const grid = h(
