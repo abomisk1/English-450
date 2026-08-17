@@ -7,6 +7,7 @@ import { renderProgress } from './ui/progress.js';
 import { renderSession } from './ui/session.js';
 import { renderQuiz } from './ui/quiz.js';
 import { getState, setActiveLevel } from './store.js';
+import { initAnalytics } from './lib/analytics.js';
 
 const root = document.getElementById('root');
 
@@ -97,3 +98,6 @@ function setView(next) {
 }
 
 render();
+
+// تهيئة الإحصائيات المجهولة (اختيارية وغير معطِّلة — no-op إن لم تُضبط الإعدادات).
+initAnalytics();
