@@ -12,5 +12,5 @@
 
 export const ANALYTICS_CONFIG = {
   SUPABASE_URL: 'https://iwmwhrqcdpfqubejlybl.supabase.co',
-  SUPABASE_ANON_KEY: '',
+  SUPABASE_ANON_KEY: 'sb_publishable_UYHGzCvgMFFa6vXzJWww5A_SaZ631R4',
 };

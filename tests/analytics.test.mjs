@@ -7,6 +7,7 @@
 import assert from 'node:assert/strict';
 import { ITEMS_BY_LEVEL, ALL_ITEMS } from '../js/data/index.js';
 import { resetAll, answerItem, getState, levelStats, computeStats } from '../js/store.js';
+import { ANALYTICS_CONFIG } from '../js/config/analytics.config.js';
 import {
   newAnonId,
   normalizeRecord,
@@ -42,8 +43,11 @@ test('normalizeRecord يعطي بنية آمنة للبيانات الناقصة
   assert.equal(r2.reportedProgram, true);
 });
 
-test('isEnabled = false حين لا إعداد (القيمة الافتراضية فارغة)', () => {
-  assert.equal(isEnabled(), false);
+test('isEnabled يعكس وجود الإعداد (منطق التفعيل)', () => {
+  // النتيجة تعتمد على قيم analytics.config.js الفعلية؛ نتحقّق من المنطق لا من قيمة ثابتة:
+  // مُفعَّل ⇔ ضُبط الرابط والمفتاح العام معًا.
+  assert.equal(typeof isEnabled(), 'boolean');
+  assert.equal(isEnabled(), Boolean(ANALYTICS_CONFIG.SUPABASE_URL && ANALYTICS_CONFIG.SUPABASE_ANON_KEY));
 });
 
 test('pendingEvents لا يُصدر شيئًا لمستخدم جديد', () => {
