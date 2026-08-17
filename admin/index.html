@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>English 450 — لوحة الإحصائيات</title>
+    <style>
+      :root {
+        --bg: #f6f8f9; --surface: #fff; --surface-2: #eef2f3; --border: #e2e8ea;
+        --text: #16232a; --muted: #55666e; --faint: #8a99a0;
+        --primary: #0f766e; --primary-soft: #d8efec; --on-primary: #fff;
+        --success: #17915f; --error: #c2453f; --error-soft: #fbe4e2;
+        --radius: 16px; --radius-sm: 10px;
+        --shadow: 0 4px 16px rgba(16,40,48,.08);
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #0e1518; --surface: #172227; --surface-2: #1e2c31; --border: #26363c;
+          --text: #eaf1f2; --muted: #a9b8bd; --faint: #7d8d93;
+          --primary: #2dd4bf; --primary-soft: #123832; --on-primary: #04211d;
+          --success: #34d399; --error: #f27a74; --error-soft: #35201f;
+          --shadow: 0 4px 16px rgba(0,0,0,.4);
+        }
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0; background: var(--bg); color: var(--text);
+        font-family: 'Cairo', 'Segoe UI', system-ui, -apple-system, sans-serif;
+        line-height: 1.6; padding: 24px 16px;
+      }
+      .wrap { max-width: 880px; margin: 0 auto; }
+      h1 { font-size: 22px; margin: 0 0 4px; }
+      .sub { color: var(--muted); font-size: 14px; margin: 0 0 24px; }
+      .card {
+        background: var(--surface); border: 1px solid var(--border);
+        border-radius: var(--radius); padding: 20px; box-shadow: var(--shadow);
+      }
+      label { display: block; font-size: 13px; font-weight: 700; margin: 0 0 6px; }
+      input {
+        width: 100%; padding: 12px 14px; border: 1px solid var(--border);
+        border-radius: var(--radius-sm); background: var(--bg); color: var(--text);
+        font-size: 15px; font-family: inherit;
+      }
+      .field { margin-bottom: 14px; }
+      button {
+        font-family: inherit; font-weight: 700; font-size: 15px; cursor: pointer;
+        border: 0; border-radius: var(--radius-sm); padding: 12px 18px;
+        background: var(--primary); color: var(--on-primary);
+      }
+      button.ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+      button:disabled { opacity: .6; cursor: default; }
+      .msg { font-size: 14px; padding: 10px 12px; border-radius: var(--radius-sm); margin-top: 12px; }
+      .msg.err { background: var(--error-soft); color: var(--error); }
+      .hidden { display: none; }
+      .row { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+      .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin: 16px 0; }
+      .tile { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 16px; }
+      .tile .v { font-size: 28px; font-weight: 800; color: var(--primary); }
+      .tile .l { font-size: 13px; color: var(--muted); margin-top: 2px; }
+      .section-title { font-size: 15px; font-weight: 800; margin: 24px 0 12px; }
+      table { width: 100%; border-collapse: collapse; font-size: 14px; }
+      th, td { text-align: start; padding: 10px 8px; border-bottom: 1px solid var(--border); }
+      th { color: var(--muted); font-weight: 700; }
+      td.num, th.num { text-align: end; font-variant-numeric: tabular-nums; }
+      /* Funnel — سلسلة واحدة، لون العلامة التجارية، النصوص بألوان الحبر */
+      .funnel { display: flex; flex-direction: column; gap: 10px; }
+      .fstage { }
+      .fstage .flabel { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 4px; }
+      .fstage .flabel .fname { color: var(--text); font-weight: 700; }
+      .fstage .flabel .fval { color: var(--muted); font-variant-numeric: tabular-nums; }
+      .ftrack { background: var(--surface-2); border-radius: var(--radius-sm); overflow: hidden; height: 26px; }
+      .fbar {
+        height: 100%; background: var(--primary); border-radius: var(--radius-sm);
+        min-width: 2px; transition: width .5s cubic-bezier(.22,1,.36,1);
+      }
+      .dropoff { margin-top: 12px; font-size: 14px; color: var(--muted); }
+      .dropoff b { color: var(--text); }
+      .foot { margin-top: 20px; font-size: 12px; color: var(--faint); text-align: center; }
+      .config-warn { background: var(--error-soft); color: var(--error); padding: 14px; border-radius: var(--radius-sm); font-size: 14px; }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <h1>لوحة إحصائيات English 450</h1>
+      <p class="sub">إحصائيات مجهولة ومجمّعة — للإدارة فقط.</p>
+
+      <div id="config-missing" class="card hidden">
+        <div class="config-warn">
+          لم تُضبط إعدادات Supabase بعد. افتح <code>js/config/analytics.config.js</code> واملأ
+          <code>SUPABASE_URL</code> و<code>SUPABASE_ANON_KEY</code> (انظر <code>docs/ANALYTICS.md</code>).
+        </div>
+      </div>
+
+      <!-- تسجيل الدخول -->
+      <div id="login" class="card hidden">
+        <div class="field">
+          <label for="email">البريد الإلكتروني (حساب المشرف في Supabase)</label>
+          <input id="email" type="email" autocomplete="username" />
+        </div>
+        <div class="field">
+          <label for="password">كلمة المرور</label>
+          <input id="password" type="password" autocomplete="current-password" />
+        </div>
+        <button id="loginBtn" type="button">تسجيل الدخول</button>
+        <div id="loginMsg" class="msg err hidden"></div>
+      </div>
+
+      <!-- اللوحة -->
+      <div id="dash" class="hidden">
+        <div class="row">
+          <div class="section-title" style="margin:0">نظرة عامة</div>
+          <div style="display:flex; gap:8px">
+            <button id="refreshBtn" class="ghost" type="button">تحديث</button>
+            <button id="logoutBtn" class="ghost" type="button">خروج</button>
+          </div>
+        </div>
+
+        <div class="tiles" id="tiles"></div>
+
+        <div class="section-title">إكمال المستويات (من إجمالي من بدأ)</div>
+        <div class="card">
+          <table>
+            <thead>
+              <tr><th>المستوى</th><th class="num">عدد المكمِلين</th><th class="num">النسبة</th></tr>
+            </thead>
+            <tbody id="levelsBody"></tbody>
+          </table>
+        </div>
+
+        <div class="section-title">مسار التقدّم (Funnel)</div>
+        <div class="card">
+          <div class="funnel" id="funnel"></div>
+          <div class="dropoff" id="dropoff"></div>
+        </div>
+
+        <div class="foot" id="foot"></div>
+      </div>
+    </div>
+
+    <script type="module">
+      import { ANALYTICS_CONFIG } from '../js/config/analytics.config.js';
+
+      const { SUPABASE_URL, SUPABASE_ANON_KEY } = ANALYTICS_CONFIG;
+      const $ = (id) => document.getElementById(id);
+      const show = (el) => el.classList.remove('hidden');
+      const hide = (el) => el.classList.add('hidden');
+      let accessToken = null;
+
+      if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+        show($('config-missing'));
+      } else {
+        show($('login'));
+      }
+
+      $('loginBtn').addEventListener('click', login);
+      $('password').addEventListener('keydown', (e) => { if (e.key === 'Enter') login(); });
+      $('refreshBtn').addEventListener('click', loadStats);
+      $('logoutBtn').addEventListener('click', () => { accessToken = null; hide($('dash')); show($('login')); });
+
+      async function login() {
+        const email = $('email').value.trim();
+        const password = $('password').value;
+        const msg = $('loginMsg');
+        hide(msg);
+        $('loginBtn').disabled = true;
+        try {
+          const res = await fetch(`${SUPABASE_URL}/auth/v1/token?grant_type=password`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', apikey: SUPABASE_ANON_KEY },
+            body: JSON.stringify({ email, password }),
+          });
+          const data = await res.json();
+          if (!res.ok || !data.access_token) {
+            throw new Error(data.error_description || data.msg || 'تعذّر تسجيل الدخول. تحقّق من البيانات.');
+          }
+          accessToken = data.access_token;
+          hide($('login'));
+          show($('dash'));
+          await loadStats();
+        } catch (e) {
+          msg.textContent = e.message || String(e);
+          show(msg);
+        } finally {
+          $('loginBtn').disabled = false;
+        }
+      }
+
+      async function loadStats() {
+        try {
+          const res = await fetch(`${SUPABASE_URL}/rest/v1/rpc/get_stats`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              apikey: SUPABASE_ANON_KEY,
+              Authorization: `Bearer ${accessToken}`,
+            },
+            body: '{}',
+          });
+          if (!res.ok) throw new Error('تعذّر جلب الإحصائيات (تحقّق من الصلاحيات).');
+          render(await res.json());
+        } catch (e) {
+          alert(e.message || String(e));
+        }
+      }
+
+      const pct = (n, d) => (d > 0 ? Math.round((n / d) * 100) : 0);
+
+      function render(s) {
+        const total = s.total_users || 0;
+        const levels = s.levels || {};
+        const lvl = (L) => Number(levels[L] || levels[String(L)] || 0);
+        const program = s.program_completed || 0;
+
+        // بطاقات
+        $('tiles').innerHTML = [
+          ['إجمالي المستخدمين', total],
+          ['نشطون آخر 7 أيام', s.active_7d || 0],
+          ['نشطون آخر 30 يومًا', s.active_30d || 0],
+          ['أكملوا 450/450', program],
+          ['نسبة إكمال البرنامج', pct(program, total) + '%'],
+        ].map(([l, v]) => `<div class="tile"><div class="v">${v}</div><div class="l">${l}</div></div>`).join('');
+
+        // جدول المستويات
+        $('levelsBody').innerHTML = [1, 2, 3, 4, 5, 6]
+          .map((L) => `<tr><td>المستوى ${L}</td><td class="num">${lvl(L)}</td><td class="num">${pct(lvl(L), total)}%</td></tr>`)
+          .join('');
+
+        // Funnel — سلسلة واحدة، عرض كل مرحلة نسبةً إلى «من بدؤوا»
+        const stages = [
+          { name: 'بدؤوا الاستخدام', n: total },
+          ...[1, 2, 3, 4, 5, 6].map((L) => ({ name: `أكمل المستوى ${L}`, n: lvl(L) })),
+          { name: 'أكمل 450/450', n: program },
+        ];
+        const top = Math.max(total, 1);
+        $('funnel').innerHTML = stages
+          .map(
+            (st) => `
+          <div class="fstage">
+            <div class="flabel"><span class="fname">${st.name}</span><span class="fval">${st.n} · ${pct(st.n, top)}%</span></div>
+            <div class="ftrack"><div class="fbar" style="width:${pct(st.n, top)}%"></div></div>
+          </div>`,
+          )
+          .join('');
+
+        // أكثر مرحلة يتوقف عندها المستخدمون = أكبر انخفاض بين مرحلتين متتاليتين
+        let maxDrop = -1, dropIdx = -1;
+        for (let i = 0; i < stages.length - 1; i++) {
+          const d = stages[i].n - stages[i + 1].n;
+          if (d > maxDrop) { maxDrop = d; dropIdx = i; }
+        }
+        $('dropoff').innerHTML =
+          maxDrop > 0 && dropIdx >= 0
+            ? `أكبر انخفاض: <b>${maxDrop}</b> مستخدمًا بين «${stages[dropIdx].name}» و«${stages[dropIdx + 1].name}» — أكثر نقطة يتوقف عندها المستخدمون.`
+            : 'لا يوجد انخفاض ملحوظ بعد.';
+
+        $('foot').textContent = 'آخر تحديث: ' + (s.generated_at ? new Date(s.generated_at).toLocaleString('ar') : '—');
+      }
+    </script>
+  </body>
+</html>
