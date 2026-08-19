@@ -1243,3 +1243,54 @@ p {
   line-height: 1.7;
   color: var(--c-text-faint);
 }
+
+/* ============================================================
+   صندوق شرح مصطلحات الإحصائيات (details/summary — قابل للطيّ)
+   ============================================================ */
+.stats-help {
+  background: var(--c-surface);
+  border: 1px solid var(--c-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--space-5);
+  overflow: hidden;
+}
+.stats-help__summary {
+  cursor: pointer;
+  list-style: none;
+  padding: var(--space-3) var(--space-4);
+  font-weight: 700;
+  font-size: 15px;
+  color: var(--c-primary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+.stats-help__summary::-webkit-details-marker { display: none; }
+/* مؤشّر الفتح/الإغلاق (سهم) على الجانب المبدئي في RTL */
+.stats-help__summary::after {
+  content: '⌄';
+  font-size: 18px;
+  line-height: 1;
+  color: var(--c-text-faint);
+  transition: transform 0.2s ease;
+}
+.stats-help[open] .stats-help__summary::after { transform: rotate(180deg); }
+.stats-help__summary:hover { background: var(--c-surface-2); }
+.stats-help__body {
+  padding: var(--space-2) var(--space-4) var(--space-4);
+  border-top: 1px solid var(--c-border);
+}
+/* طيّ صريح معتمد على سمة [open] — سلوك حتميّ في كل المتصفّحات (مغلق افتراضيًا). */
+.stats-help:not([open]) .stats-help__body { display: none; }
+.stats-help__row { font-size: 14px; line-height: 1.7; margin-top: var(--space-3); }
+.stats-help__row:first-child { margin-top: 0; }
+.stats-help__term {
+  display: inline-block;
+  font-weight: 800;
+  color: var(--c-text);
+  margin-inline-end: 6px;
+}
+.stats-help__term::after { content: ':'; }
+.stats-help__desc { color: var(--c-text-soft); }
