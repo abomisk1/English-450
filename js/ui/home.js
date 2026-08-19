@@ -65,7 +65,7 @@ export function renderHome({ onStart, onRestart, onChooseLevel }) {
     statCard(smallNum(stats.wordsLearned, TARGET_WORDS), 'كلمات تعلّمتها'),
     statCard(smallNum(stats.phrasesLearned, TARGET_PHRASES), 'جمل تعلّمتها'),
     statCard(String(stats.dueCount), 'مراجعات اليوم'),
-    statCard(String(progress.points), 'مجموع النقاط'),
+    statCard(String(progress.points), 'نقاط التحفيز'),
   );
 
   const goals = h(

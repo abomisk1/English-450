@@ -14,9 +14,20 @@ const ACHIEVEMENTS = [
 const STATUS_META = {
   new: { label: 'لم تبدأ بعد', dot: 'dot--new' },
   learning: { label: 'قيد التعلّم', dot: 'dot--learning' },
-  review: { label: 'قيد المراجعة', dot: 'dot--review' },
+  review: { label: 'قيد التثبيت', dot: 'dot--review' },
   mastered: { label: 'متقَنة', dot: 'dot--mastered' },
 };
+
+// شرح مبسّط لمصطلحات صفحة الإحصائيات (بلا مصطلحات تقنية) — يظهر في صندوق قابل للطيّ.
+const STATS_HELP = [
+  ['بدأت تعلّمها', 'عدد الكلمات والجمل التي بدأت دراستها، وتشمل العناصر التي ما زالت قيد التثبيت والعناصر المتقنة.'],
+  ['قيد التعلّم', 'عناصر بدأت بها حديثًا وما زالت في المرحلة الأولى من التعلّم.'],
+  ['قيد التثبيت', 'عناصر تعلمتها ويجدولها التطبيق لتراجعها في أوقات مناسبة حتى تثبت في الذاكرة.'],
+  ['مستحقة اليوم', 'عناصر حان موعد مراجعتها الآن. وهي جزء من العناصر قيد التثبيت.'],
+  ['متقنة', 'عناصر أجبت عنها بنجاح مرات كافية وفق نظام المراجعة في التطبيق.'],
+  ['نقاط التحفيز', 'تحصل على 10 نقاط مقابل كل إجابة صحيحة، ويمكن أن تحصل على نقاط جديدة عند مراجعة العنصر نفسه. النقاط للتحفيز فقط، ولا تؤثر في فتح المستويات أو نسبة الإنجاز.'],
+  ['المستويات المكتملة', 'عدد المستويات التي أنهيت محتواها واختبارها وفق شروط التطبيق.'],
+];
 
 export function renderProgress({ afterReset }) {
   const progress = getState();
@@ -41,12 +52,12 @@ export function renderProgress({ afterReset }) {
   const grid = h(
     'div',
     { class: 'stat-grid', style: { marginBottom: 'var(--space-4)' } },
-    statCard(String(stats.wordsLearned), `كلمات مكتسبة من ${TARGET_WORDS}`),
-    statCard(String(stats.phrasesLearned), `جمل مكتسبة من ${TARGET_PHRASES}`),
-    statCard(String(stats.dueCount), 'بحاجة إلى مراجعة'),
+    statCard(String(stats.wordsLearned), `كلمات بدأت تعلّمها من ${TARGET_WORDS}`),
+    statCard(String(stats.phrasesLearned), `جمل بدأت تعلّمها من ${TARGET_PHRASES}`),
+    statCard(String(stats.dueCount), 'مستحقة اليوم'),
     statCard(`${stats.levelsCompleted} / ${LEVEL_COUNT}`, 'مستويات مكتملة'),
     statCard(String(progress.streak), 'أيام متتالية 🔥'),
-    statCard(String(progress.points), 'مجموع النقاط'),
+    statCard(String(progress.points), 'نقاط التحفيز'),
   );
 
   // تقدّم كل مستوى (نسبة الإتقان) + ✅ عند الاكتمال.
@@ -154,10 +165,30 @@ export function renderProgress({ afterReset }) {
     ),
   );
 
+  // صندوق شرح المصطلحات — مغلق افتراضيًا (عنصر <details> أصيل: خفيف، بلا JS، يدعم RTL).
+  const helpBox = h(
+    'details',
+    { class: 'stats-help' },
+    h('summary', { class: 'stats-help__summary' }, 'ما معنى هذه الإحصائيات؟'),
+    h(
+      'div',
+      { class: 'stats-help__body' },
+      ...STATS_HELP.map(([term, desc]) =>
+        h(
+          'div',
+          { class: 'stats-help__row' },
+          h('span', { class: 'stats-help__term' }, term),
+          h('span', { class: 'stats-help__desc' }, desc),
+        ),
+      ),
+    ),
+  );
+
   return h(
     'div',
     { class: 'page-fade' },
-    h('h1', { class: 'hero__title', style: { marginBottom: 'var(--space-5)' } }, 'تقدّمي'),
+    h('h1', { class: 'hero__title', style: { marginBottom: 'var(--space-4)' } }, 'تقدّمي'),
+    helpBox,
     ringCard,
     grid,
     levelsSection,
