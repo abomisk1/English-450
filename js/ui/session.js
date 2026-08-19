@@ -9,8 +9,7 @@
 import { h, mount, icon } from './dom.js';
 import { progressBar, speakButton, feedback, statCard, chip } from './widgets.js';
 import { buildSession } from '../lib/session.js';
-import { buildExercise, typesFor } from '../lib/exercises.js';
-import { sample } from '../lib/shuffle.js';
+import { addUniqueError } from '../lib/session-review.js';
 import { getState, answerItem, learnItem, completeSession, computeStats } from '../store.js';
 import { speak, stopSpeaking } from '../lib/speech.js';
 import { renderCompletionScreen } from './completion.js';
@@ -31,7 +30,8 @@ export function renderSession({ level, onExit }) {
     phase: 'main', // main | result | review | done
     firstTotal: 0,
     firstCorrect: 0,
-    firstErrors: [], // عناصر أخطأ فيها المستخدم في المحاولة الأولى
+    firstErrors: [], // نُسخ مستقلّة وثابتة من *الأسئلة* التي أخطأ فيها المستخدم (لا مجرّد العناصر)
+    firstErrorKeys: new Set(), // هويّات مركّبة (item.id|type) لتفادي تكرار نفس السؤال
     reviewQueue: [],
     pointsEarned: 0,
     finalized: false,
@@ -81,10 +81,10 @@ export function renderSession({ level, onExit }) {
     return { type: 'ex', ex: step.exercise, phase: 'main', answered: false, correct: null, chosen: null, placed: null };
   }
 
+  // مراجعة: نُعيد عرض *نفس السؤال* المخزَّن (لا نولّد سؤالًا جديدًا ولا نعيد اختيار النوع).
   function makeReviewFrame() {
-    const item = st.reviewQueue.shift();
-    const ex = buildExercise(item, sample(typesFor(item)));
-    return { type: 'ex', ex, phase: 'review', item, answered: false, correct: null, chosen: null, placed: null };
+    const ex = st.reviewQueue.shift();
+    return { type: 'ex', ex, phase: 'review', item: ex.item, answered: false, correct: null, chosen: null, placed: null };
   }
 
   // ينتقل إلى الإطار التالي (يولّده ويُلحقه).
@@ -124,6 +124,7 @@ export function renderSession({ level, onExit }) {
     st.firstTotal = 0;
     st.firstCorrect = 0;
     st.firstErrors = [];
+    st.firstErrorKeys = new Set();
     st.reviewQueue = [];
     st.pointsEarned = 0;
     st.finalized = false;
@@ -138,10 +139,10 @@ export function renderSession({ level, onExit }) {
     if (frame.phase === 'main') {
       st.firstTotal += 1;
       if (frame.correct) st.firstCorrect += 1;
-      else st.firstErrors.push(frame.ex.item);
+      else addUniqueError(st.firstErrors, st.firstErrorKeys, frame.ex); // خزّن *نفس السؤال* المُخطأ فيه
     } else if (!frame.correct) {
-      // مراجعة: الخطأ يعود إلى الطابور حتى يُصحَّح
-      st.reviewQueue.push(frame.ex.item);
+      // مراجعة: يعود *نفس السؤال* إلى نهاية الطابور حتى يُصحَّح (وعند الصواب يُحذف ولا يتكرر)
+      st.reviewQueue.push(frame.ex);
     }
   }
 
