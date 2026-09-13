@@ -13,7 +13,7 @@
 
 | العنصر | العدد | أين هو |
 |---|---:|---|
-| ملفات المشروع المتتبَّعة | ١٦٨ | `bard-alyaqeen/**` |
+| ملفات المشروع المتتبَّعة | ١٨٠ | `bard-alyaqeen/**` |
 | ملفات المحتوى العلمي | ٩ | `content/manifest.json` · `content/units/u1–u7.json` · `content/needs-review.json` |
 | مصادر المحتوى المنظَّمة | ٩ | `scripts/content/*.py` |
 | الخطوط المضمَّنة (SIL OFL) | ٤ | `assets/fonts/*.woff2` |
@@ -84,11 +84,11 @@ node tests/screenshots.mjs
 
 | الفحص | القيمة المتوقَّعة |
 |---|---|
-| `git ls-files \| wc -l` | ١٦٨ |
+| `git ls-files \| wc -l` | ١٨٠ |
 | `git log --oneline \| wc -l` | ١ |
 | محتوى `content/units/` | ٧ ملفات |
 | `content/needs-review.json` → `count` | ٣٠٢ |
-| `docs/screenshots/*.png` | ١٠٣ |
+| `docs/screenshots/*.png` | ١٠٣ (+ `README.md`) |
 | `assets/fonts/*.woff2` | ٤ |
 | اختبارات المنطق | ٥٥ / ٥٥ |
 | اختبارات الواجهة | ٥٧ / ٥٧ |
