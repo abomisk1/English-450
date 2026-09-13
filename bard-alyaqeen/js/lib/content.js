@@ -134,7 +134,9 @@ export function cardKindLabel(card) {
   if (card.type === 'hadith') return { text: 'حديث نبوي', cls: 'chip--brand' };
   if (card.type === 'dhikr') return { text: 'ذكر / دعاء', cls: 'chip--brand' };
   if (card.src === 'book') return { text: 'من الكتاب', cls: '' };
-  if (card.src === 'authored') return { text: 'صياغة تعليمية مساعدة', cls: 'chip--warn' };
+  // لصيقة إفصاح عن المصدر: لا تُعرض للمتعلّم في الوضع الطبيعي، بل في
+  // «وضع مراجعة المحتوى» ولوحة الإدارة. (prov = provenance)
+  if (card.src === 'authored') return { text: 'صياغة تعليمية مساعدة', cls: 'chip--warn', prov: true };
   return { text: 'من الكتاب', cls: '' };
 }
 

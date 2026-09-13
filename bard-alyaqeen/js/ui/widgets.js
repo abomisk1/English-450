@@ -47,11 +47,28 @@ function listenButton(card) {
   return btn;
 }
 
+/**
+ * سطر «صياغة تعليمية مساعدة» وشرحه.
+ * مخفيّ عن المتعلّم في الوضع الطبيعي، ويظهر في «وضع مراجعة المحتوى» فقط
+ * (وفي لوحة الإدارة دائمًا، وهي لا تستعمل هذه المكوّنات).
+ * إخفاؤه ليس اعتمادًا للمحتوى: حالة العنصر في البيانات تبقى «بانتظار المراجعة».
+ */
+export const PROV_NOTE = 'محتوى تعليمي صيغ لتيسير عرض مادة الكتاب، '
+  + 'وهو بانتظار المراجعة والاعتماد';
+
+export function provChip(text) {
+  return h('span', { class: 'chip chip--warn prov' }, text);
+}
+
+export function provNote() {
+  return h('p', { class: 'prov prov__note' }, icon(ICONS.info, 14), h('span', {}, PROV_NOTE));
+}
+
 export function renderCard(card) {
   const kind = cardKindLabel(card);
-  const head = h('div', { class: 'lesson-card__label' },
-    h('span', { class: `chip ${kind.cls}` }, kind.text),
-  );
+  const head = kind.prov
+    ? h('div', { class: 'lesson-card__label prov' }, h('span', { class: `chip ${kind.cls}` }, kind.text))
+    : h('div', { class: 'lesson-card__label' }, h('span', { class: `chip ${kind.cls}` }, kind.text));
 
   let body;
   if (card.type === 'quran') {
@@ -71,7 +88,7 @@ export function renderCard(card) {
     );
   } else if (card.type === 'note' || card.src === 'authored') {
     body = h('div', { class: 'aid' },
-      h('span', { class: 'aid__tag' }, 'صياغة تعليمية مساعدة (ليست من الكتاب)'),
+      h('span', { class: 'aid__tag prov' }, 'صياغة تعليمية مساعدة (ليست من الكتاب)'),
       h('div', {}, card.text),
     );
   } else {
@@ -112,10 +129,11 @@ export function renderQuestion(q, onAnswer, opts = {}) {
   const prompt = h('div', { class: 'q__prompt' }, q.prompt);
   wrap.append(prompt);
   if (q.src === 'authored') {
-    wrap.append(h('div', { class: 'chip chip--warn', style: { marginBottom: '.5rem' } },
+    wrap.append(h('div', { class: 'chip chip--warn prov', style: { marginBottom: '.5rem' } },
       q.kind === 'scenario'
         ? 'موقف تطبيقي بصياغة تعليمية مساعدة'
         : 'صياغة تعليمية مساعدة — مستمدّة من نصّ الدرس'));
+    wrap.append(provNote());
   }
 
   let answered = false;

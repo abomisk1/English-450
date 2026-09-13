@@ -138,6 +138,15 @@ const EXTRA = [
     route: '/#/lesson/u1/u1l4', scroll: '.audio-note' },
   { id: 'x11-family-home', title: 'قسم «دروس مناسبة للأسرة» في الصفحة الرئيسة',
     route: '/#/home', scroll: 'text=دروس مناسبة للأسرة' },
+  { id: 'x12-tabbar-320-large', title: 'شريط التنقّل على ٣٢٠px مع الخط الكبير — بعد الإصلاح',
+    route: '/#/home', prefs: { largeText: true, fontScale: 1.5 }, viewportOverride: { width: 320, height: 700 } },
+  { id: 'x13-more', title: 'صفحة «المزيد» — بقيّة الأقسام بأسماء كاملة', route: '/#/more' },
+  { id: 'x14-no-prov-label', title: 'واجهة المتعلّم بلا لصيقة «صياغة تعليمية مساعدة»',
+    route: '/#/lesson/u1/u1l3' },
+  { id: 'x15-review-mode', title: 'وضع مراجعة المحتوى مُفعَّلًا — اللصيقة وشرحها',
+    route: '/#/lesson/u1/u1l3', prefs: { reviewLabels: true } },
+  { id: 'x16-safe-replacement', title: 'البديل الآمن عن إكمال الآية (مطابقة معاني ألفاظ آية الكرسي)',
+    route: '/#/lesson/u1/u1l4', scroll: '.match' },
 ];
 
 const manifest = [];
@@ -149,7 +158,7 @@ async function capture(device, viewport, shots) {
     if (s.fresh) seed.onboarded = false;
 
     const ctx = await browser.newContext({
-      viewport, locale: 'ar', deviceScaleFactor: 1,
+      viewport: s.viewportOverride || viewport, locale: 'ar', deviceScaleFactor: 1,
       colorScheme: s.colorScheme || 'light',
     });
     await ctx.addInitScript((st) => {

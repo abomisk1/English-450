@@ -18,8 +18,8 @@
 | مصادر المحتوى المنظَّمة | ٩ | `scripts/content/*.py` |
 | الخطوط المضمَّنة (SIL OFL) | ٤ | `assets/fonts/*.woff2` |
 | ملفات الاختبارات | ٤ | `tests/run.mjs` · `e2e.mjs` · `visual-audit.mjs` · `persona-walkthrough.mjs` |
-| الوثائق | ٨ | `docs/*.md` |
-| صور المراجعة | ١٠٣ | `docs/screenshots/` |
+| الوثائق | ١٠ | `docs/*.md` |
+| صور المراجعة | ١٢٧ | `docs/screenshots/` |
 | ملفات المراجعة المصدَّرة | ٢ | `docs/review/review-items.csv` · `.xls` |
 | سجلّ Git | التزامات الفرع `claude/bard-al-yaqeen-program-jckzr0` | — |
 
@@ -69,15 +69,16 @@ git ls-files | wc -l    # يجب أن يساوي ١١٠
 تُنفَّذ داخل المستودع الجديد **قبل** أي دفع إلى مستودع بعيد:
 
 ```bash
-python3 scripts/build_content.py     # يجب: units=7 lessons=66 cards=192 interactions=167 quiz=148 tasks=35 needsReview=302
+python3 scripts/build_content.py     # يجب: units=7 lessons=66 cards=192 interactions=167 quiz=148 tasks=35 needsReview=304
 python3 scripts/audit_counts.py      # يجب: بلا تحذيرات
-python3 scripts/export_review.py     # يجب: 302 عنصرًا
+python3 scripts/export_review.py     # يجب: 304 عنصرًا
 python3 scripts/build_docs.py
+python3 scripts/audit_quran.py --check  # يجب: ٠ مخالفة
 
 npm i -D playwright@1.49.1
 node scripts/serve.mjs &
-node tests/run.mjs                   # يجب: ٥٥ ناجح، ٠ فاشل
-node tests/e2e.mjs                   # يجب: ٥٧ ناجح، ٠ فاشل
+node tests/run.mjs                   # يجب: ٥٨ ناجح، ٠ فاشل
+node tests/e2e.mjs                   # يجب: ٦٢ ناجح، ٠ فاشل
 node tests/visual-audit.mjs          # يجب: ٠ خطأ، ٠ تنبيه
 node tests/screenshots.mjs
 ```
@@ -87,12 +88,13 @@ node tests/screenshots.mjs
 | `git ls-files \| wc -l` | ١٨٠ |
 | `git log --oneline \| wc -l` | ١ |
 | محتوى `content/units/` | ٧ ملفات |
-| `content/needs-review.json` → `count` | ٣٠٢ |
-| `docs/screenshots/*.png` | ١٠٣ (+ `README.md`) |
+| `content/needs-review.json` → `count` | ٣٠٤ |
+| `docs/screenshots/*.png` | ١٢٧ (+ `README.md`) |
 | `assets/fonts/*.woff2` | ٤ |
-| اختبارات المنطق | ٥٥ / ٥٥ |
-| اختبارات الواجهة | ٥٧ / ٥٧ |
-| الفحص البصري | ٦٧٢ فحصًا · ٠ خطأ |
+| اختبارات المنطق | ٥٨ / ٥٨ |
+| اختبارات الواجهة | ٦٢ / ٦٢ |
+| الفحص البصري | ٧٠٢ فحصًا · ٠ خطأ |
+| تدقيق النصّ القرآني | ٢١٧١ فحصًا · ٠ مخالفة |
 | فتح `index.html` عبر خادم محلي | الشاشة الافتتاحية تظهر واسم الكتاب ومؤلفه |
 
 **لا يُحذف المجلد من `English-450` إلا بعد اجتياز هذه القائمة كاملة**، ويُفضَّل

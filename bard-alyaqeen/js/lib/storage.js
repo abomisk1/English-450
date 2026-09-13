@@ -21,6 +21,9 @@ export function defaultState() {
       highContrast: false,
       theme: 'system',           // system | light | dark
       fontScale: 1,              // مُعامل تكبير الخطّ (٠٫٩–١٫٦)
+      // «وضع مراجعة المحتوى»: يُظهر لصيقات الإفصاح عن المصدر.
+      // لا يظهر مفتاحه إلا في المعاينة الخاصة (window.__BAY_REVIEW_PREVIEW__).
+      reviewLabels: false,
       reduceMotion: false,
     },
     // تقدّم الدروس: { [lessonId]: { seen, quizBest, quizAttempts, completedAt } }

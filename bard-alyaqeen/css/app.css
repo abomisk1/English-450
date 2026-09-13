@@ -101,12 +101,18 @@ main { flex: 1; width: 100%; }
   flex: 1 1 0; min-width: 0;
   padding: var(--sp-2) 2px calc(var(--sp-2) + 2px);
   font-family: inherit; color: var(--fg-subtle);
-  min-height: 56px; line-height: 1.3;
-  /* لصيقة التنقّل شريط أدوات لا نصّ قراءة، فلا تتضخّم بمُعامل التكبير حتى لا تفيض. */
-  font-size: clamp(10px, calc(var(--fs-xs) / max(var(--font-scale, 1), 1)), 13px);
+  min-height: 56px; line-height: 1.25;
+  /*
+   * أربعة تبويبات على ٣٢٠px تعني ٨٠px للتبويب — يتّسع فيها أطول اسم («المراجعة»)
+   * بحجم بين ١٢px و١٦px. فالحدّ الأدنى ١٢px لا ينزل عنه أبدًا (سهولة القراءة)،
+   * والحدّ الأعلى ١٦px يمنع الفيضان عند تكبير الخطّ، وبينهما يكبر مع المستخدم.
+   */
+  font-size: clamp(12px, var(--fs-xs), 16px);
 }
-.tabbar__btn > span {
-  max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+.tabbar__label {
+  max-width: 100%; white-space: nowrap;
+  /* شبكة أمان: لا يُتوقَّع أن يُفعَّل، ويتحقّق منه اختبار على ثلاثة مقاسات. */
+  overflow: hidden; text-overflow: ellipsis;
 }
 .tabbar__btn svg { width: 22px; height: 22px; }
 .tabbar__btn[aria-current="page"] { color: var(--accent-text); font-weight: 700; }
@@ -544,3 +550,50 @@ details.more[open] > summary::before { content: "－"; }
   border-radius: var(--r-sm); padding: var(--sp-2) var(--sp-3);
 }
 .audio-note svg { flex: 0 0 auto; margin-top: 2px; opacity: .8; }
+
+
+/* ---------- صفحة «المزيد» ---------- */
+.more-row {
+  display: flex; align-items: center; gap: var(--sp-3);
+  width: 100%; text-align: start; cursor: pointer;
+  font: inherit; color: inherit; min-height: 64px;
+}
+.more-row__ic {
+  flex: 0 0 auto; width: 40px; height: 40px; border-radius: var(--r-md);
+  display: grid; place-items: center;
+  background: var(--soft-brand-bg); color: var(--soft-brand-fg);
+}
+.more-row__label { font-weight: 700; display: block; }
+.more-row > svg:last-child { flex: 0 0 auto; color: var(--fg-subtle); }
+
+
+/* ---------- لصيقات الإفصاح عن المصدر (prov) ---------- */
+/*
+ * «صياغة تعليمية مساعدة» أربكت الفئات الستّ في قياس التجربة، فأُخفيت عن
+ * المتعلّم في الوضع الطبيعي. وتظهر في «وضع مراجعة المحتوى» وحده.
+ * الإخفاء عرضٌ لا اعتماد: حالة العنصر في البيانات تبقى «بانتظار المراجعة».
+ * ولوحة الإدارة لا تستعمل هذه المكوّنات، فلصيقاتها ظاهرة دائمًا.
+ */
+.prov { display: none; }
+:root[data-review-labels="on"] .prov { display: inline-flex; }
+:root[data-review-labels="on"] span.aid__tag.prov { display: inline-block; }
+:root[data-review-labels="on"] div.prov { display: flex; }
+:root[data-review-labels="on"] .prov__note {
+  display: flex; align-items: flex-start; gap: var(--sp-2);
+  margin: var(--sp-2) 0 0; font-size: var(--fs-xs); line-height: 1.7;
+  color: var(--fg-muted);
+  background: var(--c-warn-soft); border-inline-start: 3px solid var(--c-warn);
+  border-radius: var(--r-sm); padding: var(--sp-2) var(--sp-3);
+}
+.prov__note svg { flex: 0 0 auto; margin-top: 3px; opacity: .85; }
+
+/* شريط «وضع مراجعة المحتوى» — لا يظهر إلا في المعاينة الخاصة */
+.review-mode-bar {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: var(--sp-3); flex-wrap: wrap;
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--c-warn-soft); border-bottom: 1px solid var(--c-warn);
+  font-size: var(--fs-sm);
+}
+.review-mode-bar__txt { flex: 1 1 14rem; min-width: 0; }
+.review-mode-bar__ttl { font-weight: 700; }

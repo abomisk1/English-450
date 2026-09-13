@@ -297,6 +297,54 @@ console.log('› فحص مناطق اللمس …');
   await ctx.close();
 }
 
+/* ======= ٤٫٥) شريط التنقّل: حجم الخطّ ومناطق اللمس على المقاسات الضيقة ======= */
+console.log('› فحص شريط التنقّل …');
+for (const [lbl, prefs] of [['عادي', { fontScale: 1, largeText: false }],
+                            ['خط كبير ×١٫٥', { fontScale: 1.5, largeText: true }]]) {
+  for (const width of [320, 375, 390]) {
+    const st = JSON.parse(JSON.stringify(SEED));
+    Object.assign(st.prefs, prefs);
+    const ctx = await browser.newContext({ viewport: { width, height: 800 }, locale: 'ar' });
+    await ctx.addInitScript((x) => {
+      try { localStorage.setItem('bay.state.v1', JSON.stringify(x)); } catch (_) {}
+    }, st);
+    const page = await ctx.newPage();
+    await page.goto(BASE + '/#/home', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(220);
+    const r = await page.evaluate(() => ({
+      scroll: document.documentElement.scrollWidth,
+      client: document.documentElement.clientWidth,
+      tabs: [...document.querySelectorAll('.tabbar__btn')].map((b) => {
+        const l = b.querySelector('.tabbar__label');
+        const rc = b.getBoundingClientRect();
+        return {
+          t: l.textContent, fs: +parseFloat(getComputedStyle(l).fontSize).toFixed(1),
+          w: Math.round(rc.width), h: Math.round(rc.height),
+          clipped: l.scrollWidth > l.clientWidth + 0.5,
+        };
+      }),
+    }));
+    const area = `شريط التنقّل · ${width}px · ${lbl}`;
+    if (r.scroll > r.client) note('خطأ', area, `تمرير أفقي ${r.scroll - r.client}px`);
+    else ok();
+    const small = r.tabs.filter((t) => t.fs < 12);
+    if (small.length) note('خطأ', area, `حجم خطّ دون ١٢px: ${small.map((t) => `${t.t}=${t.fs}`).join('، ')}`);
+    else ok();
+    const tiny = r.tabs.filter((t) => t.w < 44 || t.h < 44);
+    if (tiny.length) note('خطأ', area, `منطقة لمس دون ٤٤: ${tiny.map((t) => `${t.t} ${t.w}×${t.h}`).join('، ')}`);
+    else ok();
+    const cut = r.tabs.filter((t) => t.clipped);
+    if (cut.length) note('خطأ', area, `قصّ في الاسم: ${cut.map((t) => t.t).join('، ')}`);
+    else ok();
+    const unnamed = r.tabs.filter((t) => !t.t || t.t.trim().length < 3);
+    if (unnamed.length) note('خطأ', area, 'تبويب بلا اسم مقروء');
+    else ok();
+    note('معلومة', area,
+      r.tabs.map((t) => `${t.t} ${t.fs}px ${t.w}×${t.h}`).join(' · '));
+    await ctx.close();
+  }
+}
+
 /* ============= ٥) وضع الخط الكبير: لا قصّ ولا تداخل بعد التكبير ============= */
 console.log('› فحص وضع الخط الكبير …');
 {

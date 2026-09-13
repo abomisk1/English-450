@@ -13,6 +13,7 @@ export function applyPrefs(prefs) {
   if (prefs.theme === 'system') root.removeAttribute('data-theme');
   else root.dataset.theme = prefs.theme;
   root.style.setProperty('--font-scale', String(prefs.fontScale || 1));
+  root.dataset.reviewLabels = prefs.reviewLabels ? 'on' : 'off';
   const meta = document.querySelector('meta[name="theme-color"]');
   if (meta) {
     const dark = root.dataset.theme === 'dark'

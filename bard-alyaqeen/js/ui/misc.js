@@ -371,3 +371,38 @@ export function searchScreen(units) {
   setTimeout(() => input.focus(), 60);
   return wrap;
 }
+
+
+/* ------------------------------ المزيد ------------------------------ */
+
+/**
+ * صفحة «المزيد»: بقيّة أقسام البرنامج بأسماء كاملة مقروءة.
+ * وُجدت لأنّ شريط التنقّل السفلي ضاق بخمسة تبويبات على عرض ٣٢٠px
+ * مع تكبير الخطّ، فصار أربعةً وانتقلت البقيّة إلى هنا.
+ */
+const MORE_ITEMS = [
+  { path: '/tasks', label: 'المهام الأدائية', desc: 'مهام عملية من الكتاب، وحدةً وحدة.', ic: ICONS.tasks },
+  { path: '/progress', label: 'الإنجاز', desc: 'تقدّمك وشاراتك ومواظبتك.', ic: ICONS.progress },
+  { path: '/search', label: 'البحث', desc: 'ابحث في نصوص البرنامج كلها.', ic: ICONS.search },
+  { path: '/bookmarks', label: 'المفضلة', desc: 'ما حفظتَه للرجوع إليه.', ic: ICONS.star },
+  { path: '/settings', label: 'الإعدادات وإمكانية الوصول', desc: 'حجم الخطّ والسِّمة والنسخ الاحتياطية.', ic: ICONS.gear },
+];
+
+export function moreScreen() {
+  const wrap = h('div', { class: 'container container--narrow section stack' },
+    h('h1', {}, 'المزيد'));
+  const list = h('nav', { class: 'stack', 'aria-label': 'أقسام أخرى' });
+  for (const it of MORE_ITEMS) {
+    list.append(h('button', {
+      class: 'card more-row', type: 'button',
+      onclick: () => navigate(it.path),
+    },
+      h('span', { class: 'more-row__ic' }, icon(it.ic, 22)),
+      h('span', { style: { flex: 1, minWidth: 0 } },
+        h('span', { class: 'more-row__label' }, it.label),
+        h('span', { class: 'small muted', style: { display: 'block' } }, it.desc)),
+      icon(ICONS.back, 18)));
+  }
+  wrap.append(list);
+  return wrap;
+}

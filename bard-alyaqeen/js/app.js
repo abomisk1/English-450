@@ -10,7 +10,7 @@ import { splashScreen, setupScreen } from './ui/onboarding.js';
 import { homeScreen } from './ui/home.js';
 import { unitsScreen, unitScreen } from './ui/units.js';
 import { lessonScreen, quizScreen } from './ui/lesson.js';
-import { tasksScreen, reviewScreen, achievementsScreen, bookmarksScreen, searchScreen } from './ui/misc.js';
+import { tasksScreen, reviewScreen, achievementsScreen, bookmarksScreen, searchScreen, moreScreen } from './ui/misc.js';
 import { settingsScreen, applyPrefs } from './ui/settings.js';
 
 const view = document.getElementById('view');
@@ -19,23 +19,29 @@ const tabbarHost = document.getElementById('tabbar');
 let MANIFEST = null;
 let UNITS = [];
 
-const TABS = [
+/*
+ * أربعة تبويبات ظاهرة لا خمسة، وخامسها «المزيد» يجمع البقيّة.
+ * السبب: على عرض ٣٢٠px كانت الخمسة تقتسم ٦٤px للتبويب الواحد، فلا يتّسع
+ * «المراجعة» عند تكبير الخطّ. وبأربعة يصير نصيب التبويب ٨٠px، فيبقى الاسم
+ * مقروءًا بحجم لا ينزل عن ١٢px، بلا قصّ ولا تمرير أفقي.
+ */
+export const TABS = [
   { path: '/home', label: 'الرئيسة', ic: ICONS.home },
   { path: '/units', label: 'الوحدات', ic: ICONS.book },
   { path: '/review', label: 'المراجعة', ic: ICONS.review },
-  { path: '/tasks', label: 'المهام', ic: ICONS.tasks },
-  { path: '/progress', label: 'الإنجاز', ic: ICONS.progress },
+  { path: '/more', label: 'المزيد', ic: ICONS.more, owns: ['/tasks', '/progress', '/search', '/bookmarks', '/settings'] },
 ];
 
 function renderTabbar(path) {
   const due = dueCount(getState().review);
   tabbarHost.replaceChildren(...TABS.map((t) => {
-    const active = path.startsWith(t.path);
+    const active = path.startsWith(t.path)
+      || (t.owns || []).some((p) => path.startsWith(p));
     const btn = h('button', {
       class: 'tabbar__btn', type: 'button',
       'aria-current': active ? 'page' : null,
       onclick: () => navigate(t.path),
-    }, icon(t.ic, 22), h('span', {}, t.label));
+    }, icon(t.ic, 22), h('span', { class: 'tabbar__label' }, t.label));
     if (t.path === '/review' && due > 0) {
       btn.append(h('span', { class: 'sr-only' }, `${due} عنصرًا مستحقًّا`));
       btn.querySelector('svg').style.color = 'var(--c-gold)';
@@ -43,6 +49,34 @@ function renderTabbar(path) {
     return btn;
   }));
   tabbarHost.hidden = ['/', '/setup'].includes(path);
+}
+
+/**
+ * شريط «وضع مراجعة المحتوى» — للمعاينة الخاصة وحدها.
+ * لا يُرسَم إلا إذا أعلنت الصفحة `window.__BAY_REVIEW_PREVIEW__ = true`،
+ * وصفحة البرنامج العامّة (index.html) لا تُعلنه، فلا يراه المستخدم العام.
+ */
+function renderReviewModeBar() {
+  if (!window.__BAY_REVIEW_PREVIEW__) return;
+  const host = document.getElementById('review-mode-bar');
+  if (!host) return;
+  const on = () => !!getState().prefs.reviewLabels;
+  const input = h('input', {
+    type: 'checkbox', class: 'switch', id: 'review-mode-toggle', checked: on(),
+    'aria-label': 'وضع مراجعة المحتوى',
+    onchange: (e) => {
+      update((s) => { s.prefs = { ...s.prefs, reviewLabels: e.target.checked }; });
+      applyPrefs(getState().prefs);
+    },
+  });
+  host.replaceChildren(
+    h('span', { class: 'review-mode-bar__txt' },
+      h('span', { class: 'review-mode-bar__ttl' }, 'وضع مراجعة المحتوى'),
+      h('span', { class: 'small muted', style: { display: 'block' } },
+        'يُظهر لصيقة «صياغة تعليمية مساعدة» على ما ليس من نصّ الكتاب. '
+        + 'خاصٌّ بالمعاينة، ولا يظهر للمستخدم العام.')),
+    input);
+  host.hidden = false;
 }
 
 function renderTopbar() {
@@ -127,11 +161,13 @@ function defineRoutes() {
   route('/bookmarks', () => withUnits((units) => bookmarksScreen(units)));
   route('/search', () => withUnits((units) => searchScreen(units)));
   route('/settings', () => show(settingsScreen()));
+  route('/more', () => show(moreScreen()));
 }
 
 async function boot() {
   applyPrefs(getState().prefs);
   renderTopbar();
+  renderReviewModeBar();
   try {
     MANIFEST = await C.loadManifest();
   } catch (e) {

@@ -230,6 +230,106 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     }
   });
 
+  await check('شريط التنقّل: أربعة تبويبات بأسماء مقروءة ≥١٢px بلا قصّ', async () => {
+    for (const w of [320, 375, 390]) {
+      await page.setViewportSize({ width: w, height: 800 });
+      await page.goto(BASE + '/#/home', { waitUntil: 'networkidle' });
+      await page.waitForTimeout(200);
+      const r = await page.evaluate(() => ({
+        scroll: document.documentElement.scrollWidth,
+        client: document.documentElement.clientWidth,
+        tabs: [...document.querySelectorAll('.tabbar__btn')].map((b) => {
+          const l = b.querySelector('.tabbar__label');
+          const rc = b.getBoundingClientRect();
+          return {
+            t: l.textContent, fs: parseFloat(getComputedStyle(l).fontSize),
+            w: rc.width, h: rc.height, clipped: l.scrollWidth > l.clientWidth + 0.5,
+          };
+        }),
+      }));
+      assert(r.tabs.length === 4, `${w}px: التبويبات ${r.tabs.length} لا ٤`);
+      assert(r.scroll <= r.client, `${w}px: تمرير أفقي ${r.scroll}/${r.client}`);
+      for (const t of r.tabs) {
+        assert(t.fs >= 12, `${w}px: «${t.t}» بحجم ${t.fs}px < ١٢`);
+        assert(t.w >= 44 && t.h >= 44, `${w}px: «${t.t}» ${t.w}×${t.h} < ٤٤`);
+        assert(!t.clipped, `${w}px: «${t.t}» مقصوص`);
+        assert(t.t.trim().length > 2, `${w}px: تبويب بلا اسم مقروء`);
+      }
+    }
+    await page.setViewportSize({ width: 390, height: 844 });
+  });
+
+  await check('«المزيد» يفتح بقيّة الأقسام بأسماء كاملة', async () => {
+    await page.goto(BASE + '/#/more', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(200);
+    const rows = page.locator('.more-row');
+    assert(await rows.count() === 5, `صفوف المزيد ${await rows.count()} لا ٥`);
+    const txt = await page.locator('#view').innerText();
+    for (const t of ['المهام الأدائية', 'الإنجاز', 'البحث', 'المفضلة', 'الإعدادات']) {
+      assert(txt.includes(t), `«${t}» غير موجود في المزيد`);
+    }
+    // والتبويب يُبرز «المزيد» عند فتح قسم من أقسامه
+    await page.goto(BASE + '/#/tasks', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(200);
+    const cur = await page.locator('.tabbar__btn[aria-current="page"] .tabbar__label').innerText();
+    assert(cur.includes('المزيد'), `التبويب البارز «${cur}» لا «المزيد»`);
+  });
+
+  await check('لصيقة «صياغة تعليمية مساعدة» مخفيّة عن المتعلّم في الوضع الطبيعي', async () => {
+    for (const r of ['/#/lesson/u1/u1l3', '/#/lesson/u5/u5l14', '/#/lesson/u4/u4l7', '/#/home']) {
+      await page.goto(BASE + r, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(200);
+      const vis = await page.evaluate(() => [...document.querySelectorAll('body *')]
+        .filter((e) => !e.children.length && e.offsetParent !== null
+          && /صياغة تعليمية مساعدة|صياغة مساعدة/.test(e.textContent || ''))
+        .map((e) => e.className || e.tagName));
+      assert(vis.length === 0, `${r}: اللصيقة ظاهرة — ${vis.join('، ')}`);
+    }
+    // وحالة العنصر في البيانات لم تتغيّر
+    const still = await page.evaluate(async () => {
+      const r = await (await fetch('/content/needs-review.json')).json();
+      return r.items.every((i) => !i.approved) && r.count;
+    });
+    assert(still > 0, 'عناصر المراجعة تغيّرت حالتها');
+  });
+
+  await check('«وضع مراجعة المحتوى» يُظهر اللصيقة وشرحها — في المعاينة وحدها', async () => {
+    await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(200);
+    // لا يظهر الشريط في صفحة البرنامج العامّة
+    assert(await page.locator('#review-mode-bar').isHidden(), 'شريط المراجعة ظاهر للمستخدم العام');
+    // وبتفعيل الوضع تظهر اللصيقة وشرحها
+    await page.evaluate(() => { document.documentElement.dataset.reviewLabels = 'on'; });
+    await page.waitForTimeout(150);
+    const n = await page.evaluate(() => [...document.querySelectorAll('.prov')]
+      .filter((e) => e.offsetParent !== null).length);
+    assert(n >= 3, `اللصيقات الظاهرة ${n}`);
+    const note = await page.locator('.prov__note').first().innerText();
+    assert(note.includes('بانتظار المراجعة والاعتماد'), `نصّ الشرح: ${note}`);
+  });
+
+  await check('لا نصّ قرآني في أي قائمة خيارات ولا إكمال آية', async () => {
+    const bad = await page.evaluate(async () => {
+      const m = await (await fetch('/content/manifest.json')).json();
+      const out = [];
+      for (const u of m.units) {
+        const unit = await (await fetch('/content/' + u.file)).json();
+        for (const l of unit.lessons) {
+          for (const q of [...l.interactions, ...l.quiz]) {
+            for (const o of (q.options || [])) {
+              if (String(o).includes('﴿')) out.push(`${l.id}/${q.id} خيار قرآني`);
+            }
+            if (q.kind === 'complete' && ((q.before || '') + (q.after || '')).includes('﴿')) {
+              out.push(`${l.id}/${q.id} إكمال آية`);
+            }
+          }
+        }
+      }
+      return out;
+    });
+    assert(bad.length === 0, bad.join(' | '));
+  });
+
   await check('نشاط التصنيف يعمل ويصحّح', async () => {
     await page.goto(BASE + '/#/lesson/u5/u5l14', { waitUntil: 'networkidle' });
     await page.waitForSelector('.q');
@@ -358,9 +458,9 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
   await check('لوحة المراجعة: العرض والتصفية الرباعية', async () => {
     await page.goto(BASE + '/admin/index.html', { waitUntil: 'networkidle' });
     await page.waitForSelector('.rv', { timeout: 8000 });
-    assert((await page.locator('#rv-count').innerText()).includes('٣٠٢'), 'العدّاد لا يعرض ٣٠٢');
+    assert((await page.locator('#rv-count').innerText()).includes('٣٠٤'), 'العدّاد لا يعرض ٣٠٤');
     for (const [sel, val, expect] of [
-      ['select[aria-label="الأولوية"]', 'high', '٢٨'],
+      ['select[aria-label="الأولوية"]', 'high', '٢٤'],
       ['select[aria-label="الوحدة"]', 'u2', null],
       ['select[aria-label="نوع العنصر"]', 'hook', null],
       ['select[aria-label="حالة الاعتماد"]', 'pending', null],

@@ -1,11 +1,11 @@
 {
  "generatedFrom": "scripts/build_content.py",
  "policy": "كل نصّ قرآني (src=quran) وكل صياغة تعليمية مساعدة (src=authored) يحتاج إلى مراجعة واعتماد قبل النشر.",
- "count": 302,
+ "count": 304,
  "byPriority": {
   "low": 144,
-  "medium": 130,
-  "high": 28
+  "medium": 136,
+  "high": 24
  },
  "items": [
   {
@@ -372,15 +372,15 @@
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l3",
    "lesson": "سورة الفاتحة",
-   "kind": "interaction:complete-quran",
+   "kind": "interaction:classify",
    "path": "u1/u1l3/interaction/i3",
-   "src": "derived",
+   "src": "authored",
    "ref": null,
-   "page": 8,
-   "priority": "high",
-   "priorityAr": "عالية",
-   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
-   "text": "أكمل الآية.\n✔ نَسْتَعِينُ\n— نَسْتَغْفِرُ\n— نَشْكُرُ\n— نَدْعُو\nالتفسير: معناها في الكتاب: نعبدك وحدك، ونستعين بك وحدك.",
+   "page": 9,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف ما قرّره الكتاب عن قول (آمين) بعد الفاتحة.\nالتفسير: نصّ الكتاب: «وَيُسْتَحَبُّ لِلْقَارِئِ أَنْ يَقُولَ فِي الصَّلَاةِ بَعْدَ قِرَاءَةِ الْفَاتِحَةِ: (آمِينَ)، وَمَعْنَاهَا: اللَّهُمَّ اسْتَجِبْ. وَلَيْسَتْ مِنَ الْقُرْآنِ».",
    "bookContext": {
     "text": "يَجِبُ عَلَى الْمُسْلِمِ أَنْ يَتَعَلَّمَ قِرَاءَةَ سُورَةِ الْفَاتِحَةِ؛ لِأَنَّ الصَّلَاةَ لَا تَصِحُّ إِلَّا بِهَا، وَيَحْسُنُ أَنْ يَتَعَلَّمَ قِرَاءَةَ كِتَابِ اللهِ كَامِلًا، فَإِنْ لَمْ يَكُنْ فَمَا اسْتَطَاعَ مِنْهُ.",
     "page": 7,
@@ -482,15 +482,15 @@
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l4",
    "lesson": "آية الكرسي",
-   "kind": "interaction:complete-quran",
+   "kind": "interaction:match",
    "path": "u1/u1l4/interaction/i2",
-   "src": "derived",
+   "src": "authored",
    "ref": null,
    "page": 10,
-   "priority": "high",
-   "priorityAr": "عالية",
-   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
-   "text": "أكمل الآية.\n✔ الْحَيُّ الْقَيُّومُ\n— الْعَلِيُّ الْعَظِيمُ\n— الْغَفُورُ الرَّحِيمُ\n— السَّمِيعُ الْعَلِيمُ\nالتفسير: أول آية الكرسي: ﴿اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ﴾.",
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين لفظ آية الكرسي ومعناه كما شرحه الكتاب.\nالتفسير: هذه معاني الألفاظ كما شرحها الكتاب في ص ١٠.",
    "bookContext": {
     "text": "وَهِيَ أَعْظَمُ آيَةٍ فِي الْقُرْآنِ.",
     "page": 10,
@@ -697,15 +697,15 @@
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l6",
    "lesson": "سورة الكافرون",
-   "kind": "interaction:complete-quran",
+   "kind": "interaction:match",
    "path": "u1/u1l6/interaction/i2",
-   "src": "derived",
+   "src": "authored",
    "ref": null,
    "page": 12,
-   "priority": "high",
-   "priorityAr": "عالية",
-   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
-   "text": "أكمل الآية الأخيرة.\n✔ وَلِيَ دِينِ\n— وَلَنَا دِينُنَا\n— وَلِيَ عَمَلِي\n— وَأَنْتُمْ بَرِيئُونَ\nالتفسير: خاتمة السورة: ﴿لَكُمْ دِينُكُمْ وَلِيَ دِينِ﴾.",
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين لفظ سورة الكافرون ومعناه كما شرحه الكتاب.\nالتفسير: هذه معاني الألفاظ كما شرحها الكتاب في ص ١٢.",
    "bookContext": {
     "text": "وَتُسَنُّ قِرَاءَتُهَا فِي الرَّكْعَةِ الْأُولَى مِنَ السُّنَّةِ الْقَبْلِيَّةِ لِصَلَاةِ الْفَجْرِ.",
     "page": 12,
@@ -4585,6 +4585,29 @@
    "seq": 202,
    "unitId": "u6",
    "unit": "الأخلاق",
+   "lessonId": "u6l1",
+   "lesson": "الصدق",
+   "kind": "quiz:mcq",
+   "path": "u6/u6l1/quiz/q2",
+   "src": "authored",
+   "ref": null,
+   "page": 59,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "عنصر مستحدث يحتاج اعتمادًا قبل النشر.",
+   "text": "آية باب الصدق في الكتاب تأمر بـ:\n✔ تقوى الله والكون مع الصادقين\n— الوفاء بالعهد\n— أداء الأمانات إلى أهلها\n— الصبر واحتساب الأجر\nالتفسير: صدّر الكتاب باب الصدق بقوله تعالى: ﴿يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ﴾ [التوبة: ١١٩]، ص ٥٩.",
+   "bookContext": {
+    "text": "«إِنَّ الصِّدْقَ يَهْدِي إِلَى الْبِرِّ، وَإِنَّ الْبِرَّ يَهْدِي إِلَى الْجَنَّةِ، وَإِنَّ الرَّجُلَ لَيَصْدُقُ حَتَّى يَكُونَ صِدِّيقًا. وَإِنَّ الْكَذِبَ يَهْدِي إِلَى الْفُجُورِ، وَإِنَّ الْفُجُورَ يَهْدِي إِلَى النَّارِ، وَإِنَّ الرَّجُلَ لَيَكْذِبُ حَتَّى يُكْتَبَ عِنْدَ اللهِ كَذَّابًا»",
+    "page": 59,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u6/u6l1"
+  },
+  {
+   "seq": 203,
+   "unitId": "u6",
+   "unit": "الأخلاق",
    "lessonId": "u6l2",
    "lesson": "الصبر",
    "kind": "hook",
@@ -4605,7 +4628,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 203,
+   "seq": 204,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4628,7 +4651,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 204,
+   "seq": 205,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4651,7 +4674,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 205,
+   "seq": 206,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4669,7 +4692,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 206,
+   "seq": 207,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4692,7 +4715,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 207,
+   "seq": 208,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4715,7 +4738,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 208,
+   "seq": 209,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4738,7 +4761,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 209,
+   "seq": 210,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4756,7 +4779,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 210,
+   "seq": 211,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4779,7 +4802,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 211,
+   "seq": 212,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4802,7 +4825,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 212,
+   "seq": 213,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4825,7 +4848,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 213,
+   "seq": 214,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4848,7 +4871,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 214,
+   "seq": 215,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4866,7 +4889,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 215,
+   "seq": 216,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4889,7 +4912,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 216,
+   "seq": 217,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4912,7 +4935,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 217,
+   "seq": 218,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4935,7 +4958,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 218,
+   "seq": 219,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4953,7 +4976,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 219,
+   "seq": 220,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4976,7 +4999,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 220,
+   "seq": 221,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4999,7 +5022,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 221,
+   "seq": 222,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -5022,7 +5045,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 222,
+   "seq": 223,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -5040,7 +5063,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 223,
+   "seq": 224,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -5063,7 +5086,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 224,
+   "seq": 225,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -5086,7 +5109,30 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 225,
+   "seq": 226,
+   "unitId": "u6",
+   "unit": "الأخلاق",
+   "lessonId": "u6l6",
+   "lesson": "الشجاعة",
+   "kind": "quiz:mcq",
+   "path": "u6/u6l6/quiz/q1",
+   "src": "authored",
+   "ref": null,
+   "page": 61,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "عنصر مستحدث يحتاج اعتمادًا قبل النشر.",
+   "text": "آية باب الشجاعة في الكتاب تنهى عن:\n✔ الوهن والحزن\n— الخيانة في الأمانة\n— نقض العهد\n— البخل بالمال\nالتفسير: صدّر الكتاب باب الشجاعة بقوله تعالى: ﴿وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنْتُمُ الْأَعْلَوْنَ إِنْ كُنْتُمْ مُؤْمِنِينَ﴾ [آل عمران: ١٣٩]، ص ٦١.",
+   "bookContext": {
+    "text": "كَانَ النَّبِيُّ ﷺ أَحْسَنَ النَّاسِ وَأَشْجَعَ النَّاسِ وَأَجْوَدَ النَّاسِ، وَلَقَدْ فَزِعَ أَهْلُ الْمَدِينَةِ، فَكَانَ النَّبِيُّ ﷺ سَبَقَهُمْ عَلَى فَرَسٍ.",
+    "page": 61,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u6/u6l6"
+  },
+  {
+   "seq": 227,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -5109,7 +5155,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 226,
+   "seq": 228,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -5132,7 +5178,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 227,
+   "seq": 229,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -5155,7 +5201,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 228,
+   "seq": 230,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -5173,7 +5219,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 229,
+   "seq": 231,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -5196,7 +5242,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 230,
+   "seq": 232,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -5219,7 +5265,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 231,
+   "seq": 233,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -5242,7 +5288,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 232,
+   "seq": 234,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -5260,7 +5306,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 233,
+   "seq": 235,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -5283,7 +5329,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 234,
+   "seq": 236,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -5306,7 +5352,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 235,
+   "seq": 237,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -5329,7 +5375,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 236,
+   "seq": 238,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -5352,7 +5398,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 237,
+   "seq": 239,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -5370,7 +5416,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 238,
+   "seq": 240,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -5393,7 +5439,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 239,
+   "seq": 241,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -5416,7 +5462,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 240,
+   "seq": 242,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -5439,7 +5485,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 241,
+   "seq": 243,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -5457,7 +5503,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 242,
+   "seq": 244,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -5480,7 +5526,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 243,
+   "seq": 245,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -5503,7 +5549,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 244,
+   "seq": 246,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -5526,7 +5572,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 245,
+   "seq": 247,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -5544,7 +5590,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 246,
+   "seq": 248,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5567,7 +5613,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 247,
+   "seq": 249,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5590,7 +5636,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 248,
+   "seq": 250,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5613,7 +5659,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 249,
+   "seq": 251,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5636,7 +5682,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 250,
+   "seq": 252,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5654,7 +5700,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 251,
+   "seq": 253,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5677,7 +5723,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 252,
+   "seq": 254,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5700,7 +5746,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 253,
+   "seq": 255,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5723,7 +5769,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 254,
+   "seq": 256,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5746,7 +5792,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 255,
+   "seq": 257,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5769,7 +5815,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 256,
+   "seq": 258,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5792,7 +5838,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 257,
+   "seq": 259,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5815,7 +5861,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 258,
+   "seq": 260,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5838,7 +5884,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 259,
+   "seq": 261,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5861,7 +5907,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 260,
+   "seq": 262,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5884,7 +5930,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 261,
+   "seq": 263,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5907,7 +5953,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 262,
+   "seq": 264,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5930,7 +5976,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 263,
+   "seq": 265,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5953,7 +5999,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 264,
+   "seq": 266,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5976,7 +6022,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 265,
+   "seq": 267,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5999,7 +6045,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 266,
+   "seq": 268,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -6022,7 +6068,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 267,
+   "seq": 269,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -6045,7 +6091,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 268,
+   "seq": 270,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -6068,7 +6114,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 269,
+   "seq": 271,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -6091,7 +6137,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 270,
+   "seq": 272,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -6114,7 +6160,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 271,
+   "seq": 273,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6137,7 +6183,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 272,
+   "seq": 274,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6160,7 +6206,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 273,
+   "seq": 275,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6183,7 +6229,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 274,
+   "seq": 276,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6206,7 +6252,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 275,
+   "seq": 277,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6229,7 +6275,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 276,
+   "seq": 278,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6252,7 +6298,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 277,
+   "seq": 279,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -6275,7 +6321,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 278,
+   "seq": 280,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -6298,7 +6344,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 279,
+   "seq": 281,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -6321,7 +6367,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 280,
+   "seq": 282,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -6344,7 +6390,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 281,
+   "seq": 283,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -6362,7 +6408,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 282,
+   "seq": 284,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -6380,7 +6426,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 283,
+   "seq": 285,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -6403,7 +6449,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 284,
+   "seq": 286,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -6426,7 +6472,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 285,
+   "seq": 287,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -6449,7 +6495,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 286,
+   "seq": 288,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -6472,7 +6518,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 287,
+   "seq": 289,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -6495,7 +6541,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 288,
+   "seq": 290,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -6518,7 +6564,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 289,
+   "seq": 291,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -6541,7 +6587,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 290,
+   "seq": 292,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -6564,7 +6610,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 291,
+   "seq": 293,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -6587,7 +6633,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 292,
+   "seq": 294,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -6610,7 +6656,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 293,
+   "seq": 295,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6633,7 +6679,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 294,
+   "seq": 296,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6656,7 +6702,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 295,
+   "seq": 297,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6679,7 +6725,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 296,
+   "seq": 298,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6697,20 +6743,20 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 297,
+   "seq": 299,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
    "lesson": "المجاهدة",
-   "kind": "interaction:complete-quran",
+   "kind": "interaction:mcq",
    "path": "u7/u7l11/interaction/i2",
-   "src": "derived",
+   "src": "authored",
    "ref": null,
    "page": 70,
-   "priority": "high",
-   "priorityAr": "عالية",
-   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
-   "text": "أكمل الآية.\n✔ لَنَهْدِيَنَّهُمْ سُبُلَنَا\n— لَنُدْخِلَنَّهُمُ الْجَنَّةَ\n— لَنَغْفِرَنَّ لَهُمْ\n— لَنُثِيبَنَّهُمْ أَجْرًا\nالتفسير: ﴿وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا﴾ [العنكبوت: ٦٩].",
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب.",
+   "text": "الباب الذي صدّر الكتاب هذه الآية به:\n✔ المجاهدة\n— صلة الرحم\n— أذكار النوم\n— واجبات الصلاة\nالتفسير: افتتح الكتاب باب المجاهدة بقوله تعالى: ﴿وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا﴾ [العنكبوت: ٦٩]، ص ٧٠.",
    "bookContext": {
     "text": "«حُجِبَتِ النَّارُ بِالشَّهَوَاتِ، وَحُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ»",
     "page": 71,
@@ -6720,7 +6766,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 298,
+   "seq": 300,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6743,7 +6789,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 299,
+   "seq": 301,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -6766,7 +6812,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 300,
+   "seq": 302,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",
@@ -6789,7 +6835,7 @@
    "route": "#/lesson/u7/u7l12"
   },
   {
-   "seq": 301,
+   "seq": 303,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",
@@ -6812,7 +6858,7 @@
    "route": "#/lesson/u7/u7l12"
   },
   {
-   "seq": 302,
+   "seq": 304,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",

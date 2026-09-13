@@ -5,7 +5,7 @@
 
 import { h, ar, arCount, COUNT_QUESTION, COUNT_CARD, COUNT_MINUTE_GEN,
   icon, ICONS, toast, focusMain, announce } from '../lib/dom.js';
-import { renderCard, renderQuestion, progressBar, ornament, sectionTitle } from './widgets.js';
+import { renderCard, renderQuestion, progressBar, ornament, sectionTitle, provNote } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState, update, saveNow } from '../store.js';
 import * as C from '../lib/content.js';
@@ -116,7 +116,8 @@ export function lessonScreen(unit, lesson, units) {
 
     // ١) مدخل جذّاب
     body.append(h('div', { class: 'card' },
-      h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--warn' }, 'مدخل — صياغة تعليمية مساعدة')),
+      h('div', { class: 'lesson-card__label prov' }, h('span', { class: 'chip chip--warn' }, 'مدخل — صياغة تعليمية مساعدة')),
+      provNote(),
       h('p', { style: { fontSize: 'var(--fs-lg)', margin: 0, lineHeight: '1.9' } }, lesson.hook.text),
     ));
 
@@ -156,7 +157,8 @@ export function lessonScreen(unit, lesson, units) {
 
     // ٥) الخلاصة
     body.append(ornament(), h('div', { class: 'card' },
-      h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--warn' }, 'خلاصة — صياغة تعليمية مساعدة')),
+      h('div', { class: 'lesson-card__label prov' }, h('span', { class: 'chip chip--warn' }, 'خلاصة — صياغة تعليمية مساعدة')),
+      provNote(),
       h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'خلاصة الدرس'),
       h('ul', { style: { margin: 0, paddingInlineStart: '1.2rem', lineHeight: '2' } },
         ...lesson.summary.points.map((t) => h('li', {}, t))),
@@ -186,7 +188,8 @@ export function lessonScreen(unit, lesson, units) {
   /** مسار المراجعة: خلاصة ← بطاقات تذكّر ← نصوص الكتاب (إظهار تدريجي) ← الأسئلة الأساسية. */
   function paintReview() {
     body.append(h('div', { class: 'card' },
-      h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--warn' }, 'خلاصة — صياغة تعليمية مساعدة')),
+      h('div', { class: 'lesson-card__label prov' }, h('span', { class: 'chip chip--warn' }, 'خلاصة — صياغة تعليمية مساعدة')),
+      provNote(),
       h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'خلاصة الدرس'),
       h('ul', { style: { margin: 0, paddingInlineStart: '1.2rem', lineHeight: '2' } },
         ...lesson.summary.points.map((t) => h('li', {}, t))),

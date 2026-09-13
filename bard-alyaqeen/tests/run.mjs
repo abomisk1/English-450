@@ -87,7 +87,7 @@ test('قائمة المراجعة تطابق العناصر المعلَّمة',
   const quranComplete = needsReview.items.filter((i) => i.kind.endsWith(':complete-quran')).length;
   assert.equal(needsReview.count, n + quranComplete);
   assert.equal(needsReview.items.length, n + quranComplete);
-  assert.equal(quranComplete, 4);
+  assert.equal(quranComplete, 0, 'لم تعُد هناك عناصر إكمال قرآني');
 });
 
 test('كل سؤال اختيار له إجابة صحيحة ضمن الخيارات وتفسير', () => {
@@ -354,27 +354,68 @@ test('كل تفاعل مستحدث موسوم authored ومُدرَج في ال�
   }
 });
 
-test('لا يُطلب إكمال نصّ قرآني كتابةً، ولا يُشترط لتقدّم المتعلّم', () => {
-  const bare = (t) => (t || '').replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\s\u2E2B﴿﴾]/g, '');
+test('لا يوجد في البرنامج إكمالٌ لنصّ قرآني بأي صورة', () => {
+  const bare = (t) => (t || '')
+    .replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\u06DD]/g, '')
+    .replace(/[﴿﴾\[\]()«»…．.]/g, '').replace(/[٠-٩0-9]/g, '').replace(/\s+/g, '');
   for (const u of units) for (const l of u.lessons) {
     const quran = l.cards.filter((c) => c.type === 'quran').map((c) => bare(c.text));
-    if (!quran.length) continue;
-    for (const [grp, label] of [[l.interactions, 'interaction'], [l.quiz, 'quiz']]) {
-      for (const q of grp) {
-        if (q.kind !== 'complete') continue;
-        const probe = (bare(q.before) + bare(q.after)).slice(0, 12);
-        if (!probe || !quran.some((t) => t.includes(probe))) continue;
-        // بالاختيار لا بالكتابة: لا بدّ من خيارات جاهزة.
-        assert.ok(Array.isArray(q.options) && q.options.length >= 2, `${l.id}/${q.id}: بلا خيارات`);
-        // ولا يكون في الاختبار المُحتسَب في الدرجة.
-        assert.equal(label, 'interaction', `${l.id}/${q.id}: إكمال آية داخل الاختبار المُحتسَب`);
-        // ويدخل المراجعة بأعلى أولوية.
-        const it = needsReview.items.find((x) => x.lessonId === l.id && x.path.endsWith('/' + q.id));
-        assert.ok(it, `${l.id}/${q.id}: غير مُدرَج في المراجعة`);
-        assert.equal(it.priority, 'high', `${l.id}/${q.id}`);
+    for (const q of [...l.interactions, ...l.quiz]) {
+      if (q.kind !== 'complete') continue;
+      const raw = (q.before || '') + (q.after || '');
+      assert.ok(!raw.includes('﴿') && !raw.includes('﴾'),
+        `${l.id}/${q.id}: إكمال نصّ موسوم بأقواس الآية`);
+      const probe = (bare(q.before) + bare(q.after)).slice(0, 12);
+      if (!probe) continue;
+      assert.ok(!quran.some((t) => t.includes(probe)),
+        `${l.id}/${q.id}: إكمال مقطع قرآني`);
+    }
+  }
+});
+
+test('لا يظهر نصّ قرآني داخل قائمة خيارات — لا صوابًا ولا خطأً', () => {
+  for (const u of units) for (const l of u.lessons) {
+    for (const q of [...l.interactions, ...l.quiz]) {
+      for (const [i, o] of (q.options || []).entries()) {
+        assert.ok(!String(o).includes('﴿') && !String(o).includes('﴾'),
+          `${l.id}/${q.id}: خيار [${i}] فيه نصّ قرآني — ${String(o).slice(0, 40)}`);
+      }
+      // ولا يكون بديلًا خاطئًا في المطابقة أو التصنيف
+      for (const pr of (q.pairs || [])) {
+        assert.ok(!String(pr[1]).includes('﴿'),
+          `${l.id}/${q.id}: نصّ قرآني في بدائل المطابقة`);
+      }
+      for (const g of (q.groups || [])) {
+        for (const it of g.items) {
+          assert.ok(!String(it).includes('﴿'),
+            `${l.id}/${q.id}: نصّ قرآني بين عناصر التصنيف`);
+        }
       }
     }
   }
+});
+
+test('التفاعلات الأربعة المحذوفة لم تعُد موجودة', () => {
+  const gone = [['u1l3', 'i3'], ['u1l4', 'i2'], ['u1l6', 'i2'], ['u7l11', 'i2']];
+  for (const [lid, qid] of gone) {
+    const l = units.flatMap((u) => u.lessons).find((x) => x.id === lid);
+    assert.ok(l, lid);
+    const q = l.interactions.find((x) => x.id === qid);
+    // المعرّف قد يبقى مستعملًا لبديلٍ آمن، والممنوع أن يبقى «إكمال آية».
+    if (q) {
+      assert.notEqual(q.kind, 'complete', `${lid}/${qid}: ما زال إكمال نصّ`);
+      assert.ok(!((q.before || '') + (q.after || '')).includes('﴿'), `${lid}/${qid}`);
+      assert.equal(q.src, 'authored', `${lid}/${qid}: البديل غير موسوم للمراجعة`);
+      assert.equal(q.needsReview, true, `${lid}/${qid}`);
+    }
+  }
+});
+
+test('كل مقطع قرآني في البرنامج داخل الجَرْد المعتمد (بلا نصّ مولَّد)', () => {
+  // نفس منطق scripts/audit_quran.py — يُثبت أنّ الشفرة والمحتوى متّفقان.
+  const report = fs.readFileSync(path.join(ROOT, 'docs/QURAN_AUDIT.md'), 'utf8');
+  assert.ok(/المخالفات: \*\*٠\*\*/.test(report),
+    'تقرير تدقيق القرآن يذكر مخالفات — شغّل: python3 scripts/audit_quran.py');
 });
 
 test('صياغة العدد والمعدود عربية سليمة', () => {

@@ -250,6 +250,56 @@
   ]
  },
  {
+  "device": "mobile",
+  "id": "x12-tabbar-320-large",
+  "title": "شريط التنقّل على ٣٢٠px مع الخط الكبير — بعد الإصلاح",
+  "route": "/#/home",
+  "files": [
+   "mobile-x12-tabbar-320-large.png",
+   "mobile-x12-tabbar-320-large-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x13-more",
+  "title": "صفحة «المزيد» — بقيّة الأقسام بأسماء كاملة",
+  "route": "/#/more",
+  "files": [
+   "mobile-x13-more.png",
+   "mobile-x13-more-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x14-no-prov-label",
+  "title": "واجهة المتعلّم بلا لصيقة «صياغة تعليمية مساعدة»",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "mobile-x14-no-prov-label.png",
+   "mobile-x14-no-prov-label-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x15-review-mode",
+  "title": "وضع مراجعة المحتوى مُفعَّلًا — اللصيقة وشرحها",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "mobile-x15-review-mode.png",
+   "mobile-x15-review-mode-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x16-safe-replacement",
+  "title": "البديل الآمن عن إكمال الآية (مطابقة معاني ألفاظ آية الكرسي)",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "mobile-x16-safe-replacement.png",
+   "mobile-x16-safe-replacement-full.png"
+  ]
+ },
+ {
   "device": "desktop",
   "id": "01-splash",
   "title": "الصفحة الافتتاحية",
@@ -497,6 +547,56 @@
   "files": [
    "desktop-x11-family-home.png",
    "desktop-x11-family-home-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x12-tabbar-320-large",
+  "title": "شريط التنقّل على ٣٢٠px مع الخط الكبير — بعد الإصلاح",
+  "route": "/#/home",
+  "files": [
+   "desktop-x12-tabbar-320-large.png",
+   "desktop-x12-tabbar-320-large-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x13-more",
+  "title": "صفحة «المزيد» — بقيّة الأقسام بأسماء كاملة",
+  "route": "/#/more",
+  "files": [
+   "desktop-x13-more.png",
+   "desktop-x13-more-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x14-no-prov-label",
+  "title": "واجهة المتعلّم بلا لصيقة «صياغة تعليمية مساعدة»",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "desktop-x14-no-prov-label.png",
+   "desktop-x14-no-prov-label-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x15-review-mode",
+  "title": "وضع مراجعة المحتوى مُفعَّلًا — اللصيقة وشرحها",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "desktop-x15-review-mode.png",
+   "desktop-x15-review-mode-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x16-safe-replacement",
+  "title": "البديل الآمن عن إكمال الآية (مطابقة معاني ألفاظ آية الكرسي)",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "desktop-x16-safe-replacement.png",
+   "desktop-x16-safe-replacement-full.png"
   ]
  }
 ]
