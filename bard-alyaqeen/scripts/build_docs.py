@@ -133,7 +133,7 @@ w('|---|---|---|---|')
 for it in review['items']:
     if it['src'] != 'quran':
         continue
-    ex = it['excerpt'].replace('|', '/')[:90]
+    ex = it['text'].replace('|', '/').replace('\n', ' ')[:90]
     w(f"| `{it['path']}` | {it.get('ref') or '—'} | {ar(it['page']) if it.get('page') else '—'} | {ex}… |")
 w('')
 w('> لكل نصّ قرآني بطاقةٌ في البرنامج تحمل `needsReview: true`، '
@@ -144,13 +144,13 @@ w('> لكل نصّ قرآني بطاقةٌ في البرنامج تحمل `needs
 w('## الصياغات التعليمية المساعدة\n')
 w('هذه ليست من الكتاب، وهي بصياغة تعليمية تُعين على الفهم والتشويق. '
   'وتظهر في الواجهة بلصيقة صفراء واضحة: «صياغة تعليمية مساعدة».\n')
-w('| الموضع | النوع | ص | مطلع النصّ |')
-w('|---|---|---|---|')
+w('| الموضع | النوع | الأولوية | ص | مطلع النصّ |')
+w('|---|---|---|---|---|')
 for it in review['items']:
     if it['src'] != 'authored':
         continue
-    ex = it['excerpt'].replace('|', '/').replace('\n', ' ')[:90]
-    w(f"| `{it['path']}` | {NA.get(it['kind'], it['kind'])} | "
+    ex = it['text'].replace('|', '/').replace('\n', ' ')[:90]
+    w(f"| `{it['path']}` | {NA.get(it['kind'], it['kind'])} | {it['priorityAr']} | "
       f"{ar(it['page']) if it.get('page') else '—'} | {ex}… |")
 w('')
 

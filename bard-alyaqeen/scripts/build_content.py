@@ -57,36 +57,104 @@ PROGRAM = {
 }
 
 
-def walk_review(unit):
-    """يجمع كل عنصر يحتاج إلى مراجعة شرعية داخل وحدة."""
-    out = []
+# أولوية المراجعة وسببها لكل نوع عنصر.
+#   high   : خطؤه يمسّ نصًّا شرعيًّا أو يُحتسب في درجة المتعلّم.
+#   medium : محتوى تعليمي يُعرض داخل الدرس ويؤثّر في الفهم.
+#   low    : إطار تربوي حول الدرس لا يضيف حكمًا.
+PRIORITY = {
+    "card:quran":          ("high", "نصّ قرآني كُتب بالرسم المعتمد ولم يُستخرج من ملف الكتاب؛ "
+                                    "يحتاج تدقيقًا حرفيًّا وتشكيليًّا وتحقّقًا من حدود المقطع."),
+    "quiz:scenario":       ("high", "موقف تطبيقي يُحتسب في درجة المتعلّم؛ "
+                                    "يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب."),
+    "interaction:scenario": ("medium", "موقف تطبيقي بصياغة مستحدثة يُعرض داخل الدرس؛ "
+                                       "يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب."),
+    "card:note":           ("medium", "ملحوظة تعليمية مستحدثة تُعرض ضمن محتوى الدرس؛ "
+                                      "يحتاج تأكيد أنها لا تضيف حكمًا ولا تفسيرًا من خارج الكتاب."),
+    "summary":             ("medium", "خلاصة مستحدثة تلخّص الدرس؛ "
+                                      "يحتاج تأكيد أنها لا تخلّ بمعنى النصّ ولا تختصره اختصالًا مخلًّا."),
+    "hook":                ("low", "مدخل تشويقي مستحدث ليس من الكتاب؛ يحتاج إقرار الصياغة والأسلوب."),
+    "objective":           ("low", "هدف إجرائي مستحدث للدرس؛ يحتاج إقرار الصياغة."),
+    "family":              ("low", "اقتراح نشاط أسري مستحدث؛ يحتاج إقرار الصياغة."),
+}
 
-    def push(kind, path, obj, text=None, ref=None, page=None):
+PRIORITY_AR = {"high": "عالية", "medium": "متوسطة", "low": "منخفضة"}
+
+
+def _book_anchor(lesson):
+    """أقرب نصّ منقول من الكتاب داخل الدرس، ليُعرض بجوار الصياغة المستحدثة."""
+    for c in lesson.get("cards", []):
+        if c.get("src") == "book" and c.get("type") != "note":
+            txt = c.get("text") or " | ".join(
+                "%s: %s" % (i["term"], i["def"]) for i in (c.get("items") or []))
+            if txt:
+                return {"text": txt[:600], "page": c.get("page"), "cardId": c.get("id"),
+                        "type": c.get("type")}
+    for c in lesson.get("cards", []):
+        if c.get("type") in ("hadith", "dhikr") and c.get("text"):
+            return {"text": c["text"][:600], "page": c.get("page"), "cardId": c.get("id"),
+                    "type": c.get("type")}
+    return None
+
+
+def walk_review(unit):
+    """يجمع كل عنصر يحتاج إلى مراجعة شرعية داخل وحدة، مع ما يلزم المراجعَ."""
+    out = []
+    seq = [0]
+
+    def push(kind, lesson, path, obj, text=None, ref=None, page=None, anchor=None):
+        prio, reason = PRIORITY.get(kind, ("medium", "عنصر مستحدث يحتاج اعتمادًا قبل النشر."))
+        seq[0] += 1
         out.append({
-            "unit": unit["id"], "kind": kind, "path": path,
+            "seq": seq[0],
+            "unitId": unit["id"],
+            "unit": unit["shortTitle"],
+            "lessonId": lesson["id"],
+            "lesson": lesson["title"],
+            "kind": kind,
+            "path": path,
             "src": obj.get("src") if isinstance(obj, dict) else None,
-            "ref": ref, "page": page,
-            "excerpt": (text or "")[:400],
+            "ref": ref,
+            "page": page,
+            "priority": prio,
+            "priorityAr": PRIORITY_AR[prio],
+            "reason": reason,
+            # النصّ كاملًا — لا يُقتطع، لأنّ المراجع يحتاج قراءته ثم تحريره.
+            "text": text or "",
+            # مرساة من الكتاب تُعرض بجوار الصياغة المستحدثة (متى أمكن).
+            "bookContext": anchor,
+            # موضع ظهوره في واجهة المتعلّم.
+            "route": "#/lesson/%s/%s" % (unit["id"], lesson["id"]),
         })
 
     for lesson in unit["lessons"]:
         base = "%s/%s" % (unit["id"], lesson["id"])
+        anchor = _book_anchor(lesson)
         for key in ("hook", "objective", "summary", "family"):
             node = lesson.get(key)
             if node and node.get("needsReview"):
-                txt = node.get("text") or " | ".join(node.get("points", []))
-                push(key, "%s/%s" % (base, key), node, txt, page=lesson["source"]["pages"][0])
+                txt = node.get("text") or "\n".join("• " + p for p in node.get("points", []))
+                push(key, lesson, "%s/%s" % (base, key), node, txt,
+                     page=lesson["source"]["pages"][0], anchor=anchor)
         for c in lesson["cards"]:
             if c.get("needsReview"):
-                txt = c.get("text") or " | ".join(
+                txt = c.get("text") or "\n".join(
                     "%s: %s" % (i["term"], i["def"]) for i in (c.get("items") or []))
-                push("card:" + c["type"], "%s/cards/%s" % (base, c["id"]), c,
-                     txt, c.get("ref"), c.get("page"))
+                push("card:" + c["type"], lesson, "%s/cards/%s" % (base, c["id"]), c,
+                     txt, c.get("ref"), c.get("page"),
+                     anchor=None if c["type"] == "quran" else anchor)
         for group, label in ((lesson["interactions"], "interaction"), (lesson["quiz"], "quiz")):
             for q in group:
                 if q.get("needsReview"):
-                    push(label + ":" + q["kind"], "%s/%s/%s" % (base, label, q["id"]),
-                         q, q.get("prompt"), None, q.get("page"))
+                    body = q.get("prompt", "")
+                    if q.get("options"):
+                        body += "\n" + "\n".join(
+                            ("✔ " if i == q.get("answer") else "— ") + o
+                            for i, o in enumerate(q["options"]))
+                    if q.get("why"):
+                        body += "\nالتفسير: " + q["why"]
+                    push(label + ":" + q["kind"], lesson,
+                         "%s/%s/%s" % (base, label, q["id"]),
+                         q, body, None, q.get("page"), anchor=anchor)
     return out
 
 
@@ -137,12 +205,19 @@ def main():
     with open(os.path.join(CONTENT, "manifest.json"), "w", encoding="utf-8") as f:
         json.dump(manifest, f, ensure_ascii=False, indent=1)
 
+    # ترقيم تسلسلي عامّ عبر كل الوحدات
+    for i, it in enumerate(review, 1):
+        it["seq"] = i
+    by_priority = {}
+    for it in review:
+        by_priority[it["priority"]] = by_priority.get(it["priority"], 0) + 1
     with open(os.path.join(CONTENT, "needs-review.json"), "w", encoding="utf-8") as f:
         json.dump({
             "generatedFrom": "scripts/build_content.py",
             "policy": "كل نصّ قرآني (src=quran) وكل صياغة تعليمية مساعدة (src=authored) "
                       "يحتاج إلى مراجعة واعتماد قبل النشر.",
             "count": len(review),
+            "byPriority": by_priority,
             "items": review,
         }, f, ensure_ascii=False, indent=1)
 

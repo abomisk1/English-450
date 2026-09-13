@@ -31,7 +31,7 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
 
 /* ------------------------- المسار الكامل ------------------------- */
 {
-  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ar' });
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ar', acceptDownloads: true });
   const page = await ctx.newPage();
   const errors = [];
   page.on('pageerror', (e) => errors.push(String(e)));
@@ -238,10 +238,81 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert(JSON.stringify(before) === JSON.stringify(after), 'ضاع التقدّم');
   });
 
-  await check('لوحة الإدارة تعرض قائمة المراجعة الشرعية', async () => {
+  await check('لوحة المراجعة: العرض والتصفية الرباعية', async () => {
     await page.goto(BASE + '/admin/index.html', { waitUntil: 'networkidle' });
-    await page.waitForSelector('text=حالة المراجعة الشرعية', { timeout: 6000 });
-    assert((await page.locator('text=بانتظار المراجعة').count()) > 0);
+    await page.waitForSelector('.rv', { timeout: 8000 });
+    assert((await page.locator('#rv-count').innerText()).includes('٢٦٠'), 'العدّاد لا يعرض ٢٦٠');
+    for (const [sel, val, expect] of [
+      ['select[aria-label="الأولوية"]', 'high', '٢٤'],
+      ['select[aria-label="الوحدة"]', 'u2', null],
+      ['select[aria-label="نوع العنصر"]', 'hook', null],
+      ['select[aria-label="حالة الاعتماد"]', 'pending', null],
+    ]) {
+      await page.click('text=إعادة ضبط التصفية');
+      await page.waitForTimeout(180);
+      await page.selectOption(sel, val);
+      await page.waitForTimeout(280);
+      const n = await page.locator('#rv-count').innerText();
+      assert(/[٠-٩]/.test(n), `${sel}: لا عدّاد`);
+      if (expect) assert(n.includes(expect), `${sel}: توقّعت ${expect} فوجدت ${n}`);
+    }
+  });
+
+  await check('لوحة المراجعة: البحث يبرز المطابقات', async () => {
+    await page.click('text=إعادة ضبط التصفية');
+    await page.fill('input[type="search"]', 'الوضوء');
+    await page.waitForTimeout(450);
+    assert((await page.locator('mark.hit').count()) > 0, 'لا إبراز للمطابقات');
+  });
+
+  await check('لوحة المراجعة: نصّ الكتاب المرجعي ورابط الانتقال', async () => {
+    await page.click('text=إعادة ضبط التصفية');
+    await page.waitForTimeout(300);
+    assert((await page.locator('.rv__anchor').count()) > 0, 'لا يظهر نصّ الكتاب المرجعي');
+    const link = page.locator('a:has-text("موضعه في البرنامج")').first();
+    assert(await link.count() > 0, 'لا رابط انتقال');
+    assert((await link.getAttribute('href')).includes('#/lesson/'), 'الرابط لا يشير إلى درس');
+  });
+
+  await check('لوحة المراجعة: التحرير والملاحظة والاعتماد تُحفظ', async () => {
+    await page.click('text=إعادة ضبط التصفية');
+    await page.waitForTimeout(300);
+    const card = page.locator('.rv').first();
+    await card.locator('text=تحرير النصّ').click();
+    await card.locator('textarea.rv__edit').fill('نصّ اختبار');
+    await card.locator('textarea[aria-label="ملاحظة المراجع"]').fill('ملاحظة اختبار');
+    await card.locator('text=✓ معتمَد').click();
+    await page.waitForTimeout(350);
+    const saved = await page.evaluate(() => {
+      const d = JSON.parse(localStorage.getItem('bay.review.v2') || '{}');
+      return Object.values(d)[0];
+    });
+    assert(saved && saved.status === 'approved', 'لم تُحفظ حالة الاعتماد');
+    assert(saved.note === 'ملاحظة اختبار', 'لم تُحفظ الملاحظة');
+    assert(saved.edited === 'نصّ اختبار', 'لم يُحفظ النصّ المحرَّر');
+    await page.evaluate(() => localStorage.removeItem('bay.review.v2'));
+  });
+
+  await check('لوحة المراجعة: التصدير يُنتج ملفًا بكل الأعمدة', async () => {
+    await page.goto(BASE + '/admin/index.html', { waitUntil: 'networkidle' });
+    await page.waitForSelector('.rv');
+    await page.click('text=التصدير');
+    await page.waitForTimeout(250);
+    const [dl] = await Promise.all([
+      page.waitForEvent('download', { timeout: 8000 }),
+      page.click('text=⬇ تصدير CSV (كل العناصر)'),
+    ]);
+    const p2 = await dl.path();
+    const txt = fs.readFileSync(p2, 'utf8');
+    const head = txt.split('\r\n')[0];
+    for (const col of ['م', 'الوحدة', 'الدرس', 'نوع العنصر', 'النص', 'المصدر', 'صفحة الكتاب',
+      'سبب الحاجة إلى المراجعة', 'الأولوية', 'حالة الاعتماد', 'الملاحظات']) {
+      assert(head.includes(col), `عمود ناقص: ${col}`);
+    }
+    assert(txt.split('\r\n').length - 1 >= 260, 'عدد الصفوف أقل من ٢٦٠');
+  });
+
+  await check('لوحة المراجعة: خريطة المحتوى تعرض الوحدات السبع', async () => {
     await page.click('text=خريطة المحتوى');
     await page.waitForSelector('.tbl');
     assert((await page.locator('.tbl').count()) === 7, 'خريطة المحتوى ناقصة');
@@ -429,7 +500,9 @@ for (const [label, opts] of [
 ]) {
   const ctx = await browser.newContext({ viewport: { width: 390, height: 900 }, locale: 'ar', ...opts });
   const page = await ctx.newPage();
-  await check(`${label}: تباين النصوص يستوفي WCAG AA`, async () => {
+  // فحص محدود لعناصر النصّ الأساسية (انحدار). الفحص الشامل لكل عنصر ظاهر
+  // في كل الشاشات موجود في tests/visual-audit.mjs، وقد كشف عيوبًا مذكورة في docs/DEFECTS.md.
+  await check(`${label}: تباين عناصر النصّ الأساسية (فحص انحدار محدود)`, async () => {
     for (const r of CONTRAST_ROUTES) {
       await page.goto(BASE + r, { waitUntil: 'networkidle' });
       await page.waitForTimeout(250);

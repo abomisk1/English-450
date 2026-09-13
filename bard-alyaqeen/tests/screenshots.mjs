@@ -1,28 +1,40 @@
-/** التقاط صور الشاشات على الجوال والحاسب. */
+/**
+ * الدليل البصري — يلتقط الشاشات الأربع عشرة المطلوبة للمراجعة،
+ * على الجوال (٣٩٠×٨٤٤) والحاسب (١٢٨٠×٩٠٠).
+ *
+ * لكل شاشة صورتان:
+ *   *-full.png      الصفحة كاملة (للاطّلاع على كل المحتوى)
+ *   *.png           بمقاس الشاشة (لرؤية الشريط العلوي والسفلي في موضعهما الحقيقي)
+ *
+ * التشغيل:  node scripts/serve.mjs &  ثم  node tests/screenshots.mjs
+ */
 import { chromium } from 'playwright';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const BASE = process.env.BASE || 'http://localhost:8123';
 const OUT = path.resolve('docs/screenshots');
+fs.rmSync(OUT, { recursive: true, force: true });
 fs.mkdirSync(OUT, { recursive: true });
 
 const EXEC = process.env.CHROMIUM_PATH || '/opt/pw-browsers/chromium-1194/chrome-linux/chrome';
-const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EXEC } : {});
+const browser = await chromium.launch({ executablePath: fs.existsSync(EXEC) ? EXEC : undefined });
 
-/** حالة تقدّم واقعية لتظهر الشاشات بمحتوى حقيقي. */
+/** حالة تقدّم واقعية لتظهر الشاشات بمحتوى حيّ لا فارغ. */
 const SEED = {
   version: 1, createdAt: Date.now(), updatedAt: Date.now(), onboarded: true,
   prefs: { sessionLength: 'standard', detail: 'standard', largeText: false, audio: false,
     highContrast: false, theme: 'system', familyMode: true, reduceMotion: false, fontScale: 1 },
   lessons: {
-    u1l1: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 3e8 },
-    u1l2: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 2e8 },
-    u1l3: { seen: true, quizBest: 80, quizAttempts: 2, completedAt: Date.now() - 1e8 },
+    u1l1: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 4e8 },
+    u1l2: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 3e8 },
+    u1l3: { seen: true, quizBest: 80, quizAttempts: 2, completedAt: Date.now() - 2e8 },
     u1l4: { seen: true, quizBest: 60, quizAttempts: 1, completedAt: null },
-    u2l0: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 5e7 },
+    u2l0: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 1e8 },
+    u2l1: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 5e7 },
   },
-  tasks: { 'u1/t1': { doneAt: Date.now() - 1e8 }, 'u1/t3': { doneAt: Date.now() - 2e7 } },
+  tasks: { 'u1/t1': { doneAt: Date.now() - 2e8 }, 'u1/t3': { doneAt: Date.now() - 4e7 },
+    'u2/t2': { doneAt: Date.now() - 2e7 } },
   review: {
     'u1/u1l4/q2': { ease: 2.5, interval: 0, due: Date.now() - 1000, reps: 1, lapses: 1, step: 0 },
     'u1/u1l3/q5': { ease: 2.5, interval: 0, due: Date.now() - 2000, reps: 1, lapses: 1, step: 0 },
@@ -33,99 +45,143 @@ const SEED = {
     { at: Date.now() - 1e7, kind: 'quiz', ref: { percent: 100 } },
     { at: Date.now() - 2e7, kind: 'task', ref: {} },
     { at: Date.now() - 3e7, kind: 'lesson-complete', ref: {} },
+    { at: Date.now() - 5e7, kind: 'review', ref: { count: 4, percent: 75 } },
   ],
   badges: { 'first-lesson': Date.now(), mastery: Date.now(), 'task-done': Date.now() },
   lastPosition: { unitId: 'u1', lessonId: 'u1l4', lessonTitle: 'آية الكرسي' },
-  streak: { count: 4, lastDay: new Date().setHours(0, 0, 0, 0), best: 6 },
-  stats: { lessonsCompleted: 4, quizPassed: 4, tasksDone: 2, reviewsDone: 7, reviewDays: 3 },
+  streak: { count: 5, lastDay: new Date().setHours(0, 0, 0, 0), best: 7 },
+  stats: { lessonsCompleted: 5, quizPassed: 5, tasksDone: 3, reviewsDone: 9, reviewDays: 3 },
 };
 
+/**
+ * الشاشات الأربع عشرة المطلوبة.
+ * prep: خطوات تُنفَّذ قبل الالتقاط · scroll: عنصر يُمرَّر إليه · prefs: تعديل تفضيلات
+ */
 const SHOTS = [
-  ['01-splash', '/', 'الشاشة الافتتاحية', true],
-  ['02-setup', '/#/setup', 'التهيئة الأولية', true],
-  ['03-home', '/#/home', 'الصفحة الرئيسة ومسار التعلّم'],
-  ['04-units', '/#/units', 'صفحة الوحدات'],
-  ['05-unit', '/#/unit/u1', 'وحدة: تفسير ما يتكرر'],
-  ['06-lesson', '/#/lesson/u1/u1l3', 'شاشة الدرس التفاعلي (سورة الفاتحة)'],
-  ['07-lesson-fiqh', '/#/lesson/u4/u4l7', 'درس: واجبات الصلاة'],
-  ['08-quiz', '/#/quiz/u1/u1l3', 'شاشة الاختبار والتغذية الراجعة'],
-  ['09-tasks', '/#/tasks', 'المهام الأدائية'],
-  ['10-review', '/#/review', 'المراجعة الذكية'],
-  ['11-progress', '/#/progress', 'الإنجاز والتقدّم'],
-  ['12-bookmarks', '/#/bookmarks', 'المفضلة والعلامات المرجعية'],
-  ['13-search', '/#/search', 'البحث داخل المحتوى'],
-  ['14-settings', '/#/settings', 'الإعدادات وإمكانية الوصول'],
-  ['15-admin', '/admin/index.html', 'لوحة إدارة المحتوى والمراجعة الشرعية'],
+  { id: '01-splash', title: 'الصفحة الافتتاحية', route: '/', fresh: true },
+  { id: '02-setup', title: 'التهيئة الأولى واختيار نمط التعلّم', route: '/#/setup', fresh: true,
+    prep: async (p) => {
+      await p.locator('.choice', { hasText: 'عشر دقائق' }).click();
+      await p.locator('.choice', { hasText: 'متوسّط' }).click();
+    } },
+  { id: '03-home', title: 'الصفحة الرئيسة ومسار التعلّم', route: '/#/home' },
+  { id: '04-units', title: 'قائمة الوحدات السبع', route: '/#/units' },
+  { id: '05-lesson-quran', title: 'درس يحتوي على آية قرآنية (آية الكرسي)', route: '/#/lesson/u1/u1l4',
+    scroll: '.quran' },
+  { id: '06-lesson-fiqh', title: 'درس فقهي (واجبات الصلاة والفرق بين الركن والواجب)',
+    route: '/#/lesson/u4/u4l7', scroll: '.deflist' },
+  { id: '07-activity', title: 'نشاط تفاعلي (مطابقة + ترتيب) مع التغذية الراجعة',
+    route: '/#/lesson/u4/u4l7',
+    prep: async (p) => {
+      const q = p.locator('.q').first();
+      await q.scrollIntoViewIfNeeded();
+      const sels = q.locator('select');
+      const n = await sels.count();
+      if (n) {
+        // نملأ المطابقة إجابةً صحيحة ثم نتحقّق
+        const pairs = [['الركوع', 'سُبْحَانَ رَبِّيَ الْعَظِيمِ'],
+          ['السجود', 'سُبْحَانَ رَبِّيَ الْأَعْلَى'],
+          ['بين السجدتين', 'رَبِّ اغْفِرْ لِي']];
+        for (let i = 0; i < n; i++) {
+          const label = await q.locator('.match__term').nth(i).innerText();
+          const want = (pairs.find((x) => label.includes(x[0])) || [])[1];
+          if (want) await sels.nth(i).selectOption({ label: want });
+        }
+        await q.locator('button', { hasText: 'تحقّق' }).click();
+      } else {
+        await q.locator('.opt').first().click();
+      }
+      await p.waitForTimeout(400);
+    },
+    scroll: '.feedback' },
+  { id: '08-quiz', title: 'اختبار مع التغذية الراجعة الفورية', route: '/#/quiz/u1/u1l3',
+    prep: async (p) => {
+      await p.waitForSelector('.opt');
+      await p.locator('.opt').first().click();
+      await p.waitForSelector('.feedback');
+      await p.waitForTimeout(300);
+    } },
+  { id: '09-tasks', title: 'المهام الأدائية', route: '/#/tasks' },
+  { id: '10-progress', title: 'صفحة التقدّم والإنجاز', route: '/#/progress' },
+  { id: '11-large-text', title: 'وضع الخط الكبير (قراءة مريحة لكبار السن)',
+    route: '/#/lesson/u1/u1l3',
+    prefs: { largeText: true, fontScale: 1.2 }, scroll: '.quran' },
+  { id: '12-dark', title: 'الوضع الداكن', route: '/#/lesson/u1/u1l4',
+    prefs: { theme: 'dark' }, colorScheme: 'dark', scroll: '.quran' },
+  { id: '13-admin', title: 'لوحة مراجعة المحتوى', route: '/admin/index.html', raw: true },
+  { id: '14-review-filtered', title: 'لوحة المراجعة — تصفية بالأولوية العالية',
+    route: '/admin/index.html', raw: true,
+    prep: async (p) => {
+      await p.waitForSelector('.rv');
+      await p.selectOption('select[aria-label="الأولوية"]', 'high');
+      await p.waitForTimeout(500);
+    } },
 ];
 
-async function shoot(device, viewport, prefix, extra = {}) {
-  const ctx = await browser.newContext({ viewport, locale: 'ar', deviceScaleFactor: 1, ...extra });
-  // نزرع الحالة قبل تنفيذ أي شفرة في الصفحة، حتى لا يكتبها الحفظ التلقائي للصفحة السابقة.
-  await ctx.addInitScript((seed) => {
-    try { localStorage.setItem('bay.state.v1', JSON.stringify(seed)); } catch (_) {}
-  }, SEED);
-  const page = await ctx.newPage();
+const EXTRA = [
+  { id: 'x1-unit', title: 'صفحة وحدة (تفسير ما يتكرر)', route: '/#/unit/u1' },
+  { id: 'x2-review', title: 'المراجعة الذكية', route: '/#/review' },
+  { id: 'x3-search', title: 'البحث داخل المحتوى', route: '/#/search',
+    prep: async (p) => { await p.fill('input[type="search"]', 'الوضوء'); await p.waitForTimeout(450); } },
+  { id: 'x4-settings', title: 'الإعدادات وإمكانية الوصول', route: '/#/settings' },
+  { id: 'x5-adhkar', title: 'درس الأذكار (أذكار الصباح)', route: '/#/lesson/u5/u5l1' },
+  { id: 'x6-family', title: 'الوضع الأسري داخل الدرس', route: '/#/lesson/u1/u1l3',
+    scroll: '.card[style*="soft-brand"]' },
+];
 
-  for (const [name, route, , fresh] of SHOTS) {
-    if (fresh) {
-      await ctx.addInitScript(() => {
-        try {
-          const s = JSON.parse(localStorage.getItem('bay.state.v1') || '{}');
-          s.onboarded = false; localStorage.setItem('bay.state.v1', JSON.stringify(s));
-        } catch (_) {}
-      });
+const manifest = [];
+
+async function capture(device, viewport, shots) {
+  for (const s of shots) {
+    const seed = JSON.parse(JSON.stringify(SEED));
+    if (s.prefs) Object.assign(seed.prefs, s.prefs);
+    if (s.fresh) seed.onboarded = false;
+
+    const ctx = await browser.newContext({
+      viewport, locale: 'ar', deviceScaleFactor: 1,
+      colorScheme: s.colorScheme || 'light',
+    });
+    await ctx.addInitScript((st) => {
+      try { localStorage.setItem('bay.state.v1', JSON.stringify(st)); } catch (_) {}
+    }, seed);
+    const page = await ctx.newPage();
+    await page.goto(BASE + s.route, { waitUntil: 'networkidle' });
+    await page.waitForTimeout(650);
+    if (s.prep) { try { await s.prep(page); } catch (e) { console.warn(' تعذّر التحضير:', s.id, e.message); } }
+    if (s.scroll) {
+      try { await page.locator(s.scroll).first().scrollIntoViewIfNeeded(); await page.waitForTimeout(350); }
+      catch (_) {}
     }
-    await page.goto(BASE + route, { waitUntil: 'networkidle' });
-    await page.waitForTimeout(700);
-    if (route.includes('/quiz/')) {
-      const opt = page.locator('.opt').first();
-      if (await opt.count()) { await opt.click(); await page.waitForTimeout(400); }
-    }
-    if (route.includes('/search')) {
-      await page.fill('input[type="search"]', 'الوضوء');
-      await page.waitForTimeout(450);
-    }
-    await page.screenshot({ path: path.join(OUT, `${prefix}-${name}.png`), fullPage: true });
-    if (['03-home', '06-lesson', '09-tasks'].includes(name)) {
-      await page.screenshot({ path: path.join(OUT, `${prefix}-${name}-viewport.png`) });
-    }
+    const base = `${device}-${s.id}`;
+    await page.screenshot({ path: path.join(OUT, `${base}.png`) });
+    await page.screenshot({ path: path.join(OUT, `${base}-full.png`), fullPage: true });
+    manifest.push({ device, id: s.id, title: s.title, route: s.route,
+      files: [`${base}.png`, `${base}-full.png`] });
+    await ctx.close();
   }
-  await ctx.close();
 }
 
-await shoot('mobile', { width: 390, height: 844 }, 'mobile');
-await shoot('desktop', { width: 1280, height: 900 }, 'desktop');
+console.log('› الجوال ٣٩٠×٨٤٤ …');
+await capture('mobile', { width: 390, height: 844 }, [...SHOTS, ...EXTRA]);
+console.log('› الحاسب ١٢٨٠×٩٠٠ …');
+await capture('desktop', { width: 1280, height: 900 }, [...SHOTS, ...EXTRA]);
 
-// لقطة للوضع الداكن ووضع القراءة المريح على الجوال
-{
-  const ctx = await browser.newContext({
-    viewport: { width: 390, height: 844 }, locale: 'ar', deviceScaleFactor: 1,
-    colorScheme: 'dark',
-  });
-  await ctx.addInitScript((seed) => {
-    try {
-      localStorage.setItem('bay.state.v1',
-        JSON.stringify({ ...seed, prefs: { ...seed.prefs, theme: 'dark' } }));
-    } catch (_) {}
+// لقطة مقارنة: نفس الدرس على ثلاثة مقاسات
+console.log('› مقارنة المقاسات …');
+for (const [name, w, h] of [['320', 320, 640], ['768', 768, 1024], ['1920', 1920, 1080]]) {
+  const ctx = await browser.newContext({ viewport: { width: w, height: h }, locale: 'ar', deviceScaleFactor: 1 });
+  await ctx.addInitScript((st) => {
+    try { localStorage.setItem('bay.state.v1', JSON.stringify(st)); } catch (_) {}
   }, SEED);
   const page = await ctx.newPage();
   await page.goto(BASE + '/#/lesson/u1/u1l4', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(700);
-  await page.screenshot({ path: path.join(OUT, 'mobile-16-dark-lesson.png'), fullPage: true });
-
-  await ctx.addInitScript((seed) => {
-    try {
-      localStorage.setItem('bay.state.v1', JSON.stringify({ ...seed,
-        prefs: { ...seed.prefs, theme: 'light', largeText: true, fontScale: 1.2 } }));
-    } catch (_) {}
-  }, SEED);
-  await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
-  await page.waitForTimeout(700);
-  await page.screenshot({ path: path.join(OUT, 'mobile-17-large-text.png'), fullPage: true });
+  await page.waitForTimeout(600);
+  await page.screenshot({ path: path.join(OUT, `size-${name}-lesson.png`) });
   await ctx.close();
 }
 
 await browser.close();
-const files = fs.readdirSync(OUT).sort();
-console.log(`تم التقاط ${files.length} صورة في docs/screenshots:`);
-console.log(files.join('\n'));
+
+fs.writeFileSync(path.join(OUT, 'index.json'), JSON.stringify(manifest, null, 1));
+const files = fs.readdirSync(OUT).filter((f) => f.endsWith('.png'));
+console.log(`\nالتُقطت ${files.length} صورة في docs/screenshots/`);

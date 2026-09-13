@@ -1,0 +1,402 @@
+[
+ {
+  "device": "mobile",
+  "id": "01-splash",
+  "title": "الصفحة الافتتاحية",
+  "route": "/",
+  "files": [
+   "mobile-01-splash.png",
+   "mobile-01-splash-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "02-setup",
+  "title": "التهيئة الأولى واختيار نمط التعلّم",
+  "route": "/#/setup",
+  "files": [
+   "mobile-02-setup.png",
+   "mobile-02-setup-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "03-home",
+  "title": "الصفحة الرئيسة ومسار التعلّم",
+  "route": "/#/home",
+  "files": [
+   "mobile-03-home.png",
+   "mobile-03-home-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "04-units",
+  "title": "قائمة الوحدات السبع",
+  "route": "/#/units",
+  "files": [
+   "mobile-04-units.png",
+   "mobile-04-units-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "05-lesson-quran",
+  "title": "درس يحتوي على آية قرآنية (آية الكرسي)",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "mobile-05-lesson-quran.png",
+   "mobile-05-lesson-quran-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "06-lesson-fiqh",
+  "title": "درس فقهي (واجبات الصلاة والفرق بين الركن والواجب)",
+  "route": "/#/lesson/u4/u4l7",
+  "files": [
+   "mobile-06-lesson-fiqh.png",
+   "mobile-06-lesson-fiqh-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "07-activity",
+  "title": "نشاط تفاعلي (مطابقة + ترتيب) مع التغذية الراجعة",
+  "route": "/#/lesson/u4/u4l7",
+  "files": [
+   "mobile-07-activity.png",
+   "mobile-07-activity-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "08-quiz",
+  "title": "اختبار مع التغذية الراجعة الفورية",
+  "route": "/#/quiz/u1/u1l3",
+  "files": [
+   "mobile-08-quiz.png",
+   "mobile-08-quiz-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "09-tasks",
+  "title": "المهام الأدائية",
+  "route": "/#/tasks",
+  "files": [
+   "mobile-09-tasks.png",
+   "mobile-09-tasks-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "10-progress",
+  "title": "صفحة التقدّم والإنجاز",
+  "route": "/#/progress",
+  "files": [
+   "mobile-10-progress.png",
+   "mobile-10-progress-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "11-large-text",
+  "title": "وضع الخط الكبير (قراءة مريحة لكبار السن)",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "mobile-11-large-text.png",
+   "mobile-11-large-text-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "12-dark",
+  "title": "الوضع الداكن",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "mobile-12-dark.png",
+   "mobile-12-dark-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "13-admin",
+  "title": "لوحة مراجعة المحتوى",
+  "route": "/admin/index.html",
+  "files": [
+   "mobile-13-admin.png",
+   "mobile-13-admin-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "14-review-filtered",
+  "title": "لوحة المراجعة — تصفية بالأولوية العالية",
+  "route": "/admin/index.html",
+  "files": [
+   "mobile-14-review-filtered.png",
+   "mobile-14-review-filtered-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x1-unit",
+  "title": "صفحة وحدة (تفسير ما يتكرر)",
+  "route": "/#/unit/u1",
+  "files": [
+   "mobile-x1-unit.png",
+   "mobile-x1-unit-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x2-review",
+  "title": "المراجعة الذكية",
+  "route": "/#/review",
+  "files": [
+   "mobile-x2-review.png",
+   "mobile-x2-review-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x3-search",
+  "title": "البحث داخل المحتوى",
+  "route": "/#/search",
+  "files": [
+   "mobile-x3-search.png",
+   "mobile-x3-search-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x4-settings",
+  "title": "الإعدادات وإمكانية الوصول",
+  "route": "/#/settings",
+  "files": [
+   "mobile-x4-settings.png",
+   "mobile-x4-settings-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x5-adhkar",
+  "title": "درس الأذكار (أذكار الصباح)",
+  "route": "/#/lesson/u5/u5l1",
+  "files": [
+   "mobile-x5-adhkar.png",
+   "mobile-x5-adhkar-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x6-family",
+  "title": "الوضع الأسري داخل الدرس",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "mobile-x6-family.png",
+   "mobile-x6-family-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "01-splash",
+  "title": "الصفحة الافتتاحية",
+  "route": "/",
+  "files": [
+   "desktop-01-splash.png",
+   "desktop-01-splash-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "02-setup",
+  "title": "التهيئة الأولى واختيار نمط التعلّم",
+  "route": "/#/setup",
+  "files": [
+   "desktop-02-setup.png",
+   "desktop-02-setup-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "03-home",
+  "title": "الصفحة الرئيسة ومسار التعلّم",
+  "route": "/#/home",
+  "files": [
+   "desktop-03-home.png",
+   "desktop-03-home-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "04-units",
+  "title": "قائمة الوحدات السبع",
+  "route": "/#/units",
+  "files": [
+   "desktop-04-units.png",
+   "desktop-04-units-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "05-lesson-quran",
+  "title": "درس يحتوي على آية قرآنية (آية الكرسي)",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "desktop-05-lesson-quran.png",
+   "desktop-05-lesson-quran-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "06-lesson-fiqh",
+  "title": "درس فقهي (واجبات الصلاة والفرق بين الركن والواجب)",
+  "route": "/#/lesson/u4/u4l7",
+  "files": [
+   "desktop-06-lesson-fiqh.png",
+   "desktop-06-lesson-fiqh-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "07-activity",
+  "title": "نشاط تفاعلي (مطابقة + ترتيب) مع التغذية الراجعة",
+  "route": "/#/lesson/u4/u4l7",
+  "files": [
+   "desktop-07-activity.png",
+   "desktop-07-activity-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "08-quiz",
+  "title": "اختبار مع التغذية الراجعة الفورية",
+  "route": "/#/quiz/u1/u1l3",
+  "files": [
+   "desktop-08-quiz.png",
+   "desktop-08-quiz-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "09-tasks",
+  "title": "المهام الأدائية",
+  "route": "/#/tasks",
+  "files": [
+   "desktop-09-tasks.png",
+   "desktop-09-tasks-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "10-progress",
+  "title": "صفحة التقدّم والإنجاز",
+  "route": "/#/progress",
+  "files": [
+   "desktop-10-progress.png",
+   "desktop-10-progress-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "11-large-text",
+  "title": "وضع الخط الكبير (قراءة مريحة لكبار السن)",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "desktop-11-large-text.png",
+   "desktop-11-large-text-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "12-dark",
+  "title": "الوضع الداكن",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "desktop-12-dark.png",
+   "desktop-12-dark-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "13-admin",
+  "title": "لوحة مراجعة المحتوى",
+  "route": "/admin/index.html",
+  "files": [
+   "desktop-13-admin.png",
+   "desktop-13-admin-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "14-review-filtered",
+  "title": "لوحة المراجعة — تصفية بالأولوية العالية",
+  "route": "/admin/index.html",
+  "files": [
+   "desktop-14-review-filtered.png",
+   "desktop-14-review-filtered-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x1-unit",
+  "title": "صفحة وحدة (تفسير ما يتكرر)",
+  "route": "/#/unit/u1",
+  "files": [
+   "desktop-x1-unit.png",
+   "desktop-x1-unit-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x2-review",
+  "title": "المراجعة الذكية",
+  "route": "/#/review",
+  "files": [
+   "desktop-x2-review.png",
+   "desktop-x2-review-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x3-search",
+  "title": "البحث داخل المحتوى",
+  "route": "/#/search",
+  "files": [
+   "desktop-x3-search.png",
+   "desktop-x3-search-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x4-settings",
+  "title": "الإعدادات وإمكانية الوصول",
+  "route": "/#/settings",
+  "files": [
+   "desktop-x4-settings.png",
+   "desktop-x4-settings-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x5-adhkar",
+  "title": "درس الأذكار (أذكار الصباح)",
+  "route": "/#/lesson/u5/u5l1",
+  "files": [
+   "desktop-x5-adhkar.png",
+   "desktop-x5-adhkar-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x6-family",
+  "title": "الوضع الأسري داخل الدرس",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "desktop-x6-family.png",
+   "desktop-x6-family-full.png"
+  ]
+ }
+]
