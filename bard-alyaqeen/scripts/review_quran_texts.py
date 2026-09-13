@@ -597,7 +597,21 @@ def write_outputs(rows, occ, out_dir):
     os.makedirs(out_dir, exist_ok=True)
 
     # ----------------------------------------------------------------- CSV
+    # بيانات الإسناد الصريح: هي التي تحسم النصّ المرجعي، لا البحث النصّي.
+    prov = {}
+    qu = os.path.join(ROOT, "scripts/content/quran_uthmani.py")
+    if os.path.exists(qu):
+        ns = {}
+        exec(compile(open(qu, encoding="utf-8").read(), "quran_uthmani", "exec"), ns)
+        for ch_row in json.load(open(os.path.join(
+                ROOT, "docs/quran-review/rasm-change.json"), encoding="utf-8"))["rows"]:
+            for cv in ch_row.get("verses", []):
+                prov["%s|%s" % (ch_row["key"], cv["ayah"])] = cv
+
     cols = ["#", "الوحدة/الدرس/البطاقة", "اسم السورة", "الآية أو النطاق",
+            "السورة (رقمًا)", "رقم الآية", "بداية المقطع", "نهاية المقطع",
+            "نوع المقطع", "النصّ العثماني من المرجع الأساسي", "المرجع الأساسي",
+            "خلاف المصدرين", "الحالات غير المحسومة",
             "نصّ البرنامج", "صفحة الكتاب", "صورة الصفحة", "النصّ المرجعي",
             "مصدر المرجع", "نتيجة المطابقة", "المقارنة الخام (أساسي)",
             "المقارنة الخام (شاهد)", "الفروق الحرفية", "حالة التشكيل",
@@ -613,11 +627,21 @@ def write_outputs(rows, occ, out_dir):
             allplaces = sorted({p for k, v in occ["places"].items() for p in v
                                 if L4(r["text"])[:40] and L4(r["text"])[:40] in k})
             for v in r["verses"]:
+                pv = prov.get("%s/%s|%s" % (r["lesson"], r["card"], v["ayah"]), {})
                 w.writerow([
                     ar(r["seq"]),
                     "%s / %s / %s" % (r["unit"], r["lesson"], r["card"]),
                     r["ref"],
                     ar(v["ayah"]) if v["ayah"] else "—",
+                    ar(r["surahNo"]) if r.get("surahNo") else "—",
+                    ar(v["ayah"]) if v["ayah"] else "—",
+                    ar(pv["sliceFrom"]) if pv.get("sliceFrom") is not None else "—",
+                    ar(pv["sliceTo"]) if pv.get("sliceTo") is not None else "—",
+                    "آية كاملة" if pv.get("full") else "اقتباس جزئي",
+                    pv.get("refPrimary", ""),
+                    SRC_LABEL.get("qul", "QUL"),
+                    pv.get("sourcesAgree", "—"),
+                    "٠",
                     v["prog"],
                     ar(r["page"]) if r.get("page") else "—",
                     "pages/book-p%03d.png" % r["page"] if r.get("page") else "—",

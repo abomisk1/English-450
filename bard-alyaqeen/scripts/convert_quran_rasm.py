@@ -31,7 +31,7 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(ROOT, "scripts"))
 
 from review_quran_texts import (  # noqa: E402
-    AYAH_MARK, L2, _fold, ar, ar2int, graphemes, nfc,
+    AYAH_MARK, L1, L2, L3, _fold, ar, ar2int, graphemes, nfc,
     parse_ref, quran_cards, split_verses, surah_map, WAQF,
 )
 
@@ -55,6 +55,28 @@ def load_source_units():
                     if q["id"] not in have:
                         l["interactions"].append(q)
     return units
+
+# ------------------------------------------------------ جدول الإسناد الصريح
+# مواضع يحتمل فيها اللفظ أكثر من آية، فلا يُحسم بالبحث النصّي. الإسناد هنا
+# مقرَّر بالنظر في سياق الموضع وفي صفحة الكتاب، لا بتخمين آلي.
+AYAH_HINTS = {
+    # سورة الإخلاص: لفظ ﴿أَحَدٌ﴾ يرد في الآية ١ وفي الآية ٤ بصورتين.
+    # وهذان الموضعان شرحُهما «المتفرّد بالألوهية والربوبية والأسماء والصفات»،
+    # وهو معنى ﴿أَحَدٌ﴾ في **الآية الأولى** كما في الكتاب ص ١٣.
+    "u1/lessons[6]/interactions[0]/pairs[0][0]": "112:1",
+    "u1/lessons[6]/summary/points[1]": "112:1",
+    # سؤال تحصيلي على مستوى الوحدة، و﴿ٱلرَّحْمَـٰنِ ٱلرَّحِيمِ﴾ آيةٌ كاملة
+    # في الفاتحة (٣)، وشرحها في الكتاب ص ٨ ضمن درس الفاتحة.
+    "u1/assessment[3]/q": "1:3",
+}
+AYAH_HINT_WHY = {
+    "u1/lessons[6]/interactions[0]/pairs[0][0]":
+        "شرحه معنى ﴿أَحَدٌ﴾ في الآية الأولى، والكتاب ص ١٣ يفرد الآية ٤ بشرح آخر",
+    "u1/lessons[6]/summary/points[1]":
+        "شرحه معنى ﴿أَحَدٌ﴾ في الآية الأولى، والكتاب ص ١٣ يفرد الآية ٤ بشرح آخر",
+    "u1/assessment[3]/q":
+        "آية كاملة في الفاتحة (٣)، وشرحها في الكتاب ص ٨ ضمن درس الفاتحة",
+}
 
 PRIMARY = "qul"
 WITNESS = "quranenc"
@@ -138,28 +160,55 @@ def slice_from_reference(old_text, ref_verse):
     return None
 
 
+# علامتا الحزب والسجدة ليستا من حروف الكلمة، والمرجعان يختلفان في وضع
+# مسافة بعدهما لا في النصّ. تُعزل هذه الفروق وتُعلَن باسمها، ولا تُطوى صامتة.
+HIZB_MARKS = "\u06DE\u06E9"
+
+
+def _mark_spacing(t):
+    """ينزع علامتَي الحزب والسجدة ويوحّد المسافات حولهما فقط."""
+    return re.sub(r"\s+", " ", "".join(c for c in nfc(t)
+                                       if c not in HIZB_MARKS)).strip()
+
+
 def compare_sources(a, b):
     """يصنّف الخلاف بين المرجعين دون أن يحسمه."""
     if nfc(a) == nfc(b):
         return "متطابقان"
-    TAT = "ـ"
-    na = nfc(a).replace(TAT, "")
-    nb = nfc(b).replace(TAT, "")
+    # يُعلَن اختلاف المسافة حول علامة الحزب/السجدة صراحةً، ثم يُصنَّف ما بقي.
+    mark_note = ""
+    if _mark_spacing(a) != nfc(a) or _mark_spacing(b) != nfc(b):
+        if _mark_spacing(a) == _mark_spacing(b):
+            return "مسافة علامة الحزب/السجدة"
+        mark_note = " + مسافة علامة الحزب/السجدة"
+        a, b = _mark_spacing(a), _mark_spacing(b)
+    # نزع التطويل يجري داخل L1 قبل أي تطبيع لاحق. ولو نُزع هنا ثم أُعيد
+    # التطبيع، لالتصقت الهمزةُ المرسومة على التطويل بالياء قبلها فصارت «ئ»
+    # في مصدر دون آخر — وهو فرقٌ يصنعه القياس لا المصدران.
+    na, nb = L1(a), L1(b)
     if na == nb:
-        return "تطويل فقط"
+        return "تطويل فقط" + mark_note
+    # الطبقات التالية تُحسب من النصّ الأصلي لا من نصٍّ نُزع تطويله، لئلّا
+    # يعيد التطبيعُ تركيبَ الهمزة على ما قبلها فيُصطنع فرقٌ ليس في المصدرين.
+    l2a, l2b = L2(a), L2(b)
+    l3a, l3b = L3(a), L3(b)
     # توحيد صور السكون وصفر الوصل، وهي صور ترميز لا حروف
     def enc_norm(t):
         return (t.replace("ۡ", "ْ")      # سكون مستدير ← سكون
                  .replace("۟", "ْ")      # صفر مستدير ← سكون
                  .replace("ٰ", "ٰ"))
     if enc_norm(na) == enc_norm(nb):
-        return "صورة ترميز السكون"
-    if L2(na) == L2(nb):
-        return "تشكيل أو علامة وقف"
+        return "صورة ترميز السكون" + mark_note
+    if l2a == l2b:
+        return "تشكيل أو علامة وقف" + mark_note
     # هل الفرق في صورة الياء الأخيرة وحدها؟ (ي مقابل ى)
-    if L2(na).replace("ي", "ى") == L2(nb).replace("ي", "ى"):
-        return "صورة الياء الأخيرة (ي/ى)"
-    return "حروف ⚠️"
+    if l2a.replace("ي", "ى") == l2b.replace("ي", "ى"):
+        return "صورة الياء الأخيرة (ي/ى)" + mark_note
+    # صورة كرسيّ الهمزة: أحد المصدرين يرسمها على التطويل (ـَٔ) والآخر على
+    # كرسيّ (أٓ). تُعلَن باسمها ويبقى عليها التنبيه، فالهمزة حرف لا حركة.
+    if l3a == l3b:
+        return "صورة كرسيّ الهمزة ⚠️" + mark_note
+    return "حروف ⚠️" + mark_note
 
 
 def waqf_list(t):
@@ -256,168 +305,153 @@ def main():
         })
 
     # ------------------------------------------------- المقاطع القرآنية المقتبسة
-    # كل مقطع ﴿…﴾ يظهر خارج بطاقات القرآن (في الشروح والأسئلة والخلاصات
-    # والأسئلة التحصيلية وأطراف المطابقة) يُحوَّل كذلك — وإلا اختلف الرسم بين
-    # موضع وآخر للنصّ نفسه. ولا يُكتب شيء يدويًّا: كلّه شرائح من المرجع.
+    # كل مقطع ﴿…﴾ خارج بطاقات القرآن (في الشروح والأسئلة والخلاصات وأطراف
+    # المطابقة والأسئلة التحصيلية) يُحوَّل كذلك — وإلا اختلف الرسم بين موضع
+    # وآخر للنصّ نفسه.
+    #
+    # **الحسم ببيانات المصدر لا بالبحث النصّي:** لكل موضعٍ تُحدَّد السورةُ
+    # والآية تحديدًا صريحًا، ومنها يُقتطع النصّ. فإن احتمل اللفظ أكثر من آية
+    # (كلفظ ﴿أَحَدٌ﴾ في الإخلاص ١ و٤) لم يُحسم بالبحث، بل بجدول الإسناد
+    # الصريح أدناه، وإلا رُفع للمراجعة البشرية.
     SEG = re.compile(r"﴿[^﴿﴾]{2,}﴾")
-    frag_out, frag_rep, frag_blocked = {}, [], []
-
-    # الآيات المرشَّحة لكل وحدة: كل آية أُشير إليها في بطاقاتها القرآنية،
-    # ويُضاف إليها كل آيات تلك السور (فالشرح قد يقتبس آية مجاورة).
-    unit_pool = {}
-    for c in cards:
-        sid, ayat = parse_ref(c["ref"], smap)
-        if sid is None:
-            continue
-        pool = unit_pool.setdefault(c["unit"], {})
-        for k, v in ref[PRIMARY].items():
-            if k.startswith("%d:" % sid):
-                pool[k] = v
-
-    # فهرس مطويّ لكل القرآن، للبحث عن مقطع لم تُعرف سورته من سياق الوحدة
-    GLOBAL_FOLDED = {k: _fold(v, False) for k, v in ref[PRIMARY].items()}
-
-    def _pool_with_pairs(pool):
-        """يضيف إلى المرشَّحات كل آيتين متتاليتين، فقد يمتدّ المقطع عليهما."""
-        out = dict(pool)
-        for k, v in list(pool.items()):
-            sid_, a_ = k.split(":")
-            nxt = "%s:%d" % (sid_, int(a_) + 1)
-            if nxt in pool:
-                out["%s+%s" % (k, nxt)] = strip_hizb(v) + " " + strip_hizb(pool[nxt])
-        return out
-
-    def _search(frag, pool):
-        hits = []
-        for k, verse in _pool_with_pairs(pool).items():
-            got = slice_from_reference(frag, verse)
-            if got:
-                hits.append((k, got[0]))
-        return hits
-
-    def find_fragment(frag, pools):
-        """يجد الآية التي منها المقطع، ويقتطع الشريحة الحرفية المقابلة.
-
-        يُبحث أولًا في آيات الدرس نفسه، ثم في سور الوحدة، ثم في المصحف كلّه.
-        وإن تعدّدت الصور المحتملة في أيّ مستوى فلا يُحسم تلقائيًّا — يُرفع
-        للمراجعة البشرية (أَمْثِلَتُه: ﴿ٱلرَّحْمَـٰنِ﴾ بالكسر في الفاتحة
-        و﴿ٱلرَّحْمَـٰنُ﴾ بالضمّ في البقرة).
-        """
-        for pool in pools:
-            hits = _search(frag, pool)
-            if not hits:
-                continue
-            forms = {h[1] for h in hits}
-            if len(forms) > 1:
-                return ("ملتبس", sorted(forms, key=len, reverse=True),
-                        [h[0] for h in hits])
-            return (hits[0][0], hits[0][1], [h[0] for h in hits])
-        # بحثٌ شامل في المصحف كلّه
-        pf = _fold(frag, False)
-        if pf:
-            cand = {k: ref[PRIMARY][k] for k, fv in GLOBAL_FOLDED.items()
-                    if pf in fv}
-            hits = _search(frag, cand)
-            forms = {h[1] for h in hits}
-            if len(forms) == 1:
-                return (hits[0][0], hits[0][1], [h[0] for h in hits])
-            if len(forms) > 1:
-                return ("ملتبس", sorted(forms, key=len, reverse=True),
-                        [h[0] for h in hits])
-        return None
-
     ELLIPSIS = re.compile(r"(\s*(?:…|\.\.\.)\s*)$")
     SEPARATOR = re.compile(r"\s*(?:۝|﴿\s*[٠-٩0-9]+\s*﴾)\s*")
+    frag_out, frag_rep, frag_blocked = [], [], []
 
-    def convert_fragment(inner, pools):
-        """يحوّل مقطعًا قرآنيًّا، ولو امتدّ على أكثر من آية أو انتهى بنقاط حذف.
-
-        يعيد (النصّ الجديد، الآيات، ملحوظة) أو None.
-        """
-        tail = ""
-        mt = ELLIPSIS.search(inner)
-        if mt:
-            tail = mt.group(1)
-            inner = inner[:mt.start()]
-        parts = [x for x in SEPARATOR.split(inner) if x.strip()]
-        outs, verses, full_flags = [], [], []
-        for part in parts:
-            got = find_fragment(part.strip(), pools)
-            if not got:
-                return None
-            k, sl, _ = got
-            if k == "ملتبس":
-                return ("ملتبس", sl, "")
-            outs.append(sl)
-            verses.append(k)
-            prim = next((p.get(k) for p in pools if p.get(k)), None)
-            full_flags.append(bool(prim) and strip_hizb(prim) == sl)
-        if len(outs) == 1:
-            return "﴿%s%s﴾" % (outs[0], tail), verses, ""
-        # أكثر من آية: يُفصل بينها برقم الآية ﴿ن﴾ كما في البطاقات (بند ثالث)
-        body = []
-        for i, (o, k, full) in enumerate(zip(outs, verses, full_flags)):
-            body.append(o)
-            if full and ":" in str(k) and i < len(outs) - 1:
-                body.append("﴿%s﴾" % ar(ar2int(str(k).split(":")[1])))
-        last_k = verses[-1]
-        if full_flags[-1] and ":" in str(last_k):
-            body.append("﴿%s﴾" % ar(ar2int(str(last_k).split(":")[1])))
-            return " ".join(body) + tail, verses, "فاصل الآية وُحِّد إلى ﴿ن﴾"
-        return "﴿%s%s﴾" % (" ".join(body), tail), verses, "فاصل الآية وُحِّد إلى ﴿ن﴾"
-
-    lesson_pool = {}
+    # آيات كل درس، مأخوذة من مراجع بطاقاته القرآنية
+    lesson_verses = {}
     for c in cards:
         sid, ayat = parse_ref(c["ref"], smap)
         if sid is None:
             continue
-        p_ = lesson_pool.setdefault(c["lesson"], {})
-        if ayat:
-            for a in ayat:
-                k = "%d:%d" % (sid, a)
-                if k in ref[PRIMARY]:
-                    p_[k] = ref[PRIMARY][k]
-        else:
-            for k, v in ref[PRIMARY].items():
-                if k.startswith("%d:" % sid):
-                    p_[k] = v
+        d_ = lesson_verses.setdefault(c["lesson"], {})
+        if not ayat:
+            ayat = [int(k.split(":")[1]) for k in ref[PRIMARY] if k.startswith("%d:" % sid)]
+        for a in ayat:
+            k = "%d:%d" % (sid, a)
+            if k in ref[PRIMARY]:
+                d_[k] = ref[PRIMARY][k]
+
+    def candidates_for(frag, verses):
+        """الآيات التي يمكن أن يكون المقطع منها، مع شريحة كلٍّ منها."""
+        out = {}
+        for k, v in verses.items():
+            got = slice_from_reference(frag, v)
+            if got:
+                out[k] = got
+        # آيتان متتاليتان معًا (كآيتي الإخلاص ٣ و٤ في مصطلح واحد)
+        for k, v in list(verses.items()):
+            sid_, a_ = k.split(":")
+            nk = "%s:%d" % (sid_, int(a_) + 1)
+            if nk in verses:
+                joined = strip_hizb(v) + " " + strip_hizb(verses[nk])
+                got = slice_from_reference(frag, joined)
+                if got:
+                    out["%s+%s" % (k, nk)] = got
+        return out
 
     def walk_frags(obj, unit_id, path, lesson_id=None):
         if isinstance(obj, str):
-            for m in SEG.findall(obj):
-                inner = m[1:-1].strip()
-                if not L2(inner) or AYAH_MARK.fullmatch(m):
+            for m in SEG.finditer(obj):
+                seg, at = m.group(0), m.start()
+                inner = seg[1:-1].strip()
+                if not L2(inner) or AYAH_MARK.fullmatch(seg):
                     continue
-                if m in frag_out:
-                    continue
-                pools = [p for p in (lesson_pool.get(lesson_id or ""),
-                                     unit_pool.get(unit_id, {})) if p]
-                got = convert_fragment(inner, pools)
-                if not got:
-                    frag_blocked.append({"frag": m, "where": path,
-                                         "why": "لم يُعثر عليه في المصحف"})
-                    continue
-                new, verses, note = got
-                if new == "ملتبس":
+                fpath = "%s#%d" % (path, at)
+                verses = lesson_verses.get(lesson_id or "", {})
+                scope = "الدرس"
+                if not verses:
+                    verses = {k: v for k, v in ref[PRIMARY].items()
+                              if any(k.startswith("%d:" % parse_ref(c["ref"], smap)[0])
+                                     for c in cards if c["unit"] == unit_id
+                                     and parse_ref(c["ref"], smap)[0])}
+                    scope = "الوحدة"
+                # نقاط الحذف تُنزع قبل المقابلة وتُعاد بعدها
+                tail = ""
+                mt = ELLIPSIS.search(inner)
+                if mt:
+                    tail = mt.group(1)
+                    inner = inner[:mt.start()]
+                # المقطع قد يجمع آيتين يفصل بينهما ۝ أو ﴿ن﴾
+                parts = [x.strip() for x in SEPARATOR.split(inner) if x.strip()]
+                picked, failed = [], None
+                for pi, part in enumerate(parts):
+                    cands = candidates_for(part, verses)
+                    scope_i = scope
+                    if not cands:
+                        pf = _fold(part, False)
+                        wide = {k: ref[PRIMARY][k] for k, fv in GLOBAL_FOLDED.items()
+                                if pf and pf in fv}
+                        cands = candidates_for(part, wide)
+                        scope_i = "المصحف"
+                    hkey = "%s|%d" % (fpath, pi) if len(parts) > 1 else fpath
+                    hint = (AYAH_HINTS.get(hkey) or AYAH_HINTS.get(fpath)
+                            or AYAH_HINTS.get(path))
+                    if hint and hint in cands:
+                        chosen, why = hint, "إسناد صريح (%s)" % AYAH_HINT_WHY.get(
+                            hkey, AYAH_HINT_WHY.get(fpath,
+                                  AYAH_HINT_WHY.get(path, "مقرّر")))
+                    elif len(cands) == 1:
+                        chosen = next(iter(cands))
+                        why = "آية واحدة محتملة في %s" % scope_i
+                    elif cands and len({v[0] for v in cands.values()}) == 1:
+                        # الصور متطابقة، فالترجيح للأضيق إسنادًا: آية واحدة
+                        # قبل آيتين مضمومتين، وآيةٌ كاملة قبل اقتباس منها.
+                        chosen = sorted(cands, key=lambda k: (
+                            str(k).count("+"), not cands[k][3], str(k)))[0]
+                        why = "عدّة آيات بالصورة نفسها في %s" % scope_i
+                    else:
+                        failed = {"part": part,
+                                  "candidates": {k: v[0] for k, v in cands.items()}}
+                        break
+                    picked.append((chosen, cands[chosen], why))
+                if failed is not None or not picked:
                     frag_blocked.append({
-                        "frag": m, "where": path,
-                        "why": "يحتمل أكثر من صورة، فلم يُحسم تلقائيًّا",
-                        "options": verses})
+                        "frag": seg, "where": fpath,
+                        "why": "يحتمل أكثر من آية بصور مختلفة، ولا إسناد صريح",
+                        **(failed or {})})
                     continue
-                if nfc(new) == nfc(m):
-                    continue
-                frag_out[m] = new
-                frag_rep.append({"old": m, "new": new, "verse": verses,
-                                 "note": note, "where": path})
+
+                if len(picked) == 1:
+                    chosen, (sl, i0, i1, full), why = picked[0]
+                    new = "﴿%s%s﴾" % (sl, tail)
+                else:
+                    # أكثر من آية: يُفصل بينها برقم الآية ﴿ن﴾ كما في البطاقات
+                    body = []
+                    for chosen_i, (sl_i, _a, _b, full_i), _w in picked:
+                        body.append(sl_i)
+                        if full_i:
+                            body.append("﴿%s﴾" % ar(ar2int(str(chosen_i).split(":")[1])))
+                    new = re.sub(r"\s+", " ", " ".join(body)).strip() + tail
+                    chosen = "+".join(str(c) for c, _v, _w in picked)
+                    why = "؛ ".join(w for _c, _v, w in picked)
+                    i0, i1, full = -1, -1, all(p[1][3] for p in picked)
+                sid_ = int(str(chosen).split("+")[0].split(":")[0])
+                ayah_ = "+".join(str(x).split(":")[1] for x in str(chosen).split("+"))
+                frag_out.append({
+                    "path": fpath, "old": seg, "new": new,
+                    "surah": sid_, "ayah": ayah_,
+                    "from": i0, "to": i1,
+                    "kind": "آية كاملة" if full else "اقتباس جزئي",
+                    "lesson": lesson_id, "unit": unit_id,
+                    "why": why, "changed": nfc(new) != nfc(seg),
+                })
+                frag_rep.append(frag_out[-1])
         elif isinstance(obj, dict):
             lid = obj.get("id") if isinstance(obj.get("id"), str) and \
                 obj.get("id", "").startswith("u") and "l" in obj.get("id", "") else lesson_id
+            # نصّ بطاقة القرآن يُستبدل كاملًا من جدول UTHMANI، فلا يدخل
+            # المقاطع المقتبسة حتى لا يُطبَّق عليه استبدالان.
+            skip = {"text"} if obj.get("type") == "quran" else set()
             for kk, vv in obj.items():
+                if kk in skip:
+                    continue
                 walk_frags(vv, unit_id, "%s/%s" % (path, kk), lid)
         elif isinstance(obj, list):
             for i, vv in enumerate(obj):
                 walk_frags(vv, unit_id, "%s[%d]" % (path, i), lesson_id)
 
+    GLOBAL_FOLDED = {k: _fold(v, False) for k, v in ref[PRIMARY].items()}
     for u in units:
         walk_frags(u, u["id"], u["id"])
 
@@ -448,12 +482,14 @@ def main():
         mod.append('    },')
     mod.append('}')
     mod.append('')
-    mod.append('# المقاطع القرآنية المقتبسة خارج البطاقات (شروح وأسئلة وخلاصات):')
-    mod.append('#   المفتاح: المقطع القديم كما هو · القيمة: الشريحة العثمانية الحرفية')
-    mod.append('FRAGMENTS = {')
-    for k, v in frag_out.items():
-        mod.append('    %r: %r,' % (k, v))
-    mod.append('}')
+    mod.append('# المقاطع القرآنية المقتبسة خارج البطاقات — لكلٍّ إسنادٌ صريح:')
+    mod.append('#   path  موضعه في بنية الوحدة · old/new النصّ قبل وبعد')
+    mod.append('#   surah/ayah السورة والآية · from/to حدود المقطع في الآية')
+    mod.append('#   kind  آية كاملة أو اقتباس جزئي · why كيف حُسم الإسناد')
+    mod.append('FRAGMENTS = [')
+    for r in frag_out:
+        mod.append('    %r,' % (r,))
+    mod.append(']')
     path = os.path.join(ROOT, "scripts/content/quran_uthmani.py")
     open(path, "w", encoding="utf-8").write("\n".join(mod) + "\n")
 
@@ -465,11 +501,12 @@ def main():
                 parse_ref(r["ref"], smap)[0], v["ayah"])] = {
                 "primary": v["refPrimary"], "witness": v["refWitness"]}
     for f in frag_rep:
-        for k in (f["verse"] if isinstance(f["verse"], list) else [f["verse"]]):
-            for kk in str(k).split("+"):
-                if kk in ref[PRIMARY] and kk not in used:
-                    used[kk] = {"primary": ref[PRIMARY][kk],
-                                "witness": ref[WITNESS].get(kk)}
+        for kk in str("%s:%s" % (f["surah"], f["ayah"])).split("+"):
+            for one in kk.replace("%d:" % f["surah"], "").split("+"):
+                key = "%d:%s" % (f["surah"], one)
+                if key in ref[PRIMARY] and key not in used:
+                    used[key] = {"primary": ref[PRIMARY][key],
+                                 "witness": ref[WITNESS].get(key)}
     json.dump({"primarySource": SRC_NAME[PRIMARY],
                "witnessSource": SRC_NAME[WITNESS],
                "verses": used},
@@ -491,8 +528,9 @@ def main():
     print("خلاف المصدرين (مسجَّل لا محسوم):")
     for k, n in agree.most_common():
         print("   %-32s %d" % (k, n))
-    print("مقاطع قرآنية مقتبسة حُوِّلت: %d · متعذّرة: %d"
-          % (len(frag_out), len(frag_blocked)))
+    ch_frag = sum(1 for r in frag_out if r["changed"])
+    print("مقاطع قرآنية مقتبسة: %d موضعًا (تغيّر %d) · غير محسومة: %d"
+          % (len(frag_out), ch_frag, len(frag_blocked)))
     for b in blocked:
         print("   ✗", b)
     for b in frag_blocked:

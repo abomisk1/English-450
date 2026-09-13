@@ -3,7 +3,7 @@
  * لا يُخزَّن فيه أي بيانات مستخدم؛ بيانات التقدّم في التخزين المحلي.
  */
 
-const VERSION = 'bay-v1';
+const VERSION = 'bay-v2';
 const SHELL = `${VERSION}-shell`;
 const CONTENT = `${VERSION}-content`;
 
@@ -69,6 +69,16 @@ self.addEventListener('fetch', (e) => {
   if (req.method !== 'GET') return;
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
+
+  /*
+   * مادّة المراجعة الخاصة — بيانات المقابلة وصور صفحات الكتاب ومدخل
+   * المعاينة — لا تُخزَّن في مخزّن البرنامج أصلًا: تمرّ إلى الشبكة كما هي.
+   * فلا يبقى منها أثر في مخزّن نسخة البرنامج العامّة ولا تعمل دون اتصال.
+   */
+  if (url.pathname.includes('/docs/quran-review/')
+      || url.pathname.endsWith('/preview.html')) {
+    return;
+  }
 
   // المحتوى العلمي: من الشبكة أولًا مع رجوع للمخزّن (ليصل التحديث ويعمل دون اتصال).
   if (url.pathname.includes('/content/')) {

@@ -266,47 +266,68 @@ def apply_uthmani():
     return applied
 
 
-_FRAG_RE = None
+_STEP = re.compile(r"([A-Za-z]+)((?:\[\d+\])*)")
+
+
+def _resolve(unit, path):
+    """يمشي إلى موضع النصّ بعينه من مسار الإسناد، لا بالبحث عن نصّه.
+
+    يعيد (الحاوية، المفتاح) حتى يُستبدل هذا الموضع وحده دون سواه.
+    مثال المسار:  u1/lessons[6]/interactions[0]/pairs[0][0]
+    """
+    node, holder, key = unit, None, None
+    for step in path.split("/")[1:]:
+        m = _STEP.fullmatch(step)
+        if not m:
+            raise SystemExit("مسار إسناد غير صالح: %s" % path)
+        name, idx = m.group(1), m.group(2)
+        holder, key = node, name
+        node = node[name]
+        for n in re.findall(r"\[(\d+)\]", idx):
+            holder, key = node, int(n)
+            node = node[key]
+    return holder, key
 
 
 def apply_fragments():
     """يستبدل المقاطع القرآنية المقتبسة في الشروح والأسئلة والخلاصات.
 
-    **مرورٌ واحد** بتعبير نمطيّ يجمع كل المقاطع مرتَّبةً من الأطول إلى الأقصر،
-    فلا يُعاد المسح على ناتج الاستبدال ولا تتداخل القواعد بعضها في بعض.
-    والقيم شرائح حرفية من المرجع الأساسي — لا خوارزمية ولا كتابة يدوية.
+    **بالإسناد لا بالبحث النصّي**: لكل مقطع سجلٌّ يحمل مساره في شجرة المحتوى
+    وموضعه داخل النصّ (الإزاحة)، وسورته ورقم آيته وحدّي المقطع فيها ونوعه.
+    فلا يُستبدل إلا ذلك الموضع بعينه، ولو تكرّر اللفظ نفسه في مواضع أخرى
+    تعود إلى آيات مختلفة. والقيم شرائح حرفية من المرجع الأساسي.
+
+    ويتحقّق قبل كل استبدال من أنّ النصّ القديم المسجَّل موجود في تلك الإزاحة
+    نفسها؛ وإلا فشل البناء، لأنّ المحتوى تغيّر عن الذي وُلِّد عليه الإسناد.
     """
-    global _FRAG_RE
     if not FRAGMENTS:
         return 0
-    if _FRAG_RE is None:
-        keys = sorted(FRAGMENTS, key=len, reverse=True)
-        _FRAG_RE = re.compile("|".join(re.escape(k) for k in keys))
-    n = [0]
-
-    def fix(t):
-        def rep(m):
-            n[0] += 1
-            return FRAGMENTS[m.group(0)]
-        return _FRAG_RE.sub(rep, t)
-
-    def walk(o):
-        if isinstance(o, dict):
-            for k, v in o.items():
-                if isinstance(v, str):
-                    o[k] = fix(v)
-                else:
-                    walk(v)
-        elif isinstance(o, list):
-            for i, v in enumerate(o):
-                if isinstance(v, str):
-                    o[i] = fix(v)
-                else:
-                    walk(v)
-
-    for u in UNITS:
-        walk(u)
-    return n[0]
+    units = {u["id"]: u for u in UNITS}
+    edits = {}
+    for rec in FRAGMENTS:
+        path, at = rec["path"].rsplit("#", 1)
+        edits.setdefault(path, []).append((int(at), rec))
+    n = 0
+    for path, spots in edits.items():
+        uid = path.split("/")[0]
+        if uid not in units:
+            raise SystemExit("وحدة غير معروفة في مسار الإسناد: %s" % path)
+        holder, key = _resolve(units[uid], path)
+        text = holder[key]
+        if not isinstance(text, str):
+            raise SystemExit("مسار إسناد لا ينتهي إلى نصّ: %s" % path)
+        # من آخر النصّ إلى أوّله، فلا تُزيح الاستبدالاتُ إزاحاتِ ما بعدها.
+        for at, rec in sorted(spots, key=lambda x: -x[0]):
+            old = rec["old"]
+            if text[at:at + len(old)] != old:
+                raise SystemExit(
+                    "تعذّر تطبيق الإسناد: %s#%d — النصّ المسجَّل غير موجود في موضعه.\n"
+                    "  المسجَّل: %s\n  الموجود: %s"
+                    % (path, at, old, text[at:at + len(old)]))
+            text = text[:at] + rec["new"] + text[at + len(old):]
+            n += 1
+        holder[key] = text
+    return n
 
 
 def tag_quran_content():

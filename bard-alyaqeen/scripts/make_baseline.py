@@ -53,6 +53,9 @@ KEY_FILES = [
     "scripts/content/quran_uthmani.py",
     "scripts/build_content.py", "scripts/audit_quran.py",
     "scripts/review_quran_texts.py", "scripts/convert_quran_rasm.py",
+    "scripts/make_review_page_data.py",
+    "docs/quran-review/review-data.json",
+    "js/ui/quran-review.js", "preview.html", "sw.js",
     "tests/run.mjs", "tests/e2e.mjs", "tests/visual-audit.mjs",
 ]
 
@@ -82,12 +85,16 @@ def content_counts():
 
 TESTS = [
     ("اختبارات المنطق", "node tests/run.mjs", "٦١ ناجحًا · ٠ فاشلًا"),
-    ("اختبارات الواجهة", "node tests/e2e.mjs", "٦٦ ناجحًا · ٠ فاشلًا"),
+    ("اختبارات الواجهة", "node tests/e2e.mjs", "٧٧ ناجحًا · ٠ فاشلًا"),
     ("الفحص البصري", "node tests/visual-audit.mjs", "٧٠٢ فحصًا · ٠ خطأ · ٠ تنبيه"),
     ("تدقيق سلامة النصّ القرآني", "python3 scripts/audit_quran.py --check",
-     "٢٧٦٠ فحصًا · ٠ مخالفة (ثماني قواعد)"),
+     "٣٣٥٢ فحصًا · ٠ مخالفة (ثلاث عشرة قاعدة)"),
     ("مراجعة النصوص القرآنية الـ٢٤", "python3 scripts/review_quran_texts.py",
      "٢٤ نصًّا شريحةً حرفية من المرجع الأساسي · ٠ تعارض بين المواضع"),
+    ("إسناد المقاطع القرآنية", "python3 scripts/convert_quran_rasm.py",
+     "١٤٠ مقطعًا بإسناد صريح · ٠ حالة غير محسومة"),
+    ("بيانات صفحة المراجعة", "python3 scripts/make_review_page_data.py",
+     "٢٤ نصًّا · ١٥ صورة · ١٤٦ موضعًا"),
     ("البناء", "python3 scripts/build_content.py",
      "يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه"),
 ]

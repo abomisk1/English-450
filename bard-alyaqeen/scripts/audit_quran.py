@@ -272,6 +272,76 @@ def main():
                         break
                     prev = at
 
+    # ---------------- ق-٩ · ق-١٠ · ق-١١ · ق-١٢ — الإسناد الصريح لكل مقطع
+    # كل مقطع قرآني مقتبس مرتبط بسورة وآية محدّدتين وبحدّي المقطع فيها.
+    # وهذا الإسناد — لا البحث النصّي — هو الذي يحسم النصّ المرجعي.
+    ns = {}
+    exec(compile(open(os.path.join(ROOT, "scripts/content/quran_uthmani.py"),
+                      encoding="utf-8").read(), "quran_uthmani", "exec"), ns)
+    frags = ns["FRAGMENTS"]
+    folded_verses = {}
+    for f in frags:
+        checks["ق-٩"] += 1
+        if not isinstance(f.get("surah"), int) or not str(f.get("ayah") or "").strip():
+            bad("ق-٩", f.get("path", "?"), "مقطع قرآني بلا سورة وآية محدّدتين")
+            continue
+        if f.get("kind") not in ("آية كاملة", "اقتباس جزئي"):
+            bad("ق-٩", f["path"], "مقطع بلا نوع (آية كاملة/اقتباس جزئي)")
+        if not f.get("lesson") and not f.get("unit"):
+            bad("ق-٩", f["path"], "مقطع بلا مرجع درس أو وحدة")
+        if "+" not in str(f["ayah"]) and f.get("from", -1) < 0:
+            bad("ق-٩", f["path"], "مقطع بلا حدّين داخل الآية المرجعية")
+
+        # ق-١٠ — لفظ يتكرّر في أكثر من آية لا يُحسم بمطابقة نصّية مطلقة:
+        # لا بدّ من إسناد صريح، أو اتّحاد صورة اللفظ في كل الآيات المحتملة.
+        key = "%d:%s" % (f["surah"], f["ayah"])
+        folded_verses.setdefault(key, set()).add(f["new"])
+        checks["ق-١٠"] += 1
+        why = f.get("why") or ""
+        if not (why.startswith("إسناد صريح")
+                or why.startswith("آية واحدة محتملة")
+                or why.startswith("عدّة آيات بالصورة نفسها")
+                or "؛" in why):
+            bad("ق-١٠", f["path"], "أساس اختيار الآية غير مصرّح به: %s" % why)
+
+    # ق-١١ — لفظ ﴿أَحَدٌ﴾ منفردًا يعود إلى الإخلاص ١، والصورة المنوَّنة إلى ٤
+    ikhlas = [f for f in frags if f["surah"] == 112 and "أَحَد" in f["new"]]
+    for f in ikhlas:
+        checks["ق-١١"] += 1
+        body = nfc(f["new"]).strip("﴿﴾").strip()
+        if body.startswith("أَحَد"):
+            # اللفظ وحده: من الآية الأولى، بلا علامة الإقلاب
+            if str(f["ayah"]) != "1":
+                bad("ق-١١", f["path"], "﴿أَحَدٌ﴾ منفردًا أُسند إلى الآية %s لا ١" % f["ayah"])
+            if "\u06E2" in f["new"]:
+                bad("ق-١١", f["path"], "صورة الآية ٤ في موضع الآية ١")
+        elif "كُفُوًا" in body:
+            # الصورة المنوَّنة داخل ﴿…كُفُوًا أَحَدٌۢ﴾: من الآية الرابعة
+            if "4" not in str(f["ayah"]).split("+"):
+                bad("ق-١١", f["path"],
+                    "﴿…كُفُوًا أَحَدٌۢ﴾ أُسند إلى الآية %s لا ٤" % f["ayah"])
+            if "\u06E2" not in f["new"]:
+                bad("ق-١١", f["path"], "صورة الآية ٤ بلا علامة الإقلاب")
+
+    # ق-١٢ — لا حالات غير محسومة في النصوص الأربعة والعشرين
+    change = json.load(open(os.path.join(
+        ROOT, "docs/quran-review/rasm-change.json"), encoding="utf-8"))
+    for name, key in (("النصوص", "blocked"), ("المقاطع", "fragments" + "Blocked")):
+        checks["ق-١٢"] += 1
+        n = len(change.get(key) or [])
+        if n:
+            bad("ق-١٢", key, "%s: %d حالة غير محسومة" % (name, n))
+
+    # ق-١٣ — كل عناصر المراجعة باقية «بانتظار المراجعة»، لم يُعتمد منها شيء
+    nr = json.load(open(os.path.join(ROOT, "content/needs-review.json"), encoding="utf-8"))
+    for it in nr["items"]:
+        checks["ق-١٣"] += 1
+        if it.get("approved"):
+            bad("ق-١٣", it.get("path", "?"), "عنصر مُعتمَد قبل صدور الاعتماد")
+    checks["ق-١٣"] += 1
+    if nr["count"] != len(nr["items"]):
+        bad("ق-١٣", "needs-review.json", "عدد العناصر لا يطابق قائمتها")
+
     # ------------------------------------------------------------------ التقرير
     out = []
     w = out.append
@@ -291,6 +361,11 @@ def main():
         "ق-٦": "صورتان مختلفتان للنصّ القرآني نفسه بين موضعين",
         "ق-٧": "نصّ قرآني في البيانات بلا وسم `quran` (فيَفوته خطّ المصحف)",
         "ق-٨": "نشاط ترتيب الفاتحة لا يطابق نصّ البطاقة أو ترتيب المصحف",
+        "ق-٩": "مقطع قرآني بلا إسناد صريح (سورة وآية وحدّان ونوع ومرجع درس)",
+        "ق-١٠": "حسم آيةِ لفظٍ متكرّر بمطابقة نصّية مطلقة بلا إسناد مصرَّح",
+        "ق-١١": "﴿أَحَدٌ﴾ منفردًا من غير الإخلاص ١، أو ﴿…كُفُوًا أَحَدٌۢ﴾ من غير ٤",
+        "ق-١٢": "بقاء حالة غير محسومة في النصوص الأربعة والعشرين",
+        "ق-١٣": "اعتماد عنصر من عناصر المراجعة قبل صدور الاعتماد",
     }
     nviol = collections.Counter(v[0] for v in violations)
     for r, d in RULES.items():

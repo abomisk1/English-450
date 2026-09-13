@@ -865,6 +865,150 @@ for (const [label, opts] of [
   await ctx.close();
 }
 
+
+/* ---------------- مراجعة النصوص القرآنية — المعاينة الخاصة وحدها --------- */
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ar' });
+  const page = await ctx.newPage();
+
+  // (٨) لا تظهر الصفحة في الوضع العام: لا رابط، ولا عرض عند زيارة المسار.
+  await page.goto(BASE + '/index.html#/home', { waitUntil: 'networkidle' });
+  await check('الوضع العام: لا مفتاح مراجعة ولا رابط لمراجعة النصوص القرآنية', async () => {
+    assert(!(await page.$('#review-mode-toggle')), 'ظهر مفتاح وضع المراجعة في الواجهة العامّة');
+    assert(!(await page.$('#quran-review-link')), 'ظهر رابط مراجعة النصوص في الواجهة العامّة');
+    assert((await page.locator('#review-mode-bar').isHidden()), 'شريط وضع المراجعة ظاهر للعامّة');
+  });
+  await check('الوضع العام: زيارة /quran-review مباشرةً لا تعرض الصفحة', async () => {
+    await page.goto(BASE + '/index.html#/quran-review', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(800);
+    assert((await page.locator('.qrv-card').count()) === 0, 'عُرضت بطاقات المراجعة في الوضع العام');
+    assert(!(await page.$('.qrv-figure')), 'عُرضت صور الكتاب في الوضع العام');
+    assert((await page.textContent('h1')).includes('غير متاحة'), 'لم تُمنع الصفحة');
+  });
+
+  // المعاينة الخاصة، وقبل تفعيل وضع المراجعة: الصفحة ما تزال ممنوعة.
+  await page.goto(BASE + '/preview.html#/quran-review', { waitUntil: 'networkidle' });
+  await check('المعاينة الخاصة قبل تفعيل الوضع: الصفحة ممنوعة أيضًا', async () => {
+    await page.waitForTimeout(600);
+    assert((await page.locator('.qrv-card').count()) === 0, 'عُرضت الصفحة قبل تفعيل الوضع');
+  });
+
+  await page.goto(BASE + '/preview.html#/home', { waitUntil: 'networkidle' });
+  await page.click('#review-mode-toggle');
+  await page.waitForTimeout(300);
+  await check('المعاينة الخاصة: يظهر رابط «مراجعة النصوص القرآنية» بتفعيل الوضع', async () => {
+    const a = await page.$('#quran-review-link');
+    assert(a, 'لم يظهر الرابط');
+    assert((await a.textContent()).trim() === 'مراجعة النصوص القرآنية', 'اسم الرابط مختلف');
+  });
+
+  await page.goto(BASE + '/preview.html#/quran-review', { waitUntil: 'networkidle' });
+  await page.waitForSelector('.qrv-card', { timeout: 10000 });
+
+  await check('الصفحة تعرض النصوص الأربعة والعشرين بحقولها', async () => {
+    assert((await page.locator('.qrv-card').count()) === 24, 'عدد النصوص ليس ٢٤');
+    const first = page.locator('.qrv-card').first();
+    for (const k of ['الوحدة والدرس والبطاقة', 'صفحة الكتاب',
+      'النصّ الحالي في البرنامج', 'النصّ من المرجع الأساسي',
+      'نتيجة المقارنة الحرفية الخام', 'الفرق بين المصدرين']) {
+      assert((await first.textContent()).includes(k), `حقل ناقص: ${k}`);
+    }
+    assert((await first.textContent()).includes('مواضع ظهوره في البرنامج'), 'مواضع الظهور ناقصة');
+    assert((await first.locator('.qrv-img').count()) === 1, 'صورة صفحة الكتاب ناقصة');
+  });
+
+  await check('صور الكتاب الخمس عشرة محمَّلة وبدقّة تسمح بالتكبير', async () => {
+    const srcs = await page.$$eval('.qrv-img', (ns) => ns.map((n) => n.getAttribute('src')));
+    assert(new Set(srcs).size === 15, `عدد الصور ${new Set(srcs).size} لا ١٥`);
+    await page.locator('.qrv-img').first().evaluate((n) => n.scrollIntoView());
+    await page.waitForFunction(() => {
+      const i = document.querySelector('.qrv-img');
+      return i && i.complete && i.naturalWidth > 0;
+    }, null, { timeout: 15000 });
+    const nat = await page.locator('.qrv-img').first()
+      .evaluate((n) => ({ w: n.naturalWidth, h: n.naturalHeight }));
+    assert(nat.w >= 1800 && nat.h >= 2500, `دقّة الصورة ${nat.w}×${nat.h} لا تكفي للتكبير`);
+  });
+
+  await check('التكبير لا يُحدث تمريرًا أفقيًّا في جسم الصفحة', async () => {
+    const plus = page.locator('.qrv-zoom button[aria-label="تكبير"]').first();
+    for (let i = 0; i < 4; i++) await plus.click();
+    await page.waitForTimeout(300);
+    const m = await page.evaluate(() => ({
+      d: document.documentElement.scrollWidth, c: document.documentElement.clientWidth,
+      paneScroll: document.querySelector('.qrv-pane').scrollWidth,
+      paneClient: document.querySelector('.qrv-pane').clientWidth,
+    }));
+    assert(m.d <= m.c + 1, `تمرير أفقي: ${m.d} > ${m.c}`);
+    assert(m.paneScroll > m.paneClient, 'الصورة لم تُكبَّر داخل إطارها');
+  });
+
+  // (٦) قرار المقابلة البصرية لا يتحوّل إلى اعتماد للمحتوى.
+  await check('قرار المقابلة البصرية لا يُعدّ اعتمادًا ولا يغيّر النصّ', async () => {
+    const card = page.locator('.qrv-card').first();
+    const before = await card.locator('.qrv-t').first().textContent();
+    await card.locator('input[value="matched"]').check();
+    await page.waitForTimeout(200);
+    assert((await card.locator('.chip').first().textContent()).trim() === 'بانتظار المراجعة',
+      'تغيّرت حالة العنصر بعد قرار المقابلة');
+    assert((await card.locator('.qrv-t').first().textContent()) === before,
+      'تغيّر النصّ القرآني بعد قرار المقابلة');
+    const stores = await page.evaluate(() => ({
+      check: localStorage.getItem('bay.quran.visualcheck.v1'),
+      app: localStorage.getItem('bay.state.v1') || '',
+    }));
+    assert(stores.check && stores.check.includes('matched'), 'لم يُحفظ القرار');
+    assert(!stores.app.includes('visualcheck') && !stores.app.includes('"approved"'),
+      'تسرّب قرار المقابلة إلى حالة البرنامج');
+    // ولم يمسّ ملفّ المحتوى: كل العناصر باقية بلا اعتماد
+    const nr = await page.evaluate(async () => {
+      const r = await fetch('/content/needs-review.json', { cache: 'no-cache' });
+      const d = await r.json();
+      return { count: d.count, approved: d.items.filter((i) => i.approved).length };
+    });
+    assert(nr.approved === 0, `اعتُمد ${nr.approved} عنصرًا`);
+    assert(nr.count === 304, `عدد عناصر المراجعة ${nr.count} لا ٣٠٤`);
+  });
+
+  await check('مؤشّر «تمت مراجعة كذا من ٢٤» والانتقال إلى غير المراجَع', async () => {
+    assert((await page.textContent('.qrv-count')).includes('١ من ٢٤'), 'المؤشّر لم يتقدّم');
+    await page.locator('.qrv-top button').click();
+    await page.waitForTimeout(700);
+    const id = await page.evaluate(() => {
+      const e = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
+      return e && e.closest('.qrv-card') ? e.closest('.qrv-card').id : null;
+    });
+    assert(id && id !== 't-u1l2-c1', `لم ينتقل إلى نصّ غير مراجَع (${id})`);
+  });
+
+  await check('«توجد ملاحظة» تُظهر حقل الملاحظة، والتصدير يحمل القرار', async () => {
+    const card = page.locator('.qrv-card').nth(1);
+    await card.locator('input[value="note"]').check();
+    await page.waitForTimeout(200);
+    assert(await card.locator('.qrv-notewrap').isVisible(), 'لم يظهر حقل الملاحظة');
+    await card.locator('textarea.qrv-note').fill('ملاحظة اختبار');
+    await page.waitForTimeout(200);
+    await page.locator('button:has-text("تصدير CSV")').click();
+    await page.waitForTimeout(300);
+    const csv = await page.locator('.qrv-export').inputValue();
+    assert(csv.trim().split('\n').length === 25, 'صفوف CSV ليست ٢٤ وعنوانًا');
+    assert(csv.includes('ملاحظة اختبار'), 'الملاحظة لم تُصدَّر');
+    assert(csv.includes('بانتظار المراجعة'), 'حالة العنصر غير مذكورة في التصدير');
+    assert(!csv.includes('معتمد'), 'التصدير يصف عنصرًا بأنه معتمد');
+  });
+
+  await check('القرارات تبقى بعد إعادة التحميل، ولا تظهر خارج المعاينة', async () => {
+    await page.reload({ waitUntil: 'networkidle' });
+    await page.waitForSelector('.qrv-card', { timeout: 10000 });
+    assert((await page.textContent('.qrv-count')).includes('٢ من ٢٤'), 'ضاعت القرارات');
+    await page.goto(BASE + '/index.html#/quran-review', { waitUntil: 'domcontentloaded' });
+    await page.waitForTimeout(600);
+    assert((await page.locator('.qrv-card').count()) === 0, 'ظهرت الصفحة في الوضع العام');
+  });
+
+  await ctx.close();
+}
+
 await browser.close();
 
 console.log(log.join('\n'));

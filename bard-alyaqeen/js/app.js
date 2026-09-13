@@ -1,7 +1,7 @@
 /** نقطة الدخول: التوجيه، والهيكل العام، وتطبيق التفضيلات. */
 
 import { h, clear, icon, ICONS, brandMark, focusMain, enableFocusOnRender, toast } from './lib/dom.js';
-import { route, start, navigate, currentPath } from './lib/router.js';
+import { route, start, navigate, currentPath, dispatch } from './lib/router.js';
 import { getState, update, subscribe } from './store.js';
 import * as C from './lib/content.js';
 import { dueCount } from './lib/srs.js';
@@ -12,6 +12,9 @@ import { unitsScreen, unitScreen } from './ui/units.js';
 import { lessonScreen, quizScreen } from './ui/lesson.js';
 import { tasksScreen, reviewScreen, achievementsScreen, bookmarksScreen, searchScreen, moreScreen } from './ui/misc.js';
 import { settingsScreen, applyPrefs } from './ui/settings.js';
+import {
+  quranReviewScreen, quranReviewHiddenScreen, quranReviewVisible, loadReviewData,
+} from './ui/quran-review.js';
 
 const view = document.getElementById('view');
 const tabbarHost = document.getElementById('tabbar');
@@ -67,6 +70,10 @@ function renderReviewModeBar() {
     onchange: (e) => {
       update((s) => { s.prefs = { ...s.prefs, reviewLabels: e.target.checked }; });
       applyPrefs(getState().prefs);
+      // يُعاد رسم الشريط ليظهر رابط مراجعة النصوص أو يختفي معه، ثم يُعاد
+      // توجيه المسار الحالي حتى لا تبقى الصفحة معروضة بعد إطفاء الوضع.
+      renderReviewModeBar();
+      if (currentPath() === '/quran-review') dispatch();
     },
   });
   host.replaceChildren(
@@ -74,7 +81,10 @@ function renderReviewModeBar() {
       h('span', { class: 'review-mode-bar__ttl' }, 'وضع مراجعة المحتوى'),
       h('span', { class: 'small muted', style: { display: 'block' } },
         'يُظهر لصيقة «صياغة تعليمية مساعدة» على ما ليس من نصّ الكتاب. '
-        + 'خاصٌّ بالمعاينة، ولا يظهر للمستخدم العام.')),
+        + 'خاصٌّ بالمعاينة، ولا يظهر للمستخدم العام.'),
+      on() && h('a', {
+        class: 'review-mode-bar__link', href: '#/quran-review', id: 'quran-review-link',
+      }, 'مراجعة النصوص القرآنية')),
     input);
   host.hidden = false;
 }
@@ -161,6 +171,16 @@ function defineRoutes() {
   route('/bookmarks', () => withUnits((units) => bookmarksScreen(units)));
   route('/search', () => withUnits((units) => searchScreen(units)));
   route('/settings', () => show(settingsScreen()));
+  /*
+   * مراجعة النصوص القرآنية — للمعاينة الخاصة وحدها، وفي وضع المراجعة وحده.
+   * لا يظهر لها رابط في الواجهة العامّة، وزيارة المسار مباشرةً لا تعرضها.
+   */
+  route('/quran-review', async () => {
+    if (!quranReviewVisible(getState().prefs)) { show(quranReviewHiddenScreen()); return; }
+    show(loading());
+    try { show(quranReviewScreen(await loadReviewData())); }
+    catch (e) { show(errorScreen(e.message || String(e))); }
+  });
   route('/more', () => show(moreScreen()));
 }
 
