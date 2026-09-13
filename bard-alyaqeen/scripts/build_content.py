@@ -25,6 +25,7 @@ from content.unit5 import UNIT5  # noqa: E402
 from content.unit6 import UNIT6  # noqa: E402
 from content.unit7 import UNIT7  # noqa: E402
 from content.added_interactions import ADDED  # noqa: E402
+from content.quran_uthmani import UTHMANI, FRAGMENTS, PRIMARY_SOURCE  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTENT = os.path.join(ROOT, "content")
@@ -229,6 +230,114 @@ def merge_added_interactions():
     return added
 
 
+ORNATE = ("\uFD3E", "\uFD3F")
+
+
+def is_quran_string(t):
+    """وسمٌ دلاليّ: النصّ القرآني يُعرف بقوسَي الآية المزخرفين."""
+    return isinstance(t, str) and any(ch in t for ch in ORNATE)
+
+
+def apply_uthmani():
+    """يستبدل نصوص بطاقات القرآن بالنصّ العثماني المنقول حرفيًّا من المرجع.
+
+    لا استبدال بخوارزمية ولا كتابة من الذاكرة: النصوص مولّدة في
+    scripts/content/quran_uthmani.py شرائحَ حرفية من المرجع الأساسي.
+    """
+    seen, applied = set(), 0
+    for u in UNITS:
+        for l in u["lessons"]:
+            for c in l["cards"]:
+                if c["type"] != "quran":
+                    continue
+                key = "%s/%s" % (l["id"], c["id"])
+                rec = UTHMANI.get(key)
+                if not rec:
+                    raise SystemExit("بطاقة قرآنية بلا نصّ عثماني معتمد: %s" % key)
+                seen.add(key)
+                if c["text"] != rec["text"]:
+                    applied += 1
+                c["text"] = rec["text"]
+                c["rasm"] = "عثماني"
+                c["textSource"] = PRIMARY_SOURCE
+    missing = set(UTHMANI) - seen
+    if missing:
+        raise SystemExit("نصوص عثمانية بلا بطاقة: %s" % ", ".join(sorted(missing)))
+    return applied
+
+
+_FRAG_RE = None
+
+
+def apply_fragments():
+    """يستبدل المقاطع القرآنية المقتبسة في الشروح والأسئلة والخلاصات.
+
+    **مرورٌ واحد** بتعبير نمطيّ يجمع كل المقاطع مرتَّبةً من الأطول إلى الأقصر،
+    فلا يُعاد المسح على ناتج الاستبدال ولا تتداخل القواعد بعضها في بعض.
+    والقيم شرائح حرفية من المرجع الأساسي — لا خوارزمية ولا كتابة يدوية.
+    """
+    global _FRAG_RE
+    if not FRAGMENTS:
+        return 0
+    if _FRAG_RE is None:
+        keys = sorted(FRAGMENTS, key=len, reverse=True)
+        _FRAG_RE = re.compile("|".join(re.escape(k) for k in keys))
+    n = [0]
+
+    def fix(t):
+        def rep(m):
+            n[0] += 1
+            return FRAGMENTS[m.group(0)]
+        return _FRAG_RE.sub(rep, t)
+
+    def walk(o):
+        if isinstance(o, dict):
+            for k, v in o.items():
+                if isinstance(v, str):
+                    o[k] = fix(v)
+                else:
+                    walk(v)
+        elif isinstance(o, list):
+            for i, v in enumerate(o):
+                if isinstance(v, str):
+                    o[i] = fix(v)
+                else:
+                    walk(v)
+
+    for u in UNITS:
+        walk(u)
+    return n[0]
+
+
+def tag_quran_content():
+    """يضع وسم `quran` على كل عنصر يعرض نصًّا قرآنيًّا — مشتقًّا لا مكتوبًا يدويًّا.
+
+    فلا يُنسى موضع مستقبليّ: الوسم يُحسب من المحتوى نفسه في كل بناء.
+    """
+    n = 0
+    for u in UNITS:
+        for l in u["lessons"]:
+            for c in l["cards"]:
+                if c["type"] == "quran" or is_quran_string(c.get("text")):
+                    c["quran"] = True
+                    n += 1
+            for group in (l["interactions"], l["quiz"]):
+                for q in group:
+                    fields = []
+                    for k in ("prompt", "before", "after"):
+                        fields.append(q.get(k))
+                    fields += list(q.get("options") or [])
+                    fields += list(q.get("items") or [])
+                    for pr in (q.get("pairs") or []):
+                        fields += list(pr)
+                    for g in (q.get("groups") or []):
+                        fields += list(g.get("items") or [])
+                    if any(is_quran_string(x) for x in fields):
+                        q["quran"] = True
+                        n += 1
+    return n
+
+
 def strip_nulls(obj):
     if isinstance(obj, dict):
         return {k: strip_nulls(v) for k, v in obj.items() if v is not None}
@@ -240,6 +349,9 @@ def strip_nulls(obj):
 def main():
     os.makedirs(os.path.join(CONTENT, "units"), exist_ok=True)
     n_added = merge_added_interactions()
+    n_uthmani = apply_uthmani()
+    n_frag = apply_fragments()
+    n_tagged = tag_quran_content()
     index, review = [], []
     total_lessons = total_cards = total_quiz = total_tasks = 0
     total_interactions = 0
@@ -300,6 +412,15 @@ def main():
           "quiz=%d tasks=%d needsReview=%d"
           % (len(UNITS), total_lessons, total_cards, total_interactions, n_added,
              total_quiz, total_tasks, len(review)))
+    print("رسم عثماني: %d بطاقة · %d مقطعًا مقتبسًا · وسم قرآني: %d عنصرًا"
+          % (n_uthmani, n_frag, n_tagged))
+
+    # البناء يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه (بند سادس).
+    import subprocess
+    r = subprocess.run([sys.executable,
+                        os.path.join(ROOT, "scripts", "audit_quran.py"), "--check"])
+    if r.returncode != 0:
+        raise SystemExit("فشل البناء: تدقيق سلامة النصّ القرآني رصد مخالفة.")
 
 
 if __name__ == "__main__":

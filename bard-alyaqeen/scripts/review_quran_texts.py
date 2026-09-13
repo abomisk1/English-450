@@ -57,9 +57,13 @@ def ar2int(s):
 # ------------------------------------------------------------------ الترميز
 TATWEEL = "ـ"
 AYAH_MARK = re.compile(r"﴿\s*([٠-٩0-9]+)\s*﴾")
-WAQF = set("ۖۗۘۙۚۛۜ۝۞۟"
-           "ۣ۠ۢۤۥۦۧۨ۩۪"
-           "ۭ۫۬۝")
+# علامات الوقف وحدها (U+06D6–U+06DC). وما عداها من العلامات الصغيرة
+# — كالواو والياء الصغيرتين وصفر الوصل والميم الصغيرة — علاماتُ رسمٍ
+# لا علاماتُ وقف، فلا تُعدّ منها.
+WAQF = set("\u06D6\u06D7\u06D8\u06D9\u06DA\u06DB\u06DC")
+# علامات الرسم الصغيرة: تُجرَّد في المقارنة ولا تُحسب علامات وقف
+SMALL_MARKS = set("\u06DF\u06E0\u06E2\u06E3\u06E5\u06E6\u06E7\u06E8\u06EA"
+                  "\u06EB\u06EC\u06ED")
 # رموز الترميز التي تختلف بين الطبعات دون أن يختلف الحرف
 TECHNICAL = {
     "ـ": "تطويل",
@@ -83,7 +87,9 @@ def L1(t):
 def L2(t):
     """الحروف وحدها: بلا تشكيل ولا وقف ولا أرقام آيات."""
     t = AYAH_MARK.sub(" ", L1(t))
-    t = "".join(c for c in t if not unicodedata.combining(c) and c not in WAQF)
+    t = "".join(c for c in t
+                if not unicodedata.combining(c) and c not in WAQF
+                and c not in SMALL_MARKS)
     t = t.replace("﴿", " ").replace("﴾", " ")
     return re.sub(r"\s+", " ", t).strip()
 
@@ -255,6 +261,21 @@ def match_mode(prog, ref, fn):
     return "none"
 
 
+def raw_compare(prog, ref_verse):
+    """مقارنة حرفية خام: هل نصّ البرنامج شريحة حرفية من المرجع؟
+
+    لا طيّ ولا تطبيع ولا تجريد — مطابقة Unicode مباشرة.
+    """
+    p = nfc(prog).strip()
+    r = nfc(ref_verse).strip()
+    r_nohizb = re.sub(r"^[۞۩]\s*", "", r)
+    if p == r or p == r_nohizb:
+        return "مطابقة تامّة للآية"
+    if p and (p in r or p in r_nohizb):
+        return "شريحة حرفية من الآية"
+    return "لا تطابق خام ⚠️"
+
+
 def classify(prog, refs):
     """يقابل نصّ البرنامج بثلاثة مراجع ويصنّف الفرق.
 
@@ -289,7 +310,9 @@ def classify(prog, refs):
             kinds.append("رسم عثماني/إملائي")
         if res["m1_enc"] == "none" and res["m1_qul"] == "none" and res["m1_simple"] == "none":
             kinds.append("تشكيل")
-        if waqf_of(prog) and enc and waqf_of(prog) != [c for c in L1(enc) if c in WAQF]:
+        pw = waqf_of(prog)
+        prim_w = [c for c in L1(qul or "") if c in WAQF]
+        if pw and not all(c in prim_w for c in pw):
             kinds.append("علامات وقف")
     res["kinds"] = kinds
     return res
@@ -327,6 +350,8 @@ def main():
 
     os.makedirs(args.out, exist_ok=True)
     ref = load_reference(args.ref)
+    # المرجع الأساسي هو QUL؛ يُعرض في العمود المقابل للبرنامج
+
     smap = surah_map(args.names)
     units = load_units()
     cards = quran_cards(units)
@@ -367,6 +392,8 @@ def main():
                                "note": "الآية غير موجودة في المرجع بهذا الرقم."})
                 continue
             res = classify(seg, (enc, qul, simple))
+            res["raw_primary"] = raw_compare(seg, qul) if qul else "لا مرجع"
+            res["raw_witness"] = raw_compare(seg, enc) if enc else "لا مرجع"
             verses.append({
                 "ayah": a, "prog": seg, "enc": enc, "qul": qul, "simple": simple,
                 "res": res,
@@ -381,6 +408,11 @@ def main():
         row["rasm"] = "، ".join(rasms)
         row["partial"] = any(v["res"]["partial"] for v in verses if v.get("res"))
 
+        raw_ok = all((v.get("res") or {}).get("raw_primary", "").startswith(("مطابقة", "شريحة"))
+                     for v in verses)
+        row["rawPrimary"] = "كل المقاطع شرائح حرفية من المرجع الأساسي" if raw_ok \
+            else "⚠️ لا تطابق خام مع المرجع الأساسي"
+
         # التوصية — ولا تُمنح «مطابق» إلا بتطابق حرفيّ تامّ مع مرجع مُسمّى.
         if any(v.get("verdict") == "تحتاج تحققًا بشريًا" for v in verses):
             row["verdict"] = "تحتاج تحققًا بشريًا"
@@ -388,9 +420,10 @@ def main():
         elif "حروف" in kinds:
             row["verdict"] = "يحتاج تصحيحًا"
             row["reason"] = "اختلاف في الحروف بعد طيّ فروق الرسم — لا يُفسَّر باختلاف الطبعة."
-        elif all(v["res"]["exact_enc"] or v["res"]["exact_qul"] for v in verses):
-            row["verdict"] = "مطابق"
-            row["reason"] = "تطابق حرفيّ تامّ مع مرجع عثماني."
+        elif raw_ok:
+            row["verdict"] = "مطابق للمرجع الأساسي"
+            row["reason"] = ("كل مقاطعه شرائح حرفية (Unicode) من المرجع الأساسي. "
+                             "ويبقى «بانتظار المراجعة» حتى يصدر الاعتماد.")
         elif all(v["res"]["exact_simple"] for v in verses):
             row["verdict"] = "تحتاج تحققًا بشريًا"
             row["reason"] = ("تطابق حرفيّ تامّ مع المرجع الإملائي المبسّط، لا العثماني — "
@@ -418,8 +451,9 @@ def main():
               ensure_ascii=False, indent=1)
 
     tally = collections.Counter(r["verdict"] for r in rows)
-    print("النصوص: %d · مطابق=%d · يحتاج تصحيحًا=%d · تحتاج تحققًا بشريًا=%d"
-          % (len(rows), tally["مطابق"], tally["يحتاج تصحيحًا"], tally["تحتاج تحققًا بشريًا"]))
+    print("النصوص: %d" % len(rows))
+    for k, n in tally.most_common():
+        print("   %-32s %d" % (k, n))
     kinds = collections.Counter(k for r in rows for k in r.get("kinds", []))
     for k, n in kinds.most_common():
         print("   %-14s %d" % (k, n))
@@ -545,11 +579,17 @@ def tashkeel_state(v):
 
 
 def waqf_state(v):
+    """تُقارن علامات الوقف بالمرجع **الأساسي**، إذ منه نُقل النصّ حرفيًّا."""
     prog = waqf_of(v["prog"])
-    ref = [c for c in L1(v.get("enc") or "") if c in WAQF]
-    if prog == ref:
-        return "مطابقة (%s)" % (ar(len(prog)) if prog else "لا علامات")
-    return "البرنامج %s · المرجع %s" % (ar(len(prog)), ar(len(ref)))
+    prim = [c for c in L1(v.get("qul") or "") if c in WAQF]
+    wit = [c for c in L1(v.get("enc") or "") if c in WAQF]
+    if prog == prim:
+        return "مطابقة للمرجع الأساسي (%s)" % (ar(len(prog)) if prog else "لا علامات")
+    # النصّ مقطع من الآية، فعلاماته بعض علامات الآية
+    if all(c in prim for c in prog):
+        return "من علامات المرجع الأساسي (%s من %s في الآية)" % (ar(len(prog)), ar(len(prim)))
+    return "⚠️ البرنامج %s · الأساسي %s · الشاهد %s" % (
+        ar(len(prog)), ar(len(prim)), ar(len(wit)))
 
 
 def write_outputs(rows, occ, out_dir):
@@ -559,7 +599,8 @@ def write_outputs(rows, occ, out_dir):
     # ----------------------------------------------------------------- CSV
     cols = ["#", "الوحدة/الدرس/البطاقة", "اسم السورة", "الآية أو النطاق",
             "نصّ البرنامج", "صفحة الكتاب", "صورة الصفحة", "النصّ المرجعي",
-            "مصدر المرجع", "نتيجة المطابقة", "الفروق الحرفية", "حالة التشكيل",
+            "مصدر المرجع", "نتيجة المطابقة", "المقارنة الخام (أساسي)",
+            "المقارنة الخام (شاهد)", "الفروق الحرفية", "حالة التشكيل",
             "حالة علامات الوقف", "حالة رقم الآية", "مواضع الظهور",
             "الملاحظات", "التوصية"]
     csv_path = os.path.join(out_dir, "quran-review.csv")
@@ -584,6 +625,8 @@ def write_outputs(rows, occ, out_dir):
                     SRC_LABEL["enc"],
                     ("مقطع من الآية" if (v.get("res") or {}).get("partial") else "الآية كاملة")
                     + " · الحروف: " + ("سليمة" if (v.get("res") or {}).get("lettersOk") else "مختلفة ⚠️"),
+                    (v.get("res") or {}).get("raw_primary", "—"),
+                    (v.get("res") or {}).get("raw_witness", "—"),
                     diff_cells(v),
                     tashkeel_state(v),
                     waqf_state(v),
@@ -821,6 +864,9 @@ def write_html(rows, occ, out_dir):
               % ("مقطع من الآية" if (v.get("res") or {}).get("partial") else "الآية كاملة",
                  "سليمة" if (v.get("res") or {}).get("lettersOk") else "<b>مختلفة ⚠️</b>",
                  ar(nreal)))
+            w("<tr><th>المقارنة الحرفية الخام</th><td>الأساسي: <b>%s</b> · الشاهد: %s</td></tr>"
+              % ((v.get("res") or {}).get("raw_primary", "—"),
+                 (v.get("res") or {}).get("raw_witness", "—")))
             w("<tr><th>حالة التشكيل</th><td>%s</td></tr>" % tashkeel_state(v))
             w("<tr><th>علامات الوقف</th><td>%s</td></tr>" % waqf_state(v))
             w("<tr><th>الفروق الحرفية</th><td>%s</td></tr>" % esc(diff_cells(v)))

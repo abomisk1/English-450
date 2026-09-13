@@ -1,7 +1,7 @@
 /** صفحة الوحدات، وصفحة وحدة واحدة بدروسها وأنشطتها ومهامها. */
 
 import { h, ar, arCount, COUNT_MINUTE_GEN, icon, ICONS } from '../lib/dom.js';
-import { progressBar, sectionTitle, ornament } from './widgets.js';
+import { progressBar, sectionTitle, ornament, qtext } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState } from '../store.js';
 import * as P from '../lib/progress.js';
@@ -89,7 +89,7 @@ export function unitScreen(unit) {
       h('span', { class: 'chip' }, 'من الكتاب — صفحة «أنشطة»')),
     h('p', { class: 'small muted' }, 'أسئلة مقالية كما وردت في الكتاب؛ أجب عنها كتابةً ثم قارنها بما درست.'),
     ...unit.assessment.map((a, i) => h('details', { class: 'more' },
-      h('summary', {}, `${ar(i + 1)}. ${a.q}`),
+      h('summary', {}, qtext(`${ar(i + 1)}. ${a.q}`)),
       h('div', { class: 'field', style: { marginTop: '.5rem' } },
         h('textarea', {
           class: 'textarea', placeholder: 'اكتب إجابتك هنا…',

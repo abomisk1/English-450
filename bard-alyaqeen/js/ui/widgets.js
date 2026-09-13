@@ -82,8 +82,8 @@ export function renderCard(card) {
   } else if (card.type === 'list') {
     body = h('div', { class: 'deflist' },
       ...(card.items || []).map((it) => h('div', { class: 'deflist__row' },
-        h('div', { class: 'deflist__term' }, it.term),
-        h('div', { class: 'deflist__def' }, it.def),
+        qtext(it.term, 'div', 'deflist__term'),
+        qtext(it.def, 'div', 'deflist__def'),
       )),
     );
   } else if (card.type === 'note' || card.src === 'authored') {
@@ -112,15 +112,45 @@ export function renderCard(card) {
 function feedbackBox(ok, why) {
   return h('div', { class: `feedback ${ok ? 'feedback--ok' : 'feedback--err'}`, role: 'status' },
     h('strong', { class: 'feedback__title' }, ok ? 'إجابة صحيحة' : 'ليست الإجابة الصحيحة'),
-    h('div', {}, why),
+    qtext(why, 'div'),
   );
 }
 
 const KEYS = ['أ', 'ب', 'ج', 'د', 'هـ'];
 
-/** هل هذا النصّ نصٌّ قرآني؟ (يُعرَف بأقواس الآية) */
+/**
+ * هل هذا النصّ نصٌّ قرآني؟
+ * الوسم الدلالي في البيانات هو قوسا الآية المزخرفان، ويضعه البناء كذلك
+ * على العنصر نفسه (`quran: true`). والفحص هنا على النصّ المعروض مباشرةً،
+ * فلا يفوت موضعٌ جديد ولا يحتاج إلى قائمة تُحدَّث يدويًّا.
+ */
 export function isQuranText(t) {
   return /[\uFD3E\uFD3F]/.test(String(t || ''));
+}
+
+const QURAN_SEG = /\uFD3F[^\uFD3E\uFD3F]*\uFD3E/g;
+
+/**
+ * يعرض نصًّا قد يحوي قرآنًا: يُلبس **المقاطع القرآنية وحدها** خطّ المصحف
+ * ولونه، ويترك ما حولها من كلام الشرح بخطّ الواجهة.
+ * يُستعمل في **كل** موضع يُعرض فيه نصّ قد يكون قرآنيًّا، فلا يفوت موضع.
+ */
+export function qtext(t, tag = 'span', cls = '') {
+  const str = String(t == null ? '' : t);
+  const el = h(tag, { class: cls || null });
+  if (!isQuranText(str)) {
+    el.textContent = str;
+    return el;
+  }
+  let last = 0;
+  str.replace(QURAN_SEG, (m, at) => {
+    if (at > last) el.append(str.slice(last, at));
+    el.append(h('span', { class: 'qtext', lang: 'ar' }, m));
+    last = at + m.length;
+    return m;
+  });
+  if (last < str.length) el.append(str.slice(last));
+  return el;
 }
 
 /**
@@ -131,7 +161,7 @@ export function isQuranText(t) {
  */
 export function renderQuestion(q, onAnswer, opts = {}) {
   const wrap = h('section', { class: 'q' });
-  const prompt = h('div', { class: 'q__prompt' }, q.prompt);
+  const prompt = qtext(q.prompt, 'div', 'q__prompt');
   wrap.append(prompt);
   if (q.src === 'authored') {
     wrap.append(h('div', { class: 'chip chip--warn prov', style: { marginBottom: '.5rem' } },
@@ -152,13 +182,13 @@ export function renderQuestion(q, onAnswer, opts = {}) {
   if (['mcq', 'truefalse', 'scenario'].includes(q.kind) || q.kind === 'complete') {
     if (q.kind === 'complete') {
       wrap.append(h('div', { class: 'cloze' },
-        q.before, ' ', h('span', { class: 'cloze__gap' }, '……'), ' ', q.after));
+        qtext(q.before), ' ', h('span', { class: 'cloze__gap' }, '……'), ' ', qtext(q.after)));
     }
     const opts_ = h('div', { class: 'opts', role: 'group', 'aria-label': 'الخيارات' });
     q.view.forEach((text, i) => {
       const b = h('button', { class: 'opt', type: 'button' },
         h('span', { class: 'opt__key' }, KEYS[i] || i + 1),
-        h('span', {}, text));
+        qtext(text));
       b.addEventListener('click', () => {
         if (answered) return;
         const correct = i === q.answerIndex;
@@ -181,11 +211,7 @@ export function renderQuestion(q, onAnswer, opts = {}) {
     const paint = () => {
       list.replaceChildren(...items.map((text, i) => h('li', { class: 'order-item' },
         h('span', { class: 'opt__key' }, ar(i + 1)),
-        // النصّ القرآني يبقى بخطّ المصحف المعتمد ولونه حيثما عُرض.
-        h('span', {
-          class: 'order-item__text' + (isQuranText(text) ? ' qtext' : ''),
-          lang: 'ar',
-        }, text),
+        qtext(text, 'span', 'order-item__text'),
         h('span', { class: 'order-item__ctrls' },
           h('button', {
             class: 'btn btn--ghost btn--icon', type: 'button', 'aria-label': 'إلى الأعلى',
@@ -215,7 +241,7 @@ export function renderQuestion(q, onAnswer, opts = {}) {
         wrap.insertBefore(h('div', { class: 'aid', style: { marginTop: '.6rem' } },
           h('span', { class: 'aid__tag' }, 'الترتيب الصحيح'),
           h('ol', { style: { margin: 0, paddingInlineStart: '1.2rem' } },
-            ...q.items.map((t) => h('li', {}, t)))), submit.nextSibling);
+            ...q.items.map((t) => qtext(t, 'li')))), submit.nextSibling);
       }
       done(res.correct, res.detail);
     });
@@ -231,7 +257,7 @@ export function renderQuestion(q, onAnswer, opts = {}) {
         h('option', { value: '' }, '— اختر المعنى —'),
         ...q.choices.map((c) => h('option', { value: c }, c)));
       sel.addEventListener('change', () => { answer[term] = sel.value; });
-      rows.append(h('div', { class: 'match__row' }, h('div', { class: 'match__term' }, term), sel));
+      rows.append(h('div', { class: 'match__row' }, qtext(term, 'div', 'match__term'), sel));
     });
     const submit = h('button', { class: 'btn btn--accent btn--block', type: 'button', style: { marginTop: '.75rem' } },
       'تحقّق من المطابقة');
@@ -246,7 +272,7 @@ export function renderQuestion(q, onAnswer, opts = {}) {
       if (!res.correct) {
         wrap.append(h('div', { class: 'aid' },
           h('span', { class: 'aid__tag' }, 'المطابقة الصحيحة'),
-          ...q.pairs.map(([a, b]) => h('div', {}, `${a} ← ${b}`))));
+          ...q.pairs.map(([a, b]) => h('div', {}, qtext(a), ' ← ', b))));
       }
       done(res.correct, res.detail);
     });
@@ -264,7 +290,7 @@ export function renderQuestion(q, onAnswer, opts = {}) {
       sel.addEventListener('change', () => {
         answer[text] = sel.value === '' ? undefined : Number(sel.value);
       });
-      rows.append(h('div', { class: 'match__row' }, h('div', { class: 'match__term' }, text), sel));
+      rows.append(h('div', { class: 'match__row' }, qtext(text, 'div', 'match__term'), sel));
     });
     const submit = h('button', { class: 'btn btn--accent btn--block', type: 'button', style: { marginTop: '.75rem' } },
       'تحقّق من التصنيف');
@@ -279,7 +305,8 @@ export function renderQuestion(q, onAnswer, opts = {}) {
       if (!res.correct) {
         wrap.append(h('div', { class: 'aid' },
           h('span', { class: 'aid__tag' }, 'التصنيف الصحيح'),
-          ...q.groups.map((g) => h('div', {}, `${g.label}: ${g.items.join(' · ')}`))));
+          ...q.groups.map((g) => h('div', {}, `${g.label}: `,
+            ...g.items.flatMap((it, i) => (i ? [' · ', qtext(it)] : [qtext(it)]))))));
       }
       done(res.correct, res.detail);
     });
@@ -290,11 +317,12 @@ export function renderQuestion(q, onAnswer, opts = {}) {
   if (q.kind === 'flashcards') {
     const grid = h('div', { class: 'flash' });
     q.view.forEach(([front, back]) => {
-      const c = h('button', { class: 'flash__card', type: 'button', dataset: { flipped: 'false' } }, front);
+      const c = h('button', { class: 'flash__card', type: 'button', dataset: { flipped: 'false' } },
+        qtext(front));
       c.addEventListener('click', () => {
         const flipped = c.dataset.flipped === 'true';
         c.dataset.flipped = flipped ? 'false' : 'true';
-        c.textContent = flipped ? front : back;
+        c.replaceChildren(qtext(flipped ? front : back));
       });
       grid.append(c);
     });

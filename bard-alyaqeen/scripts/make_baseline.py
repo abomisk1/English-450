@@ -49,8 +49,10 @@ KEY_FILES = [
     "js/lib/speech.js", "js/lib/quiz.js", "js/lib/content.js", "js/lib/storage.js",
     "js/ui/widgets.js", "js/ui/lesson.js",
     "css/tokens.css", "css/app.css",
+    "content/quran-reference.json",
+    "scripts/content/quran_uthmani.py",
     "scripts/build_content.py", "scripts/audit_quran.py",
-    "scripts/review_quran_texts.py",
+    "scripts/review_quran_texts.py", "scripts/convert_quran_rasm.py",
     "tests/run.mjs", "tests/e2e.mjs", "tests/visual-audit.mjs",
 ]
 
@@ -80,12 +82,14 @@ def content_counts():
 
 TESTS = [
     ("اختبارات المنطق", "node tests/run.mjs", "٦١ ناجحًا · ٠ فاشلًا"),
-    ("اختبارات الواجهة", "node tests/e2e.mjs", "٦٤ ناجحًا · ٠ فاشلًا"),
+    ("اختبارات الواجهة", "node tests/e2e.mjs", "٦٦ ناجحًا · ٠ فاشلًا"),
     ("الفحص البصري", "node tests/visual-audit.mjs", "٧٠٢ فحصًا · ٠ خطأ · ٠ تنبيه"),
     ("تدقيق سلامة النصّ القرآني", "python3 scripts/audit_quran.py --check",
-     "٢١٧١ فحصًا · ٠ مخالفة"),
+     "٢٧٦٠ فحصًا · ٠ مخالفة (ثماني قواعد)"),
     ("مراجعة النصوص القرآنية الـ٢٤", "python3 scripts/review_quran_texts.py",
-     "٠ اختلاف في الحروف · ٠ تعارض بين المواضع"),
+     "٢٤ نصًّا شريحةً حرفية من المرجع الأساسي · ٠ تعارض بين المواضع"),
+    ("البناء", "python3 scripts/build_content.py",
+     "يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه"),
 ]
 
 
@@ -107,7 +111,9 @@ def main():
         if not os.path.exists(prev):
             print("لا يوجد خط أساس مسجَّل.")
             return 1
-        txt = open(prev, encoding="utf-8").read()
+        import glob as _g
+        txt = "".join(open(x, encoding="utf-8").read()
+                      for x in _g.glob(os.path.join(ROOT, "docs/BASELINE*.md")))
         bad = [rel for rel, h in hashes.items() if h and h[:16] not in txt]
         print("ملفات تغيّرت عن خط الأساس: %d" % len(bad))
         for b in bad:
@@ -161,9 +167,17 @@ def main():
               "تعديل أيّ نصّ قرآني"]:
         w("| %s | **لم يحدث** |" % k)
     w("")
-    open(os.path.join(ROOT, "docs/BASELINE.md"), "w", encoding="utf-8").write("\n".join(O))
-    print("docs/BASELINE.md · commit=%s · مراجعة=%s"
-          % (short, counts["عناصر تحتاج مراجعة"]))
+    # سجلّ جديد لا يستبدل السابق ولا يمحو بصماته
+    n = 1
+    while os.path.exists(os.path.join(ROOT, "docs/BASELINE-%02d.md" % (n + 1))):
+        n += 1
+    prev = "docs/BASELINE.md" if n == 1 else "docs/BASELINE-%02d.md" % n
+    out_name = "docs/BASELINE-%02d.md" % (n + 1)
+    O.insert(3, "**السجلّ السابق:** [`%s`](%s) — باقٍ كما هو، ولم تُمحَ بصماته.\n"
+             % (os.path.basename(prev), os.path.basename(prev)))
+    open(os.path.join(ROOT, out_name), "w", encoding="utf-8").write("\n".join(O))
+    print("%s · commit=%s · مراجعة=%s · معتمَد=%s"
+          % (out_name, short, counts["عناصر تحتاج مراجعة"], counts["منها معتمَدة"]))
     return 0
 
 

@@ -56,53 +56,68 @@ def load_units():
             for u in manifest["units"]]
 
 
-# ---------------------------------------------------------------- الجَرْد المعتمد
-# كل مقطع قرآني يظهر في البرنامج لا بدّ أن يكون جزءًا من إحدى بطاقات `quran`
-# أو من آية صدّر بها الكتاب بابًا. وهذه هي مصادر الجَرْد:
-#   ١) نصوص بطاقات type=quran كلها (٢٤ بطاقة).
-#   ٢) الآيات التي يصدّر بها الكتاب أبوابه ويقتبسها الشرح.
-# أيّ مقطع خارج ذلك يُعدّ مستحدثًا ويُرفَض.
-EXTRA_APPROVED = [
-    # آيات صدّر بها الكتاب أبوابًا، منقولة في الشروح والخلاصات
-    "يَا أَيُّهَا الَّذِينَ آمَنُوا اتَّقُوا اللَّهَ وَكُونُوا مَعَ الصَّادِقِينَ",
-    "إِنَّمَا يُوَفَّى الصَّابِرُونَ أَجْرَهُمْ بِغَيْرِ حِسَابٍ",
-    "وَأَوْفُوا بِالْعَهْدِ ۖ إِنَّ الْعَهْدَ كَانَ مَسْئُولًا",
-    "إِنَّ اللَّهَ يَأْمُرُكُمْ أَنْ تُؤَدُّوا الْأَمَانَاتِ إِلَىٰ أَهْلِهَا",
-    "وَرَحْمَتِي وَسِعَتْ كُلَّ شَيْءٍ",
-    "وَإِنْ تَعُدُّوا نِعْمَتَ اللَّهِ لَا تُحْصُوهَا",
-    "وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا",
-    "وَلَا تَهِنُوا وَلَا تَحْزَنُوا وَأَنْتُمُ الْأَعْلَوْنَ إِنْ كُنْتُمْ مُؤْمِنِينَ",
-    "وَاعْبُدُوا اللَّهَ وَلَا تُشْرِكُوا بِهِ شَيْئًا ۖ وَبِالْوَالِدَيْنِ إِحْسَانًا",
-    "وَافْعَلُوا الْخَيْرَ لَعَلَّكُمْ تُفْلِحُونَ",
-    "نَبِّئْ عِبَادِي أَنِّي أَنَا الْغَفُورُ الرَّحِيمُ ۝ وَأَنَّ عَذَابِي هُوَ الْعَذَابُ الْأَلِيمُ",
-    "لَا تَقْنَطُوا مِنْ رَحْمَةِ اللَّهِ ۚ إِنَّ اللَّهَ يَغْفِرُ الذُّنُوبَ جَمِيعًا",
-    "إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ",
-    "وَرَاوَدَتْهُ الَّتِي هُوَ فِي بَيْتِهَا",
-    "يَا أَيُّهَا الَّذِينَ آمَنُوا لَا تَدْخُلُوا بُيُوتَ النَّبِيِّ إِلَّا أَنْ يُؤْذَنَ لَكُمْ",
-    "إِنَّمَا الْمُؤْمِنُونَ",
-    "وَمِمَّا رَزَقْنَاهُمْ يُنْفِقُونَ",
-]
+# --------------------------------------------------- المرجع العثماني المعتمد
+# الجَرْد لم يعُد قائمةً مكتوبة يدويًّا. كل مقطع ﴿…﴾ في البرنامج يجب أن يكون
+# **شريحة حرفية متّصلة** من آيةٍ في المرجع الأساسي المحفوظ داخل المستودع:
+#   content/quran-reference.json  (مولّد من scripts/convert_quran_rasm.py)
+# وهذا يحقّق ما يلي دفعةً واحدة:
+#   • لا مقطع مولَّد ولا محرَّف.
+#   • مطابقة النصّ العثماني النهائي للمرجع الأساسي.
+#   • كشف أي رجوع إلى الرسم الإملائي (لأنه لن يكون شريحةً من المرجع).
+REF_PATH = os.path.join(CONTENT, "quran-reference.json")
 
 
-def build_inventory(units):
-    """جَرْد المقاطع المعتمدة: نصوص بطاقات القرآن + آيات أبواب الكتاب."""
-    inv = []
-    for u in units:
-        for l in u["lessons"]:
-            for c in l["cards"]:
-                if c["type"] == "quran" and c.get("text"):
-                    inv.append(bare(c["text"]))
-    inv += [bare(x) for x in EXTRA_APPROVED]
-    return [x for x in inv if x]
+def load_reference():
+    if not os.path.exists(REF_PATH):
+        raise SystemExit("المرجع القرآني مفقود: content/quran-reference.json")
+    d = json.load(open(REF_PATH, encoding="utf-8"))
+    return d
 
 
-def in_inventory(seg, inv):
-    b = bare(seg)
-    if not b:
-        return True           # أرقام الآيات ونحوها
-    if b.isdigit() or re.fullmatch(r"[٠-٩]+", b):
+def nfc(t):
+    import unicodedata
+    return unicodedata.normalize("NFC", t or "")
+
+
+AYAH_NUM = re.compile(r"^\s*[٠-٩0-9]+\s*$")
+ELLIPSIS = re.compile(r"\s*(?:…|\.\.\.)\s*$")
+SEP = re.compile(r"\s*(?:۝|﴿\s*[٠-٩0-9]+\s*﴾)\s*")
+
+
+_HAYSTACK = None
+
+
+def _haystacks(verses):
+    """نصوص المرجع للمطابقة: كل آية، وكل آيتين متتاليتين موصولتين.
+
+    فالمقطع قد يمتدّ على آيتين قصيرتين بلا فاصل (كآيتي الإخلاص ٣ و٤).
+    """
+    global _HAYSTACK
+    if _HAYSTACK is not None:
+        return _HAYSTACK
+    out = []
+    for k, v in verses.items():
+        t = nfc(v["primary"]).strip()
+        out.append(t)
+        sid, a = k.split(":")
+        nxt = verses.get("%s:%d" % (sid, int(a) + 1))
+        if nxt:
+            out.append(t + " " + nfc(nxt["primary"]).strip())
+    # علامة الحزب ليست من نصّ الآية
+    out += [re.sub(r"^[۞۩]\s*", "", t) for t in out]
+    _HAYSTACK = out
+    return out
+
+
+def is_reference_slice(seg, verses):
+    """هل المقطع شريحة حرفية من المرجع الأساسي؟"""
+    inner = nfc(seg[1:-1] if seg.startswith("﴿") else seg).strip()
+    inner = ELLIPSIS.sub("", inner)
+    if not inner or AYAH_NUM.match(inner):
         return True
-    return any(b in x for x in inv)
+    hay = _haystacks(verses)
+    parts = [p.strip() for p in SEP.split(inner) if p.strip()]
+    return all(any(p in h for h in hay) for p in parts)
 
 
 # ------------------------------------------------------------------ جمع العناصر
@@ -128,7 +143,8 @@ def walk_strings(obj, path=""):
 
 def main():
     units = load_units()
-    inv = build_inventory(units)
+    refdoc = load_reference()
+    verses = refdoc["verses"]
     violations = []
     checks = collections.Counter()
 
@@ -179,15 +195,82 @@ def main():
                 if "﴿" in str(o) or "﴾" in str(o):
                     bad("ق-٥", where, "نصّ قرآني بين عناصر التصنيف: %s" % str(o)[:50])
 
-    # --------------------------------------------------------------- ق-٤ الجَرْد
+    # ------------------------------------------- ق-٤ مطابقة المرجع الأساسي
     seen = collections.Counter()
     for u in units:
-        for path, s in walk_strings(u, u["id"]):
-            for seg in SEGMENT.findall(s):
+        for path, s_ in walk_strings(u, u["id"]):
+            for seg in SEGMENT.findall(s_):
                 seen[seg] += 1
                 checks["ق-٤"] += 1
-                if not in_inventory(seg, inv):
-                    bad("ق-٤", path, "مقطع خارج الجَرْد المعتمد: %s" % seg[:70])
+                if not is_reference_slice(seg, verses):
+                    bad("ق-٤", path,
+                        "ليس شريحة حرفية من المرجع الأساسي (مولَّد أو محرَّف "
+                        "أو راجعٌ إلى الرسم الإملائي): %s" % seg[:70])
+
+    # ------------------------------------------------- ق-٦ اتساق المواضع
+    places = collections.defaultdict(set)
+    for u in units:
+        for path, s_ in walk_strings(u, u["id"]):
+            for seg in SEGMENT.findall(s_):
+                inner = nfc(seg[1:-1]).strip()
+                if AYAH_NUM.match(inner) or not inner:
+                    continue
+                places[bare(inner)].add(inner)
+    for skel, forms in places.items():
+        checks["ق-٦"] += 1
+        if len(forms) > 1:
+            bad("ق-٦", "—", "صورتان مختلفتان للنصّ نفسه: %s"
+                % " ⟺ ".join(list(forms)[:2]))
+
+    # ------------------------------- ق-٧ وسم المحتوى القرآني في البيانات
+    for u in units:
+        for l in u["lessons"]:
+            for c in l["cards"]:
+                checks["ق-٧"] += 1
+                has = c["type"] == "quran" or "﴿" in (c.get("text") or "")
+                if has and not c.get("quran"):
+                    bad("ق-٧", "%s/%s/%s" % (u["id"], l["id"], c["id"]),
+                        "بطاقة فيها نصّ قرآني بلا وسم quran")
+            for group in (l["interactions"], l["quiz"]):
+                for q in group:
+                    checks["ق-٧"] += 1
+                    fields = [q.get(k) for k in ("prompt", "before", "after")]
+                    fields += list(q.get("options") or []) + list(q.get("items") or [])
+                    for pr in (q.get("pairs") or []):
+                        fields += list(pr)
+                    for g in (q.get("groups") or []):
+                        fields += list(g.get("items") or [])
+                    has = any("﴿" in str(x) for x in fields if x)
+                    if has and not q.get("quran"):
+                        bad("ق-٧", "%s/%s/%s" % (u["id"], l["id"], q["id"]),
+                            "عنصر فيه نصّ قرآني بلا وسم quran")
+
+    # ------------------------- ق-٨ نشاط ترتيب الفاتحة يطابق النصّ والترتيب
+    for u in units:
+        for l in u["lessons"]:
+            for q in l["interactions"]:
+                if q["kind"] != "order":
+                    continue
+                if not any("﴿" in str(i) for i in q.get("items") or []):
+                    continue
+                checks["ق-٨"] += 1
+                card = next((c for c in l["cards"] if c["type"] == "quran"), None)
+                if not card:
+                    bad("ق-٨", l["id"], "نشاط ترتيب قرآني بلا بطاقة سورة")
+                    continue
+                prev = -1
+                for it in q["items"]:
+                    body = nfc(it).strip("﴿﴾").strip()
+                    at = nfc(card["text"]).find(body, prev + 1)
+                    if at < 0:
+                        bad("ق-٨", "%s/%s" % (l["id"], q["id"]),
+                            "عنصر ليس نصًّا حرفيًّا من بطاقة السورة: %s" % body[:40])
+                        break
+                    if at <= prev:
+                        bad("ق-٨", "%s/%s" % (l["id"], q["id"]),
+                            "الترتيب ليس ترتيب المصحف عند: %s" % body[:40])
+                        break
+                    prev = at
 
     # ------------------------------------------------------------------ التقرير
     out = []
@@ -202,8 +285,12 @@ def main():
         "ق-١": "إكمال نصّ قرآني — كتابةً أو بالاختيار",
         "ق-٢": "ظهور نصّ قرآني داخل قائمة خيارات",
         "ق-٣": "خيار خاطئ يُنشئ عجزًا لآية أو يحاكي نظمها",
-        "ق-٤": "مقطع قرآني خارج الجَرْد المعتمد (مستحدث أو محرَّف)",
+        "ق-٤": "مقطع ليس شريحة حرفية من المرجع العثماني الأساسي "
+               "(مولَّد أو محرَّف أو راجعٌ إلى الرسم الإملائي)",
         "ق-٥": "استعمال نصّ قرآني بدلًا خاطئًا في المطابقة أو التصنيف",
+        "ق-٦": "صورتان مختلفتان للنصّ القرآني نفسه بين موضعين",
+        "ق-٧": "نصّ قرآني في البيانات بلا وسم `quran` (فيَفوته خطّ المصحف)",
+        "ق-٨": "نشاط ترتيب الفاتحة لا يطابق نصّ البطاقة أو ترتيب المصحف",
     }
     nviol = collections.Counter(v[0] for v in violations)
     for r, d in RULES.items():

@@ -5,7 +5,7 @@
 
 import { h, ar, arCount, COUNT_QUESTION, COUNT_CARD, COUNT_MINUTE_GEN,
   icon, ICONS, toast, focusMain, announce } from '../lib/dom.js';
-import { renderCard, renderQuestion, progressBar, ornament, sectionTitle, provNote } from './widgets.js';
+import { renderCard, renderQuestion, progressBar, ornament, sectionTitle, provNote, qtext } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState, update, saveNow } from '../store.js';
 import * as C from '../lib/content.js';
@@ -161,7 +161,7 @@ export function lessonScreen(unit, lesson, units) {
       provNote(),
       h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'خلاصة الدرس'),
       h('ul', { style: { margin: 0, paddingInlineStart: '1.2rem', lineHeight: '2' } },
-        ...lesson.summary.points.map((t) => h('li', {}, t))),
+        ...lesson.summary.points.map((t) => qtext(t, 'li'))),
     ));
 
     // نشاط أسري — يظهر على الدروس التي فيها نشاط فعلًا، بلا إعداد عام يُفعّله.
@@ -192,7 +192,7 @@ export function lessonScreen(unit, lesson, units) {
       provNote(),
       h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'خلاصة الدرس'),
       h('ul', { style: { margin: 0, paddingInlineStart: '1.2rem', lineHeight: '2' } },
-        ...lesson.summary.points.map((t) => h('li', {}, t))),
+        ...lesson.summary.points.map((t) => qtext(t, 'li'))),
     ));
 
     const flash = C.interactionsForPath(lesson, 'review');

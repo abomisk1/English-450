@@ -330,18 +330,74 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert(bad.length === 0, bad.join(' | '));
   });
 
+  await check('لا يظهر نصّ قرآني بخطّ الواجهة العامّة في أي شاشة', async () => {
+    const routes = ['/#/lesson/u1/u1l3', '/#/lesson/u1/u1l4', '/#/lesson/u1/u1l5',
+      '/#/lesson/u1/u1l6', '/#/lesson/u1/u1l7', '/#/lesson/u1/u1l8', '/#/lesson/u1/u1l9',
+      '/#/lesson/u6/u6l1', '/#/lesson/u6/u6l4', '/#/lesson/u7/u7l1', '/#/lesson/u7/u7l8',
+      '/#/lesson/u5/u5l5', '/#/quiz/u1/u1l3', '/#/unit/u1', '/#/unit/u6', '/#/unit/u7'];
+    const bad = [];
+    for (const r of routes) {
+      await page.goto(BASE + r, { waitUntil: 'networkidle' });
+      await page.waitForTimeout(220);
+      const hits = await page.evaluate(() => {
+        const out = [];
+        for (const el of document.querySelectorAll('#view *')) {
+          if (el.children.length) continue;
+          const t = el.textContent || '';
+          if (!/[\uFD3E\uFD3F]/.test(t)) continue;
+          if (!/Amiri Quran/i.test(getComputedStyle(el).fontFamily)) {
+            out.push((el.className || el.tagName) + ' «' + t.trim().slice(0, 30) + '»');
+          }
+        }
+        return out;
+      });
+      if (hits.length) bad.push(r + ': ' + hits.join(' | '));
+    }
+    assert(bad.length === 0, bad.join(' ‖ '));
+  });
+
+  await check('النصوص القرآنية بالرسم العثماني لا الإملائي', async () => {
+    const res = await page.evaluate(async () => {
+      const m = await (await fetch('/content/manifest.json')).json();
+      let cards = 0, wasla = 0, plain = [];
+      for (const u of m.units) {
+        const unit = await (await fetch('/content/' + u.file)).json();
+        for (const l of unit.lessons) {
+          for (const c of l.cards) {
+            if (c.type !== 'quran') continue;
+            cards++;
+            if (c.rasm !== 'عثماني') plain.push(l.id + '/' + c.id + ': بلا وسم رسم');
+            // ألف الوصل ٱ علامة الرسم العثماني؛ والألف العادية في «الله» علامة الإملائي
+            if (/\u0671/.test(c.text)) wasla++;
+            if (/\u0627\u0644\u0644\u064e\u0651\u0647/.test(c.text)) {
+              plain.push(l.id + '/' + c.id + ': «اللَّه» بألف عادية');
+            }
+          }
+        }
+      }
+      return { cards, wasla, plain };
+    });
+    assert(res.cards === 24, `بطاقات القرآن ${res.cards}`);
+    assert(res.plain.length === 0, res.plain.join(' | '));
+    assert(res.wasla >= 20, `ألف الوصل في ${res.wasla} بطاقة فقط`);
+  });
+
   await check('نشاط ترتيب الآيات: النصّ بخطّ المصحف، غير قابل للتحرير، ويُصحَّح', async () => {
     await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
     await page.waitForSelector('.order-list');
     const info = await page.evaluate(() => {
       const items = [...document.querySelectorAll('.order-item__text')];
-      return items.map((el) => ({
-        t: el.textContent,
-        font: getComputedStyle(el).fontFamily,
-        editable: el.isContentEditable,
-        inputs: el.querySelectorAll('input,textarea').length,
-        draggable: el.draggable,
-      }));
+      return items.map((el) => {
+        // النصّ القرآني يُلبَس خطّ المصحف في عنصر داخليّ .qtext
+        const q = el.querySelector('.qtext') || el;
+        return {
+          t: el.textContent,
+          font: getComputedStyle(q).fontFamily,
+          editable: el.isContentEditable,
+          inputs: el.querySelectorAll('input,textarea').length,
+          draggable: el.draggable,
+        };
+      });
     });
     assert(info.length === 5, `عناصر الترتيب ${info.length} لا ٥`);
     for (const it of info) {
