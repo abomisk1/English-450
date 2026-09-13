@@ -1,0 +1,198 @@
+/* ========================================================================
+   بَرْدُ اليقين — نظام التصميم (Design Tokens)
+   هوية بصرية تعكس السكينة والصفاء والطمأنينة ورسوخ العلم.
+   ======================================================================== */
+
+@font-face {
+  font-family: 'Cairo';
+  src: url('../assets/fonts/cairo-var.woff2') format('woff2-variations'),
+       url('../assets/fonts/cairo-var.woff2') format('woff2');
+  font-weight: 200 1000;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0600-06FF, U+0750-077F, U+08A0-08FF, U+FB50-FDFF, U+FE70-FEFF,
+                 U+0020-007F, U+0660-0669;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../assets/fonts/amiri-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Amiri';
+  src: url('../assets/fonts/amiri-700.woff2') format('woff2');
+  font-weight: 700; font-style: normal; font-display: swap;
+}
+@font-face {
+  font-family: 'Amiri Quran';
+  src: url('../assets/fonts/amiri-quran-400.woff2') format('woff2');
+  font-weight: 400; font-style: normal; font-display: swap;
+}
+
+:root {
+  /* ---- الألوان: الأزرق العميق والتركوازي والعاجي ---- */
+  --c-ink:        #0d2137;
+  --c-ink-2:      #16304b;
+  --c-primary:    #114b6e;
+  --c-primary-dark: #0b3552;
+
+  --c-navy-900:   #082033;
+  --c-navy-800:   #0c2f4a;
+  --c-navy-700:   #114b6e;
+  --c-navy-600:   #1a6390;
+
+  --c-teal-700:   #0f6f6c;
+  --c-teal-600:   #14807c;
+  --c-teal-500:   #1c9b95;
+  --c-teal-300:   #7fc9c5;
+  --c-teal-100:   #dff0ef;
+
+  --c-ivory:      #fbf8f1;
+  --c-ivory-2:    #f4efe4;
+  --c-paper:      #ffffff;
+
+  --c-gold:       #a8813f;
+  --c-gold-soft:  #efe3cc;
+
+  --c-ok:         #1d7a4c;
+  --c-ok-soft:    #e2f4ea;
+  --c-warn:       #8a5b12;
+  --c-warn-soft:  #fbf0d9;
+  --c-err:        #a33a33;
+  --c-err-soft:   #fbe9e7;
+
+  /* ---- الأدوار ---- */
+  --bg:            var(--c-ivory);
+  --bg-elev:       var(--c-paper);
+  --bg-sunken:     var(--c-ivory-2);
+  --fg:            var(--c-ink);
+  --fg-muted:      #4c6276;
+  --fg-subtle:     #6b7f90;
+  --border:        #e2dbca;
+  --border-strong: #cfc5ae;
+  --accent:        var(--c-teal-600);
+  --accent-fg:     #ffffff;
+  --brand:         var(--c-navy-700);
+  --brand-fg:      #ffffff;
+  --brand-hover:   var(--c-navy-600);
+  --quran-fg:      var(--c-navy-800);
+  --soft-brand-bg: var(--c-teal-100);
+  --soft-brand-fg: var(--c-teal-700);
+  --hero-a:        var(--c-navy-800);
+  --hero-b:        var(--c-teal-700);
+  --ring:          color-mix(in srgb, var(--c-teal-500) 55%, transparent);
+
+  /* ---- الخطوط ---- */
+  --font-ui: 'Cairo', 'Segoe UI', 'Noto Sans Arabic', system-ui, -apple-system, sans-serif;
+  --font-text: 'Amiri', 'Traditional Arabic', Georgia, serif;
+  --font-quran: 'Amiri Quran', 'Amiri', 'Traditional Arabic', serif;
+
+  --fs-xs:  0.8125rem;
+  --fs-sm:  0.9063rem;
+  --fs-md:  1rem;
+  --fs-lg:  1.125rem;
+  --fs-xl:  1.3125rem;
+  --fs-2xl: 1.625rem;
+  --fs-3xl: 2rem;
+  --fs-4xl: 2.5rem;
+
+  /* معامل تكبير الخط (إمكانية الوصول) */
+  --font-scale: 1;
+
+  /* ---- المسافات والزوايا ---- */
+  --sp-1: 0.25rem; --sp-2: 0.5rem;  --sp-3: 0.75rem; --sp-4: 1rem;
+  --sp-5: 1.5rem;  --sp-6: 2rem;    --sp-7: 3rem;    --sp-8: 4rem;
+
+  --r-sm: 8px; --r-md: 14px; --r-lg: 20px; --r-xl: 28px; --r-full: 999px;
+
+  --sh-1: 0 1px 2px rgba(8,32,51,.06), 0 1px 3px rgba(8,32,51,.05);
+  --sh-2: 0 2px 6px rgba(8,32,51,.07), 0 8px 24px rgba(8,32,51,.06);
+  --sh-3: 0 10px 34px rgba(8,32,51,.12);
+
+  --maxw: 56rem;
+  --dur: 200ms;
+  --ease: cubic-bezier(.2,.7,.3,1);
+}
+
+/* ---- الوضع الداكن (يتبع نظام المستخدم أو اختياره) ---- */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:            #071a2a;
+    --bg-elev:       #0d2941;
+    --bg-sunken:     #0a2337;
+    --fg:            #e8eef4;
+    --fg-muted:      #a8bccc;
+    --fg-subtle:     #8ba3b6;
+    --border:        #1b415f;
+    --border-strong: #27587c;
+    --accent:        var(--c-teal-500);
+    --brand:         #cfe6ea;
+    --brand-fg:      #071a2a;
+    --brand-hover:   #b7dbe1;
+    --quran-fg:      #d9ecf5;
+    --soft-brand-bg: rgba(28,155,149,.16);
+    --soft-brand-fg: #7fc9c5;
+    --hero-a:        #dff0f5;
+    --hero-b:        #7fc9c5;
+    --c-gold-soft:   #2a2416;
+    --c-ok-soft:     #0f3225;
+    --c-warn-soft:   #35290f;
+    --c-err-soft:    #3a1d1a;
+    --c-teal-100:    #0f3a3a;
+    --c-ok:          #7fdba6;
+    --c-warn:        #e9c06a;
+    --c-err:         #f2a09a;
+    --c-gold:        #d9b573;
+    --sh-1: 0 1px 2px rgba(0,0,0,.4);
+    --sh-2: 0 2px 8px rgba(0,0,0,.35);
+    --sh-3: 0 12px 36px rgba(0,0,0,.45);
+  }
+}
+:root[data-theme="dark"] {
+  --bg:            #071a2a;
+  --bg-elev:       #0d2941;
+  --bg-sunken:     #0a2337;
+  --fg:            #e8eef4;
+  --fg-muted:      #a8bccc;
+  --fg-subtle:     #8ba3b6;
+  --border:        #1b415f;
+  --border-strong: #27587c;
+  --accent:        var(--c-teal-500);
+  --brand:     #cfe6ea;
+  --brand-fg:    #071a2a;
+  --brand-hover:   #b7dbe1;
+  --quran-fg:    #d9ecf5;
+  --soft-brand-bg: rgba(28,155,149,.16);
+  --soft-brand-fg: #7fc9c5;
+  --hero-a:    #dff0f5;
+  --hero-b:    #7fc9c5;
+  --c-gold-soft:   #2a2416;
+  --c-ok-soft:     #0f3225;
+  --c-warn-soft:   #35290f;
+  --c-err-soft:    #3a1d1a;
+  --c-teal-100:    #0f3a3a;
+  --c-ok:      #7fdba6;
+  --c-warn:    #e9c06a;
+  --c-err:     #f2a09a;
+  --c-gold:    #d9b573;
+  --sh-1: 0 1px 2px rgba(0,0,0,.4);
+  --sh-2: 0 2px 8px rgba(0,0,0,.35);
+  --sh-3: 0 12px 36px rgba(0,0,0,.45);
+}
+
+/* ---- وضع التباين العالي ---- */
+:root[data-contrast="high"] {
+  --fg: #000; --fg-muted: #1a1a1a; --fg-subtle: #2a2a2a;
+  --bg: #fff; --bg-elev: #fff; --bg-sunken: #f2f2f2;
+  --border: #444; --border-strong: #000;
+  --brand: #00314d; --accent: #005a55; --brand-hover: #00415f;
+  --quran-fg: #000; --soft-brand-bg: #e6f2f1; --soft-brand-fg: #00413e;
+  --hero-a: #00314d; --hero-b: #00413e;
+}
+:root[data-theme="dark"][data-contrast="high"],
+:root[data-contrast="high"][data-theme="dark"] {
+  --fg: #fff; --fg-muted: #eaeaea; --bg: #000; --bg-elev: #0a0a0a;
+  --border: #bbb; --border-strong: #fff; --brand: #bfe3ff; --accent: #5ce0d8;
+  --brand-hover: #d6eeff; --quran-fg: #fff; --soft-brand-bg: #10322f;
+  --soft-brand-fg: #9fe8e2; --hero-a: #fff; --hero-b: #9fe8e2;
+}

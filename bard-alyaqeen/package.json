@@ -1,0 +1,25 @@
+{
+  "name": "bard-al-yaqeen",
+  "version": "1.0.0",
+  "description": "بَرْدُ اليقين — الجزء الأول: رحلة علمية تجمع بين الثقافة الشرعية والحصانة الفكرية.",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node tests/run.mjs",
+    "test:e2e": "node tests/e2e.mjs",
+    "build:content": "python3 scripts/build_content.py",
+    "shots": "node tests/screenshots.mjs"
+  },
+  "main": "sw.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "playwright": "^1.49.1"
+  }
+}

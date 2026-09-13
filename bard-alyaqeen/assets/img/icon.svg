@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="بَرْدُ اليقين">
+  <defs>
+    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0c2f4a"/>
+      <stop offset="1" stop-color="#14807c"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#g)"/>
+  <g fill="none" stroke="#f4efe4" stroke-width="20" stroke-linejoin="round">
+    <path d="M256 78 414 139 475 297 414 455 256 516 98 455 37 297 98 139Z" opacity=".38" transform="translate(0,-42) scale(1)"/>
+    <path d="M256 150c-46 0-84 38-84 84v138h168V234c0-46-38-84-84-84Z"/>
+    <path d="M256 224v72" stroke-linecap="round"/>
+  </g>
+</svg>

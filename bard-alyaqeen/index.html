@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>بَرْدُ اليقين — الجزء الأول</title>
+  <meta name="description" content="رحلة علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج.">
+  <meta name="theme-color" content="#fbf8f1">
+  <meta name="color-scheme" content="light dark">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" href="assets/img/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="assets/img/icon-192.png">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/app.css">
+  <link rel="preload" as="font" type="font/woff2" href="assets/fonts/cairo-var.woff2" crossorigin>
+</head>
+<body>
+  <div class="app-shell">
+    <a class="skip-link" href="#main">تخطّي إلى المحتوى</a>
+    <header class="topbar" id="topbar"></header>
+    <main id="main" tabindex="-1">
+      <div id="view"></div>
+    </main>
+    <nav class="tabbar" id="tabbar" aria-label="التنقّل الرئيس"></nav>
+  </div>
+  <noscript>
+    <div style="padding:2rem;text-align:center">
+      هذا البرنامج تفاعلي ويحتاج إلى تفعيل JavaScript في المتصفح.
+    </div>
+  </noscript>
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
