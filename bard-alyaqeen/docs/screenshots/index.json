@@ -12,7 +12,7 @@
  {
   "device": "mobile",
   "id": "02-setup",
-  "title": "التهيئة الأولى واختيار نمط التعلّم",
+  "title": "التهيئة الأولى: حجم الخطّ بمعاينة حيّة وتيسير العرض",
   "route": "/#/setup",
   "files": [
    "mobile-02-setup.png",
@@ -192,11 +192,61 @@
  {
   "device": "mobile",
   "id": "x6-family",
-  "title": "الوضع الأسري داخل الدرس",
+  "title": "النشاط الأسري داخل الدرس (بلا إعداد يفعّله)",
   "route": "/#/lesson/u1/u1l3",
   "files": [
    "mobile-x6-family.png",
    "mobile-x6-family-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x7-paths",
+  "title": "مسارا الدرس بعد إتمامه: تعلّم الدرس / مراجعة سريعة",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "mobile-x7-paths.png",
+   "mobile-x7-paths-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x8-review-path",
+  "title": "مسار «مراجعة سريعة»: خلاصة وبطاقات تذكّر ونصوص الكتاب",
+  "route": "/#/lesson/u1/u1l3?path=review",
+  "files": [
+   "mobile-x8-review-path.png",
+   "mobile-x8-review-path-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x9-classify",
+  "title": "نشاط التصنيف (تفاعل مضاف مستمدّ من نصّ الدرس)",
+  "route": "/#/lesson/u5/u5l14",
+  "files": [
+   "mobile-x9-classify.png",
+   "mobile-x9-classify-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x10-audio-note",
+  "title": "سبب تعطيل الاستماع للآيات ظاهرًا في الواجهة",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "mobile-x10-audio-note.png",
+   "mobile-x10-audio-note-full.png"
+  ]
+ },
+ {
+  "device": "mobile",
+  "id": "x11-family-home",
+  "title": "قسم «دروس مناسبة للأسرة» في الصفحة الرئيسة",
+  "route": "/#/home",
+  "files": [
+   "mobile-x11-family-home.png",
+   "mobile-x11-family-home-full.png"
   ]
  },
  {
@@ -212,7 +262,7 @@
  {
   "device": "desktop",
   "id": "02-setup",
-  "title": "التهيئة الأولى واختيار نمط التعلّم",
+  "title": "التهيئة الأولى: حجم الخطّ بمعاينة حيّة وتيسير العرض",
   "route": "/#/setup",
   "files": [
    "desktop-02-setup.png",
@@ -392,11 +442,61 @@
  {
   "device": "desktop",
   "id": "x6-family",
-  "title": "الوضع الأسري داخل الدرس",
+  "title": "النشاط الأسري داخل الدرس (بلا إعداد يفعّله)",
   "route": "/#/lesson/u1/u1l3",
   "files": [
    "desktop-x6-family.png",
    "desktop-x6-family-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x7-paths",
+  "title": "مسارا الدرس بعد إتمامه: تعلّم الدرس / مراجعة سريعة",
+  "route": "/#/lesson/u1/u1l3",
+  "files": [
+   "desktop-x7-paths.png",
+   "desktop-x7-paths-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x8-review-path",
+  "title": "مسار «مراجعة سريعة»: خلاصة وبطاقات تذكّر ونصوص الكتاب",
+  "route": "/#/lesson/u1/u1l3?path=review",
+  "files": [
+   "desktop-x8-review-path.png",
+   "desktop-x8-review-path-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x9-classify",
+  "title": "نشاط التصنيف (تفاعل مضاف مستمدّ من نصّ الدرس)",
+  "route": "/#/lesson/u5/u5l14",
+  "files": [
+   "desktop-x9-classify.png",
+   "desktop-x9-classify-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x10-audio-note",
+  "title": "سبب تعطيل الاستماع للآيات ظاهرًا في الواجهة",
+  "route": "/#/lesson/u1/u1l4",
+  "files": [
+   "desktop-x10-audio-note.png",
+   "desktop-x10-audio-note-full.png"
+  ]
+ },
+ {
+  "device": "desktop",
+  "id": "x11-family-home",
+  "title": "قسم «دروس مناسبة للأسرة» في الصفحة الرئيسة",
+  "route": "/#/home",
+  "files": [
+   "desktop-x11-family-home.png",
+   "desktop-x11-family-home-full.png"
   ]
  }
 ]

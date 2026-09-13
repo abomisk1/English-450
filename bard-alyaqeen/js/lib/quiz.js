@@ -49,6 +49,17 @@ export function prepare(q, seed) {
       choices: seededShuffle(q.pairs.map((p) => p[1]), `${seed}:${q.id}`),
     };
   }
+  if (q.kind === 'classify') {
+    // كل العناصر مخلوطة في سلّة واحدة، والمجموعات تبقى بترتيبها كما في نصّ الكتاب.
+    const all = [];
+    q.groups.forEach((g, gi) => g.items.forEach((text) => all.push({ text, gi })));
+    return {
+      ...q,
+      items: seededShuffle(all.map((x) => x.text), `${seed}:${q.id}`),
+      labels: q.groups.map((g) => g.label),
+      answerOf: Object.fromEntries(all.map((x) => [x.text, x.gi])),
+    };
+  }
   if (q.kind === 'flashcards') {
     return { ...q, view: q.pairs };
   }
@@ -74,6 +85,12 @@ export function check(prepared, answer) {
     case 'match': {
       const expected = Object.fromEntries(prepared.pairs);
       const detail = prepared.terms.map((t) => (answer || {})[t] === expected[t]);
+      return { correct: detail.length > 0 && detail.every(Boolean), detail };
+    }
+    case 'classify': {
+      // answer: { [نصّ العنصر]: رقم المجموعة }
+      const a = answer || {};
+      const detail = prepared.items.map((t) => a[t] === prepared.answerOf[t]);
       return { correct: detail.length > 0 && detail.every(Boolean), detail };
     }
     case 'flashcards':

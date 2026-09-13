@@ -1,11 +1,11 @@
 {
  "generatedFrom": "scripts/build_content.py",
  "policy": "كل نصّ قرآني (src=quran) وكل صياغة تعليمية مساعدة (src=authored) يحتاج إلى مراجعة واعتماد قبل النشر.",
- "count": 260,
+ "count": 302,
  "byPriority": {
   "low": 144,
-  "medium": 92,
-  "high": 24
+  "medium": 130,
+  "high": 28
  },
  "items": [
   {
@@ -370,6 +370,29 @@
    "seq": 17,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
+   "lessonId": "u1l3",
+   "lesson": "سورة الفاتحة",
+   "kind": "interaction:complete-quran",
+   "path": "u1/u1l3/interaction/i3",
+   "src": "derived",
+   "ref": null,
+   "page": 8,
+   "priority": "high",
+   "priorityAr": "عالية",
+   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
+   "text": "أكمل الآية.\n✔ نَسْتَعِينُ\n— نَسْتَغْفِرُ\n— نَشْكُرُ\n— نَدْعُو\nالتفسير: معناها في الكتاب: نعبدك وحدك، ونستعين بك وحدك.",
+   "bookContext": {
+    "text": "يَجِبُ عَلَى الْمُسْلِمِ أَنْ يَتَعَلَّمَ قِرَاءَةَ سُورَةِ الْفَاتِحَةِ؛ لِأَنَّ الصَّلَاةَ لَا تَصِحُّ إِلَّا بِهَا، وَيَحْسُنُ أَنْ يَتَعَلَّمَ قِرَاءَةَ كِتَابِ اللهِ كَامِلًا، فَإِنْ لَمْ يَكُنْ فَمَا اسْتَطَاعَ مِنْهُ.",
+    "page": 7,
+    "cardId": "c0",
+    "type": "text"
+   },
+   "route": "#/lesson/u1/u1l3"
+  },
+  {
+   "seq": 18,
+   "unitId": "u1",
+   "unit": "تفسير ما يتكرر",
    "lessonId": "u1l4",
    "lesson": "آية الكرسي",
    "kind": "hook",
@@ -390,7 +413,7 @@
    "route": "#/lesson/u1/u1l4"
   },
   {
-   "seq": 18,
+   "seq": 19,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l4",
@@ -413,7 +436,7 @@
    "route": "#/lesson/u1/u1l4"
   },
   {
-   "seq": 19,
+   "seq": 20,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l4",
@@ -436,7 +459,7 @@
    "route": "#/lesson/u1/u1l4"
   },
   {
-   "seq": 20,
+   "seq": 21,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l4",
@@ -454,7 +477,30 @@
    "route": "#/lesson/u1/u1l4"
   },
   {
-   "seq": 21,
+   "seq": 22,
+   "unitId": "u1",
+   "unit": "تفسير ما يتكرر",
+   "lessonId": "u1l4",
+   "lesson": "آية الكرسي",
+   "kind": "interaction:complete-quran",
+   "path": "u1/u1l4/interaction/i2",
+   "src": "derived",
+   "ref": null,
+   "page": 10,
+   "priority": "high",
+   "priorityAr": "عالية",
+   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
+   "text": "أكمل الآية.\n✔ الْحَيُّ الْقَيُّومُ\n— الْعَلِيُّ الْعَظِيمُ\n— الْغَفُورُ الرَّحِيمُ\n— السَّمِيعُ الْعَلِيمُ\nالتفسير: أول آية الكرسي: ﴿اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ﴾.",
+   "bookContext": {
+    "text": "وَهِيَ أَعْظَمُ آيَةٍ فِي الْقُرْآنِ.",
+    "page": 10,
+    "cardId": "c2",
+    "type": "text"
+   },
+   "route": "#/lesson/u1/u1l4"
+  },
+  {
+   "seq": 23,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l5",
@@ -477,7 +523,7 @@
    "route": "#/lesson/u1/u1l5"
   },
   {
-   "seq": 22,
+   "seq": 24,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l5",
@@ -500,7 +546,7 @@
    "route": "#/lesson/u1/u1l5"
   },
   {
-   "seq": 23,
+   "seq": 25,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l5",
@@ -523,7 +569,7 @@
    "route": "#/lesson/u1/u1l5"
   },
   {
-   "seq": 24,
+   "seq": 26,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l5",
@@ -541,7 +587,7 @@
    "route": "#/lesson/u1/u1l5"
   },
   {
-   "seq": 25,
+   "seq": 27,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l5",
@@ -559,7 +605,7 @@
    "route": "#/lesson/u1/u1l5"
   },
   {
-   "seq": 26,
+   "seq": 28,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l6",
@@ -582,7 +628,7 @@
    "route": "#/lesson/u1/u1l6"
   },
   {
-   "seq": 27,
+   "seq": 29,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l6",
@@ -605,7 +651,7 @@
    "route": "#/lesson/u1/u1l6"
   },
   {
-   "seq": 28,
+   "seq": 30,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l6",
@@ -628,7 +674,7 @@
    "route": "#/lesson/u1/u1l6"
   },
   {
-   "seq": 29,
+   "seq": 31,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l6",
@@ -646,7 +692,30 @@
    "route": "#/lesson/u1/u1l6"
   },
   {
-   "seq": 30,
+   "seq": 32,
+   "unitId": "u1",
+   "unit": "تفسير ما يتكرر",
+   "lessonId": "u1l6",
+   "lesson": "سورة الكافرون",
+   "kind": "interaction:complete-quran",
+   "path": "u1/u1l6/interaction/i2",
+   "src": "derived",
+   "ref": null,
+   "page": 12,
+   "priority": "high",
+   "priorityAr": "عالية",
+   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
+   "text": "أكمل الآية الأخيرة.\n✔ وَلِيَ دِينِ\n— وَلَنَا دِينُنَا\n— وَلِيَ عَمَلِي\n— وَأَنْتُمْ بَرِيئُونَ\nالتفسير: خاتمة السورة: ﴿لَكُمْ دِينُكُمْ وَلِيَ دِينِ﴾.",
+   "bookContext": {
+    "text": "وَتُسَنُّ قِرَاءَتُهَا فِي الرَّكْعَةِ الْأُولَى مِنَ السُّنَّةِ الْقَبْلِيَّةِ لِصَلَاةِ الْفَجْرِ.",
+    "page": 12,
+    "cardId": "c2",
+    "type": "text"
+   },
+   "route": "#/lesson/u1/u1l6"
+  },
+  {
+   "seq": 33,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l7",
@@ -669,7 +738,7 @@
    "route": "#/lesson/u1/u1l7"
   },
   {
-   "seq": 31,
+   "seq": 34,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l7",
@@ -692,7 +761,7 @@
    "route": "#/lesson/u1/u1l7"
   },
   {
-   "seq": 32,
+   "seq": 35,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l7",
@@ -715,7 +784,7 @@
    "route": "#/lesson/u1/u1l7"
   },
   {
-   "seq": 33,
+   "seq": 36,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l7",
@@ -733,7 +802,7 @@
    "route": "#/lesson/u1/u1l7"
   },
   {
-   "seq": 34,
+   "seq": 37,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l8",
@@ -756,7 +825,7 @@
    "route": "#/lesson/u1/u1l8"
   },
   {
-   "seq": 35,
+   "seq": 38,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l8",
@@ -779,7 +848,7 @@
    "route": "#/lesson/u1/u1l8"
   },
   {
-   "seq": 36,
+   "seq": 39,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l8",
@@ -802,7 +871,7 @@
    "route": "#/lesson/u1/u1l8"
   },
   {
-   "seq": 37,
+   "seq": 40,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l8",
@@ -820,7 +889,7 @@
    "route": "#/lesson/u1/u1l8"
   },
   {
-   "seq": 38,
+   "seq": 41,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -843,7 +912,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 39,
+   "seq": 42,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -866,7 +935,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 40,
+   "seq": 43,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -889,7 +958,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 41,
+   "seq": 44,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -907,7 +976,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 42,
+   "seq": 45,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -930,7 +999,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 43,
+   "seq": 46,
    "unitId": "u1",
    "unit": "تفسير ما يتكرر",
    "lessonId": "u1l9",
@@ -953,7 +1022,7 @@
    "route": "#/lesson/u1/u1l9"
   },
   {
-   "seq": 44,
+   "seq": 47,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l0",
@@ -976,7 +1045,7 @@
    "route": "#/lesson/u2/u2l0"
   },
   {
-   "seq": 45,
+   "seq": 48,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l0",
@@ -999,7 +1068,7 @@
    "route": "#/lesson/u2/u2l0"
   },
   {
-   "seq": 46,
+   "seq": 49,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l0",
@@ -1022,7 +1091,7 @@
    "route": "#/lesson/u2/u2l0"
   },
   {
-   "seq": 47,
+   "seq": 50,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l0",
@@ -1045,7 +1114,53 @@
    "route": "#/lesson/u2/u2l0"
   },
   {
-   "seq": 48,
+   "seq": 51,
+   "unitId": "u2",
+   "unit": "الأحاديث النبوية",
+   "lessonId": "u2l0",
+   "lesson": "أصول الإسلام على ثلاثة أحاديث",
+   "kind": "interaction:complete",
+   "path": "u2/u2l0/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 18,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل كلمة الإمام أحمد كما نقلها الكتاب.\n✔ ثَلَاثَةِ\n— أَرْبَعَةِ\n— خَمْسَةِ\n— سَبْعَةِ\nالتفسير: نصّ الكتاب: «أُصُولُ الْإِسْلَامِ عَلَى ثَلَاثَةِ أَحَادِيثَ».",
+   "bookContext": {
+    "text": "قَالَ الْإِمَامُ أَحْمَدُ: (أُصُولُ الْإِسْلَامِ عَلَى ثَلَاثَةِ أَحَادِيثَ...) ثُمَّ ذَكَرَهَا، وَهِيَ:",
+    "page": 18,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u2/u2l0"
+  },
+  {
+   "seq": 52,
+   "unitId": "u2",
+   "unit": "الأحاديث النبوية",
+   "lessonId": "u2l0",
+   "lesson": "أصول الإسلام على ثلاثة أحاديث",
+   "kind": "interaction:mcq",
+   "path": "u2/u2l0/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 18,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب.",
+   "text": "ماذا صنع الكتاب بعد نقل كلمة الإمام أحمد؟\n✔ ذكر الأحاديث الثلاثة\n— اكتفى بذكر الكلمة\n— أحال إلى كتاب آخر\n— ذكر حديثًا واحدًا منها\nالتفسير: نصّ الكتاب: «ثُمَّ ذَكَرَهَا، وَهِيَ:» ثم ساق الأحاديث الثلاثة.",
+   "bookContext": {
+    "text": "قَالَ الْإِمَامُ أَحْمَدُ: (أُصُولُ الْإِسْلَامِ عَلَى ثَلَاثَةِ أَحَادِيثَ...) ثُمَّ ذَكَرَهَا، وَهِيَ:",
+    "page": 18,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u2/u2l0"
+  },
+  {
+   "seq": 53,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1068,7 +1183,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 49,
+   "seq": 54,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1091,7 +1206,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 50,
+   "seq": 55,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1114,7 +1229,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 51,
+   "seq": 56,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1137,7 +1252,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 52,
+   "seq": 57,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1160,7 +1275,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 53,
+   "seq": 58,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l1",
@@ -1183,7 +1298,7 @@
    "route": "#/lesson/u2/u2l1"
   },
   {
-   "seq": 54,
+   "seq": 59,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l2",
@@ -1206,7 +1321,7 @@
    "route": "#/lesson/u2/u2l2"
   },
   {
-   "seq": 55,
+   "seq": 60,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l2",
@@ -1229,7 +1344,7 @@
    "route": "#/lesson/u2/u2l2"
   },
   {
-   "seq": 56,
+   "seq": 61,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l2",
@@ -1252,7 +1367,7 @@
    "route": "#/lesson/u2/u2l2"
   },
   {
-   "seq": 57,
+   "seq": 62,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l3",
@@ -1275,7 +1390,7 @@
    "route": "#/lesson/u2/u2l3"
   },
   {
-   "seq": 58,
+   "seq": 63,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l3",
@@ -1298,7 +1413,7 @@
    "route": "#/lesson/u2/u2l3"
   },
   {
-   "seq": 59,
+   "seq": 64,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l3",
@@ -1321,7 +1436,7 @@
    "route": "#/lesson/u2/u2l3"
   },
   {
-   "seq": 60,
+   "seq": 65,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l3",
@@ -1344,7 +1459,7 @@
    "route": "#/lesson/u2/u2l3"
   },
   {
-   "seq": 61,
+   "seq": 66,
    "unitId": "u2",
    "unit": "الأحاديث النبوية",
    "lessonId": "u2l3",
@@ -1367,7 +1482,7 @@
    "route": "#/lesson/u2/u2l3"
   },
   {
-   "seq": 62,
+   "seq": 67,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l0",
@@ -1390,7 +1505,7 @@
    "route": "#/lesson/u3/u3l0"
   },
   {
-   "seq": 63,
+   "seq": 68,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l0",
@@ -1413,7 +1528,7 @@
    "route": "#/lesson/u3/u3l0"
   },
   {
-   "seq": 64,
+   "seq": 69,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l0",
@@ -1436,7 +1551,7 @@
    "route": "#/lesson/u3/u3l0"
   },
   {
-   "seq": 65,
+   "seq": 70,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l0",
@@ -1459,7 +1574,53 @@
    "route": "#/lesson/u3/u3l0"
   },
   {
-   "seq": 66,
+   "seq": 71,
+   "unitId": "u3",
+   "unit": "مراتب الدين",
+   "lessonId": "u3l0",
+   "lesson": "مراتب الدين الثلاث",
+   "kind": "interaction:match",
+   "path": "u3/u3l0/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 23,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين كل مرتبة وعدد أركانها كما في هذا الفصل.\nالتفسير: الكتاب في هذا الفصل: أركان الإسلام «وَهِيَ خَمْسَةٌ» (ص٢٣)، وأركان الإيمان «وَهِيَ سِتَّةٌ» (ص٢٤)، والإحسان «رُكْنٌ وَاحِدٌ» (ص٢٦).",
+   "bookContext": {
+    "text": "مَرَاتِبُ الدِّينِ ثَلَاثٌ: الْإِسْلَامُ وَالْإِيمَانُ وَالْإِحْسَانُ، وَكُلُّ مَرْتَبَةٍ لَهَا أَرْكَانٌ.",
+    "page": 23,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u3/u3l0"
+  },
+  {
+   "seq": 72,
+   "unitId": "u3",
+   "unit": "مراتب الدين",
+   "lessonId": "u3l0",
+   "lesson": "مراتب الدين الثلاث",
+   "kind": "interaction:complete",
+   "path": "u3/u3l0/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 23,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل نصّ الكتاب.\n✔ ثَلَاثٌ\n— اثْنَتَانِ\n— أَرْبَعٌ\n— خَمْسٌ\nالتفسير: نصّ الكتاب: «مَرَاتِبُ الدِّينِ ثَلَاثٌ».",
+   "bookContext": {
+    "text": "مَرَاتِبُ الدِّينِ ثَلَاثٌ: الْإِسْلَامُ وَالْإِيمَانُ وَالْإِحْسَانُ، وَكُلُّ مَرْتَبَةٍ لَهَا أَرْكَانٌ.",
+    "page": 23,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u3/u3l0"
+  },
+  {
+   "seq": 73,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l1",
@@ -1482,7 +1643,7 @@
    "route": "#/lesson/u3/u3l1"
   },
   {
-   "seq": 67,
+   "seq": 74,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l1",
@@ -1505,7 +1666,7 @@
    "route": "#/lesson/u3/u3l1"
   },
   {
-   "seq": 68,
+   "seq": 75,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l1",
@@ -1528,7 +1689,7 @@
    "route": "#/lesson/u3/u3l1"
   },
   {
-   "seq": 69,
+   "seq": 76,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l1",
@@ -1551,7 +1712,7 @@
    "route": "#/lesson/u3/u3l1"
   },
   {
-   "seq": 70,
+   "seq": 77,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l2",
@@ -1574,7 +1735,7 @@
    "route": "#/lesson/u3/u3l2"
   },
   {
-   "seq": 71,
+   "seq": 78,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l2",
@@ -1597,7 +1758,7 @@
    "route": "#/lesson/u3/u3l2"
   },
   {
-   "seq": 72,
+   "seq": 79,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l2",
@@ -1620,7 +1781,7 @@
    "route": "#/lesson/u3/u3l2"
   },
   {
-   "seq": 73,
+   "seq": 80,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l3",
@@ -1643,7 +1804,7 @@
    "route": "#/lesson/u3/u3l3"
   },
   {
-   "seq": 74,
+   "seq": 81,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l3",
@@ -1666,7 +1827,7 @@
    "route": "#/lesson/u3/u3l3"
   },
   {
-   "seq": 75,
+   "seq": 82,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l3",
@@ -1689,7 +1850,7 @@
    "route": "#/lesson/u3/u3l3"
   },
   {
-   "seq": 76,
+   "seq": 83,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l3",
@@ -1712,7 +1873,7 @@
    "route": "#/lesson/u3/u3l3"
   },
   {
-   "seq": 77,
+   "seq": 84,
    "unitId": "u3",
    "unit": "مراتب الدين",
    "lessonId": "u3l3",
@@ -1735,7 +1896,7 @@
    "route": "#/lesson/u3/u3l3"
   },
   {
-   "seq": 78,
+   "seq": 85,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l1",
@@ -1758,7 +1919,7 @@
    "route": "#/lesson/u4/u4l1"
   },
   {
-   "seq": 79,
+   "seq": 86,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l1",
@@ -1781,7 +1942,7 @@
    "route": "#/lesson/u4/u4l1"
   },
   {
-   "seq": 80,
+   "seq": 87,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l1",
@@ -1804,7 +1965,7 @@
    "route": "#/lesson/u4/u4l1"
   },
   {
-   "seq": 81,
+   "seq": 88,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l1",
@@ -1827,7 +1988,7 @@
    "route": "#/lesson/u4/u4l1"
   },
   {
-   "seq": 82,
+   "seq": 89,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l1",
@@ -1850,7 +2011,7 @@
    "route": "#/lesson/u4/u4l1"
   },
   {
-   "seq": 83,
+   "seq": 90,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l2",
@@ -1873,7 +2034,7 @@
    "route": "#/lesson/u4/u4l2"
   },
   {
-   "seq": 84,
+   "seq": 91,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l2",
@@ -1896,7 +2057,7 @@
    "route": "#/lesson/u4/u4l2"
   },
   {
-   "seq": 85,
+   "seq": 92,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l2",
@@ -1919,7 +2080,7 @@
    "route": "#/lesson/u4/u4l2"
   },
   {
-   "seq": 86,
+   "seq": 93,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l3",
@@ -1942,7 +2103,7 @@
    "route": "#/lesson/u4/u4l3"
   },
   {
-   "seq": 87,
+   "seq": 94,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l3",
@@ -1965,7 +2126,7 @@
    "route": "#/lesson/u4/u4l3"
   },
   {
-   "seq": 88,
+   "seq": 95,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l3",
@@ -1988,7 +2149,7 @@
    "route": "#/lesson/u4/u4l3"
   },
   {
-   "seq": 89,
+   "seq": 96,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l3",
@@ -2011,7 +2172,7 @@
    "route": "#/lesson/u4/u4l3"
   },
   {
-   "seq": 90,
+   "seq": 97,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l4",
@@ -2034,7 +2195,7 @@
    "route": "#/lesson/u4/u4l4"
   },
   {
-   "seq": 91,
+   "seq": 98,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l4",
@@ -2057,7 +2218,7 @@
    "route": "#/lesson/u4/u4l4"
   },
   {
-   "seq": 92,
+   "seq": 99,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l4",
@@ -2080,7 +2241,7 @@
    "route": "#/lesson/u4/u4l4"
   },
   {
-   "seq": 93,
+   "seq": 100,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l5",
@@ -2103,7 +2264,7 @@
    "route": "#/lesson/u4/u4l5"
   },
   {
-   "seq": 94,
+   "seq": 101,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l5",
@@ -2126,7 +2287,7 @@
    "route": "#/lesson/u4/u4l5"
   },
   {
-   "seq": 95,
+   "seq": 102,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l5",
@@ -2149,7 +2310,7 @@
    "route": "#/lesson/u4/u4l5"
   },
   {
-   "seq": 96,
+   "seq": 103,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l5",
@@ -2172,7 +2333,7 @@
    "route": "#/lesson/u4/u4l5"
   },
   {
-   "seq": 97,
+   "seq": 104,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l6",
@@ -2195,7 +2356,7 @@
    "route": "#/lesson/u4/u4l6"
   },
   {
-   "seq": 98,
+   "seq": 105,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l6",
@@ -2218,7 +2379,7 @@
    "route": "#/lesson/u4/u4l6"
   },
   {
-   "seq": 99,
+   "seq": 106,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l6",
@@ -2241,7 +2402,7 @@
    "route": "#/lesson/u4/u4l6"
   },
   {
-   "seq": 100,
+   "seq": 107,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l7",
@@ -2264,7 +2425,7 @@
    "route": "#/lesson/u4/u4l7"
   },
   {
-   "seq": 101,
+   "seq": 108,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l7",
@@ -2287,7 +2448,7 @@
    "route": "#/lesson/u4/u4l7"
   },
   {
-   "seq": 102,
+   "seq": 109,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l7",
@@ -2310,7 +2471,7 @@
    "route": "#/lesson/u4/u4l7"
   },
   {
-   "seq": 103,
+   "seq": 110,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l7",
@@ -2333,7 +2494,7 @@
    "route": "#/lesson/u4/u4l7"
   },
   {
-   "seq": 104,
+   "seq": 111,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l7",
@@ -2356,7 +2517,7 @@
    "route": "#/lesson/u4/u4l7"
   },
   {
-   "seq": 105,
+   "seq": 112,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l8",
@@ -2379,7 +2540,7 @@
    "route": "#/lesson/u4/u4l8"
   },
   {
-   "seq": 106,
+   "seq": 113,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l8",
@@ -2402,7 +2563,7 @@
    "route": "#/lesson/u4/u4l8"
   },
   {
-   "seq": 107,
+   "seq": 114,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l8",
@@ -2425,7 +2586,7 @@
    "route": "#/lesson/u4/u4l8"
   },
   {
-   "seq": 108,
+   "seq": 115,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l9",
@@ -2448,7 +2609,7 @@
    "route": "#/lesson/u4/u4l9"
   },
   {
-   "seq": 109,
+   "seq": 116,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l9",
@@ -2471,7 +2632,7 @@
    "route": "#/lesson/u4/u4l9"
   },
   {
-   "seq": 110,
+   "seq": 117,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l9",
@@ -2494,7 +2655,7 @@
    "route": "#/lesson/u4/u4l9"
   },
   {
-   "seq": 111,
+   "seq": 118,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l10",
@@ -2517,7 +2678,7 @@
    "route": "#/lesson/u4/u4l10"
   },
   {
-   "seq": 112,
+   "seq": 119,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l10",
@@ -2540,7 +2701,7 @@
    "route": "#/lesson/u4/u4l10"
   },
   {
-   "seq": 113,
+   "seq": 120,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l10",
@@ -2563,7 +2724,7 @@
    "route": "#/lesson/u4/u4l10"
   },
   {
-   "seq": 114,
+   "seq": 121,
    "unitId": "u4",
    "unit": "الفقه",
    "lessonId": "u4l10",
@@ -2586,7 +2747,7 @@
    "route": "#/lesson/u4/u4l10"
   },
   {
-   "seq": 115,
+   "seq": 122,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l1",
@@ -2609,7 +2770,7 @@
    "route": "#/lesson/u5/u5l1"
   },
   {
-   "seq": 116,
+   "seq": 123,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l1",
@@ -2632,7 +2793,7 @@
    "route": "#/lesson/u5/u5l1"
   },
   {
-   "seq": 117,
+   "seq": 124,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l1",
@@ -2655,7 +2816,7 @@
    "route": "#/lesson/u5/u5l1"
   },
   {
-   "seq": 118,
+   "seq": 125,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l1",
@@ -2678,7 +2839,7 @@
    "route": "#/lesson/u5/u5l1"
   },
   {
-   "seq": 119,
+   "seq": 126,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l1",
@@ -2701,7 +2862,7 @@
    "route": "#/lesson/u5/u5l1"
   },
   {
-   "seq": 120,
+   "seq": 127,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l2",
@@ -2724,7 +2885,7 @@
    "route": "#/lesson/u5/u5l2"
   },
   {
-   "seq": 121,
+   "seq": 128,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l2",
@@ -2747,7 +2908,7 @@
    "route": "#/lesson/u5/u5l2"
   },
   {
-   "seq": 122,
+   "seq": 129,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l2",
@@ -2770,7 +2931,7 @@
    "route": "#/lesson/u5/u5l2"
   },
   {
-   "seq": 123,
+   "seq": 130,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l3",
@@ -2793,7 +2954,7 @@
    "route": "#/lesson/u5/u5l3"
   },
   {
-   "seq": 124,
+   "seq": 131,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l3",
@@ -2816,7 +2977,7 @@
    "route": "#/lesson/u5/u5l3"
   },
   {
-   "seq": 125,
+   "seq": 132,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l3",
@@ -2839,7 +3000,7 @@
    "route": "#/lesson/u5/u5l3"
   },
   {
-   "seq": 126,
+   "seq": 133,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l4",
@@ -2862,7 +3023,7 @@
    "route": "#/lesson/u5/u5l4"
   },
   {
-   "seq": 127,
+   "seq": 134,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l4",
@@ -2885,7 +3046,7 @@
    "route": "#/lesson/u5/u5l4"
   },
   {
-   "seq": 128,
+   "seq": 135,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l4",
@@ -2908,7 +3069,7 @@
    "route": "#/lesson/u5/u5l4"
   },
   {
-   "seq": 129,
+   "seq": 136,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l5",
@@ -2931,7 +3092,7 @@
    "route": "#/lesson/u5/u5l5"
   },
   {
-   "seq": 130,
+   "seq": 137,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l5",
@@ -2954,7 +3115,7 @@
    "route": "#/lesson/u5/u5l5"
   },
   {
-   "seq": 131,
+   "seq": 138,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l5",
@@ -2977,7 +3138,53 @@
    "route": "#/lesson/u5/u5l5"
   },
   {
-   "seq": 132,
+   "seq": 139,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l5",
+   "lesson": "أذكار الاستيقاظ من النوم",
+   "kind": "interaction:match",
+   "path": "u5/u5l5/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 50,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين الحال وما يُقرأ فيها كما في الكتاب.\nالتفسير: الكتاب قيّد قراءة خواتيم آل عمران بقوله: «إِذَا اسْتَيْقَظَ مِنْ نَوْمِ اللَّيْلِ فَقَطْ».",
+   "bookContext": {
+    "text": "(الْحَمْدُ لِلهِ الَّذِي أَحْيَانَا بَعْدَمَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ).",
+    "page": 50,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l5"
+  },
+  {
+   "seq": 140,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l5",
+   "lesson": "أذكار الاستيقاظ من النوم",
+   "kind": "interaction:mcq",
+   "path": "u5/u5l5/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 50,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب.",
+   "text": "﴿إِنَّ فِي خَلْقِ السَّمَاوَاتِ وَالْأَرْضِ…﴾ إلى آخر أيّ سورة؟\n✔ آل عمران\n— البقرة\n— النساء\n— الأنعام\nالتفسير: نصّ الكتاب: «إِلَى آخِرِ سُورَةِ آلِ عِمْرَانَ».",
+   "bookContext": {
+    "text": "(الْحَمْدُ لِلهِ الَّذِي أَحْيَانَا بَعْدَمَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ).",
+    "page": 50,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l5"
+  },
+  {
+   "seq": 141,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l6",
@@ -3000,7 +3207,7 @@
    "route": "#/lesson/u5/u5l6"
   },
   {
-   "seq": 133,
+   "seq": 142,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l6",
@@ -3023,7 +3230,7 @@
    "route": "#/lesson/u5/u5l6"
   },
   {
-   "seq": 134,
+   "seq": 143,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l6",
@@ -3046,7 +3253,7 @@
    "route": "#/lesson/u5/u5l6"
   },
   {
-   "seq": 135,
+   "seq": 144,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l6",
@@ -3069,7 +3276,53 @@
    "route": "#/lesson/u5/u5l6"
   },
   {
-   "seq": 136,
+   "seq": 145,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l6",
+   "lesson": "إن رأى في نومه ما يكره",
+   "kind": "interaction:order",
+   "path": "u5/u5l6/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 50,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب.",
+   "text": "رتّب ما يفعله من رأى في نومه ما يكره، كما ذكره الكتاب.\nالتفسير: هذا ترتيب الكتاب نصًّا في هذا الباب.",
+   "bookContext": {
+    "text": "يَنْفُثُ عَنْ يَسَارِهِ ثَلَاثَ مَرَّاتٍ، وَيَتَعَوَّذُ بِاللهِ مِنْ شَرِّهِ، وَلَا يُخْبِرُ بِهِ أَحَدًا.",
+    "page": 50,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l6"
+  },
+  {
+   "seq": 146,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l6",
+   "lesson": "إن رأى في نومه ما يكره",
+   "kind": "interaction:complete",
+   "path": "u5/u5l6/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 50,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل نصّ الكتاب.\n✔ يَسَارِهِ\n— يَمِينِهِ\n— أَمَامِهِ\n— خَلْفِهِ\nالتفسير: نصّ الكتاب: «يَنْفُثُ عَنْ يَسَارِهِ ثَلَاثَ مَرَّاتٍ».",
+   "bookContext": {
+    "text": "يَنْفُثُ عَنْ يَسَارِهِ ثَلَاثَ مَرَّاتٍ، وَيَتَعَوَّذُ بِاللهِ مِنْ شَرِّهِ، وَلَا يُخْبِرُ بِهِ أَحَدًا.",
+    "page": 50,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l6"
+  },
+  {
+   "seq": 147,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l7",
@@ -3092,7 +3345,7 @@
    "route": "#/lesson/u5/u5l7"
   },
   {
-   "seq": 137,
+   "seq": 148,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l7",
@@ -3115,7 +3368,7 @@
    "route": "#/lesson/u5/u5l7"
   },
   {
-   "seq": 138,
+   "seq": 149,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l7",
@@ -3138,7 +3391,53 @@
    "route": "#/lesson/u5/u5l7"
   },
   {
-   "seq": 139,
+   "seq": 150,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l7",
+   "lesson": "من استيقظ من الليل",
+   "kind": "interaction:order",
+   "path": "u5/u5l7/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 51,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب.",
+   "text": "رتّب ما ذكره الكتاب في هذا الباب.\nالتفسير: نصّ الكتاب: «فَإِنْ قَالَ بَعْدَهَا: اللَّهُمَّ اغْفِرْ لِي -أَوْ دَعَا- اسْتُجِيبَ لَهُ، فَإِنْ تَوَضَّأَ وَصَلَّى قُبِلَتْ صَلَاتُهُ».",
+   "bookContext": {
+    "text": "(لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ، وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، الْحَمْدُ لِلهِ، وَسُبْحَانَ اللهِ، وَلَا إِلَهَ إِلَّا اللهُ، وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ).",
+    "page": 51,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l7"
+  },
+  {
+   "seq": 151,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l7",
+   "lesson": "من استيقظ من الليل",
+   "kind": "interaction:complete",
+   "path": "u5/u5l7/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 51,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل آخر الذكر.\n✔ بِاللهِ\n— بِرَبِّي\n— بِالرَّحْمَنِ\n— بِمَشِيئَتِهِ\nالتفسير: خاتمة الذكر في الكتاب: «وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ».",
+   "bookContext": {
+    "text": "(لَا إِلَهَ إِلَّا اللهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ، وَلَهُ الْحَمْدُ، وَهُوَ عَلَى كُلِّ شَيْءٍ قَدِيرٌ، الْحَمْدُ لِلهِ، وَسُبْحَانَ اللهِ، وَلَا إِلَهَ إِلَّا اللهُ، وَاللهُ أَكْبَرُ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللهِ).",
+    "page": 51,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l7"
+  },
+  {
+   "seq": 152,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l8",
@@ -3161,7 +3460,7 @@
    "route": "#/lesson/u5/u5l8"
   },
   {
-   "seq": 140,
+   "seq": 153,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l8",
@@ -3184,7 +3483,7 @@
    "route": "#/lesson/u5/u5l8"
   },
   {
-   "seq": 141,
+   "seq": 154,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l8",
@@ -3207,7 +3506,7 @@
    "route": "#/lesson/u5/u5l8"
   },
   {
-   "seq": 142,
+   "seq": 155,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l8",
@@ -3230,7 +3529,7 @@
    "route": "#/lesson/u5/u5l8"
   },
   {
-   "seq": 143,
+   "seq": 156,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l8",
@@ -3253,7 +3552,7 @@
    "route": "#/lesson/u5/u5l8"
   },
   {
-   "seq": 144,
+   "seq": 157,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l9",
@@ -3276,7 +3575,7 @@
    "route": "#/lesson/u5/u5l9"
   },
   {
-   "seq": 145,
+   "seq": 158,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l9",
@@ -3299,7 +3598,7 @@
    "route": "#/lesson/u5/u5l9"
   },
   {
-   "seq": 146,
+   "seq": 159,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l9",
@@ -3322,7 +3621,7 @@
    "route": "#/lesson/u5/u5l9"
   },
   {
-   "seq": 147,
+   "seq": 160,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l10",
@@ -3345,7 +3644,7 @@
    "route": "#/lesson/u5/u5l10"
   },
   {
-   "seq": 148,
+   "seq": 161,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l10",
@@ -3368,7 +3667,7 @@
    "route": "#/lesson/u5/u5l10"
   },
   {
-   "seq": 149,
+   "seq": 162,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l10",
@@ -3391,7 +3690,53 @@
    "route": "#/lesson/u5/u5l10"
   },
   {
-   "seq": 150,
+   "seq": 163,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l10",
+   "lesson": "السلام",
+   "kind": "interaction:complete",
+   "path": "u5/u5l10/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 52,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل صيغة السلام كما في الكتاب.\n✔ وَبَرَكَاتُهُ\n— وَمَغْفِرَتُهُ\n— وَرِضْوَانُهُ\n— وَفَضْلُهُ\nالتفسير: نصّ الكتاب: «(السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ)».",
+   "bookContext": {
+    "text": "إِذَا لَقِيتَ مُسْلِمًا فَسَلِّمْ عَلَيْهِ قَائِلًا: (السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ)، وَإِنْ سَلَّمَ عَلَيْكَ فَقُلْ: (وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ).",
+    "page": 52,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l10"
+  },
+  {
+   "seq": 164,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l10",
+   "lesson": "السلام",
+   "kind": "interaction:match",
+   "path": "u5/u5l10/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 52,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين الحال وصيغتها.\nالتفسير: هذا نصّ الكتاب في باب السلام، والفرق بين الابتداء والردّ.",
+   "bookContext": {
+    "text": "إِذَا لَقِيتَ مُسْلِمًا فَسَلِّمْ عَلَيْهِ قَائِلًا: (السَّلَامُ عَلَيْكُمْ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ)، وَإِنْ سَلَّمَ عَلَيْكَ فَقُلْ: (وَعَلَيْكُمُ السَّلَامُ وَرَحْمَةُ اللهِ وَبَرَكَاتُهُ).",
+    "page": 52,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l10"
+  },
+  {
+   "seq": 165,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l11",
@@ -3414,7 +3759,7 @@
    "route": "#/lesson/u5/u5l11"
   },
   {
-   "seq": 151,
+   "seq": 166,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l11",
@@ -3437,7 +3782,7 @@
    "route": "#/lesson/u5/u5l11"
   },
   {
-   "seq": 152,
+   "seq": 167,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l11",
@@ -3460,7 +3805,7 @@
    "route": "#/lesson/u5/u5l11"
   },
   {
-   "seq": 153,
+   "seq": 168,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l11",
@@ -3483,7 +3828,7 @@
    "route": "#/lesson/u5/u5l11"
   },
   {
-   "seq": 154,
+   "seq": 169,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l12",
@@ -3506,7 +3851,7 @@
    "route": "#/lesson/u5/u5l12"
   },
   {
-   "seq": 155,
+   "seq": 170,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l12",
@@ -3529,7 +3874,7 @@
    "route": "#/lesson/u5/u5l12"
   },
   {
-   "seq": 156,
+   "seq": 171,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l12",
@@ -3552,7 +3897,7 @@
    "route": "#/lesson/u5/u5l12"
   },
   {
-   "seq": 157,
+   "seq": 172,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l12",
@@ -3575,7 +3920,53 @@
    "route": "#/lesson/u5/u5l12"
   },
   {
-   "seq": 158,
+   "seq": 173,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l12",
+   "lesson": "أذكار المسجد",
+   "kind": "interaction:complete",
+   "path": "u5/u5l12/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 53,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل ذكر دخول المسجد.\n✔ رَحْمَتِكَ\n— فَضْلِكَ\n— مَغْفِرَتِكَ\n— الْجَنَّةِ\nالتفسير: نصّ الكتاب: «يَقُولُ عِنْدَ دُخُولِهِ: (اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ)».",
+   "bookContext": {
+    "text": "يَقُولُ عِنْدَ دُخُولِهِ: (اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ). وَعِنْدَ خُرُوجِهِ: (اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ).",
+    "page": 53,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l12"
+  },
+  {
+   "seq": 174,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l12",
+   "lesson": "أذكار المسجد",
+   "kind": "interaction:scenario",
+   "path": "u5/u5l12/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 53,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "موقف تطبيقي بصياغة مستحدثة يُعرض داخل الدرس؛ يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب.",
+   "text": "خرجتَ من المسجد بعد الصلاة متوجّهًا إلى عملك. ما الذي تقوله؟\n✔ (اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ)\n— (اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ)\n— (غُفْرَانَكَ)\n— لا ذكر عند الخروج\nالتفسير: نصّ الكتاب: «وَعِنْدَ خُرُوجِهِ: (اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ)».",
+   "bookContext": {
+    "text": "يَقُولُ عِنْدَ دُخُولِهِ: (اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ). وَعِنْدَ خُرُوجِهِ: (اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ).",
+    "page": 53,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l12"
+  },
+  {
+   "seq": 175,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l13",
@@ -3598,7 +3989,7 @@
    "route": "#/lesson/u5/u5l13"
   },
   {
-   "seq": 159,
+   "seq": 176,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l13",
@@ -3621,7 +4012,7 @@
    "route": "#/lesson/u5/u5l13"
   },
   {
-   "seq": 160,
+   "seq": 177,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l13",
@@ -3644,7 +4035,53 @@
    "route": "#/lesson/u5/u5l13"
   },
   {
-   "seq": 161,
+   "seq": 178,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l13",
+   "lesson": "عند العطاس",
+   "kind": "interaction:match",
+   "path": "u5/u5l13/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 53,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين القائل وما يقوله.\nالتفسير: هذا نصّ الكتاب في باب العطاس.",
+   "bookContext": {
+    "text": "يُغَطِّي الْعَاطِسُ وَجْهَهُ، فَإِذَا عَطَسَ يَقُولُ: (الْحَمْدُ لِلهِ). وَيَرُدُّ عَلَيْهِ مَنْ سَمِعَهُ فَيَقُولُ: (يَرْحَمُكَ اللهُ). فَيَرُدُّ عَلَيْهِ وَيَقُولُ: (يَهْدِيكُمُ اللهُ وَيُصْلِحُ بَالَكُمْ).",
+    "page": 53,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l13"
+  },
+  {
+   "seq": 179,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l13",
+   "lesson": "عند العطاس",
+   "kind": "interaction:mcq",
+   "path": "u5/u5l13/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 53,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب.",
+   "text": "ما الذي يفعله العاطس قبل الذكر كما ذكر الكتاب؟\n✔ يُغَطِّي وَجْهَهُ\n— يَرْفَعُ صَوْتَهُ\n— يَلْتَفِتُ يَمِينًا\n— يَقُومُ مِنْ مَجْلِسِهِ\nالتفسير: نصّ الكتاب: «يُغَطِّي الْعَاطِسُ وَجْهَهُ، فَإِذَا عَطَسَ يَقُولُ: (الْحَمْدُ لِلهِ)».",
+   "bookContext": {
+    "text": "يُغَطِّي الْعَاطِسُ وَجْهَهُ، فَإِذَا عَطَسَ يَقُولُ: (الْحَمْدُ لِلهِ). وَيَرُدُّ عَلَيْهِ مَنْ سَمِعَهُ فَيَقُولُ: (يَرْحَمُكَ اللهُ). فَيَرُدُّ عَلَيْهِ وَيَقُولُ: (يَهْدِيكُمُ اللهُ وَيُصْلِحُ بَالَكُمْ).",
+    "page": 53,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l13"
+  },
+  {
+   "seq": 180,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l14",
@@ -3667,7 +4104,7 @@
    "route": "#/lesson/u5/u5l14"
   },
   {
-   "seq": 162,
+   "seq": 181,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l14",
@@ -3690,7 +4127,7 @@
    "route": "#/lesson/u5/u5l14"
   },
   {
-   "seq": 163,
+   "seq": 182,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l14",
@@ -3713,7 +4150,53 @@
    "route": "#/lesson/u5/u5l14"
   },
   {
-   "seq": 164,
+   "seq": 183,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l14",
+   "lesson": "التثاؤب",
+   "kind": "interaction:classify",
+   "path": "u5/u5l14/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 54,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف ما ورد في باب التثاؤب.\nالتفسير: نصّ الكتاب: «يَرُدُّهُ مَا اسْتَطَاعَ، وَيُمْسِكُ بِيَدِهِ عَلَى فِيهِ، وَلَا يَقُولُ: آهْ آهْ. وَلَيْسَ لَهُ ذِكْرٌ خَاصٌّ».",
+   "bookContext": {
+    "text": "يَرُدُّهُ مَا اسْتَطَاعَ، وَيُمْسِكُ بِيَدِهِ عَلَى فِيهِ، وَلَا يَقُولُ: آهْ آهْ. وَلَيْسَ لَهُ ذِكْرٌ خَاصٌّ.",
+    "page": 54,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l14"
+  },
+  {
+   "seq": 184,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l14",
+   "lesson": "التثاؤب",
+   "kind": "interaction:complete",
+   "path": "u5/u5l14/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 54,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل نصّ الكتاب.\n✔ اسْتَطَاعَ\n— أَمْكَنَ\n— قَدَرَ\n— شَاءَ\nالتفسير: نصّ الكتاب: «يَرُدُّهُ مَا اسْتَطَاعَ».",
+   "bookContext": {
+    "text": "يَرُدُّهُ مَا اسْتَطَاعَ، وَيُمْسِكُ بِيَدِهِ عَلَى فِيهِ، وَلَا يَقُولُ: آهْ آهْ. وَلَيْسَ لَهُ ذِكْرٌ خَاصٌّ.",
+    "page": 54,
+    "cardId": "c1",
+    "type": "text"
+   },
+   "route": "#/lesson/u5/u5l14"
+  },
+  {
+   "seq": 185,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l15",
@@ -3736,7 +4219,7 @@
    "route": "#/lesson/u5/u5l15"
   },
   {
-   "seq": 165,
+   "seq": 186,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l15",
@@ -3759,7 +4242,7 @@
    "route": "#/lesson/u5/u5l15"
   },
   {
-   "seq": 166,
+   "seq": 187,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l15",
@@ -3782,7 +4265,53 @@
    "route": "#/lesson/u5/u5l15"
   },
   {
-   "seq": 167,
+   "seq": 188,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l15",
+   "lesson": "عند الكرب",
+   "kind": "interaction:order",
+   "path": "u5/u5l15/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 54,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب.",
+   "text": "رتّب جُمل دعاء الكرب كما وردت في الكتاب.\nالتفسير: هذا ترتيب الجُمل الثلاث في نصّ الكتاب.",
+   "bookContext": {
+    "text": "(لَا إِلَهَ إِلَّا اللهُ الْعَظِيمُ الْحَلِيمُ، لَا إِلَهَ إِلَّا اللهُ رَبُّ الْعَرْشِ الْعَظِيمِ، لَا إِلَهَ إِلَّا اللهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الْأَرْضِ وَرَبُّ الْعَرْشِ الْعَظِيمِ).",
+    "page": 54,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l15"
+  },
+  {
+   "seq": 189,
+   "unitId": "u5",
+   "unit": "الأذكار والآداب",
+   "lessonId": "u5l15",
+   "lesson": "عند الكرب",
+   "kind": "interaction:mcq",
+   "path": "u5/u5l15/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 54,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب.",
+   "text": "كم مرة تكرّرت «لَا إِلَهَ إِلَّا اللهُ» في دعاء الكرب كما أورده الكتاب؟\n✔ ثلاث مرات\n— مرة واحدة\n— مرتان\n— أربع مرات\nالتفسير: الدعاء في الكتاب ثلاث جُمل، كلٌّ منها تبدأ بـ«لَا إِلَهَ إِلَّا اللهُ».",
+   "bookContext": {
+    "text": "(لَا إِلَهَ إِلَّا اللهُ الْعَظِيمُ الْحَلِيمُ، لَا إِلَهَ إِلَّا اللهُ رَبُّ الْعَرْشِ الْعَظِيمِ، لَا إِلَهَ إِلَّا اللهُ رَبُّ السَّمَاوَاتِ وَرَبُّ الْأَرْضِ وَرَبُّ الْعَرْشِ الْعَظِيمِ).",
+    "page": 54,
+    "cardId": "c1",
+    "type": "dhikr"
+   },
+   "route": "#/lesson/u5/u5l15"
+  },
+  {
+   "seq": 190,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l16",
@@ -3805,7 +4334,7 @@
    "route": "#/lesson/u5/u5l16"
   },
   {
-   "seq": 168,
+   "seq": 191,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l16",
@@ -3828,7 +4357,7 @@
    "route": "#/lesson/u5/u5l16"
   },
   {
-   "seq": 169,
+   "seq": 192,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l16",
@@ -3851,7 +4380,7 @@
    "route": "#/lesson/u5/u5l16"
   },
   {
-   "seq": 170,
+   "seq": 193,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l16",
@@ -3874,7 +4403,7 @@
    "route": "#/lesson/u5/u5l16"
   },
   {
-   "seq": 171,
+   "seq": 194,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l17",
@@ -3897,7 +4426,7 @@
    "route": "#/lesson/u5/u5l17"
   },
   {
-   "seq": 172,
+   "seq": 195,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l17",
@@ -3920,7 +4449,7 @@
    "route": "#/lesson/u5/u5l17"
   },
   {
-   "seq": 173,
+   "seq": 196,
    "unitId": "u5",
    "unit": "الأذكار والآداب",
    "lessonId": "u5l17",
@@ -3943,7 +4472,7 @@
    "route": "#/lesson/u5/u5l17"
   },
   {
-   "seq": 174,
+   "seq": 197,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l1",
@@ -3966,7 +4495,7 @@
    "route": "#/lesson/u6/u6l1"
   },
   {
-   "seq": 175,
+   "seq": 198,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l1",
@@ -3989,7 +4518,7 @@
    "route": "#/lesson/u6/u6l1"
   },
   {
-   "seq": 176,
+   "seq": 199,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l1",
@@ -4012,7 +4541,7 @@
    "route": "#/lesson/u6/u6l1"
   },
   {
-   "seq": 177,
+   "seq": 200,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l1",
@@ -4035,7 +4564,7 @@
    "route": "#/lesson/u6/u6l1"
   },
   {
-   "seq": 178,
+   "seq": 201,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l1",
@@ -4053,7 +4582,7 @@
    "route": "#/lesson/u6/u6l1"
   },
   {
-   "seq": 179,
+   "seq": 202,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4076,7 +4605,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 180,
+   "seq": 203,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4099,7 +4628,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 181,
+   "seq": 204,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4122,7 +4651,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 182,
+   "seq": 205,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l2",
@@ -4140,7 +4669,7 @@
    "route": "#/lesson/u6/u6l2"
   },
   {
-   "seq": 183,
+   "seq": 206,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4163,7 +4692,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 184,
+   "seq": 207,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4186,7 +4715,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 185,
+   "seq": 208,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4209,7 +4738,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 186,
+   "seq": 209,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4227,7 +4756,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 187,
+   "seq": 210,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l3",
@@ -4250,7 +4779,7 @@
    "route": "#/lesson/u6/u6l3"
   },
   {
-   "seq": 188,
+   "seq": 211,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4273,7 +4802,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 189,
+   "seq": 212,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4296,7 +4825,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 190,
+   "seq": 213,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4319,7 +4848,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 191,
+   "seq": 214,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l4",
@@ -4337,7 +4866,7 @@
    "route": "#/lesson/u6/u6l4"
   },
   {
-   "seq": 192,
+   "seq": 215,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4360,7 +4889,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 193,
+   "seq": 216,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4383,7 +4912,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 194,
+   "seq": 217,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4406,7 +4935,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 195,
+   "seq": 218,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l5",
@@ -4424,7 +4953,7 @@
    "route": "#/lesson/u6/u6l5"
   },
   {
-   "seq": 196,
+   "seq": 219,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4447,7 +4976,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 197,
+   "seq": 220,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4470,7 +4999,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 198,
+   "seq": 221,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4493,7 +5022,7 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 199,
+   "seq": 222,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l6",
@@ -4511,7 +5040,53 @@
    "route": "#/lesson/u6/u6l6"
   },
   {
-   "seq": 200,
+   "seq": 223,
+   "unitId": "u6",
+   "unit": "الأخلاق",
+   "lessonId": "u6l6",
+   "lesson": "الشجاعة",
+   "kind": "interaction:complete",
+   "path": "u6/u6l6/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 61,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل وصف أنس رضي الله عنه للنبي ﷺ.\n✔ أَشْجَعَ\n— أَعْلَمَ\n— أَزْهَدَ\n— أَحْلَمَ\nالتفسير: لفظ الحديث في الكتاب: «أَحْسَنَ النَّاسِ وَأَشْجَعَ النَّاسِ وَأَجْوَدَ النَّاسِ».",
+   "bookContext": {
+    "text": "كَانَ النَّبِيُّ ﷺ أَحْسَنَ النَّاسِ وَأَشْجَعَ النَّاسِ وَأَجْوَدَ النَّاسِ، وَلَقَدْ فَزِعَ أَهْلُ الْمَدِينَةِ، فَكَانَ النَّبِيُّ ﷺ سَبَقَهُمْ عَلَى فَرَسٍ.",
+    "page": 61,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u6/u6l6"
+  },
+  {
+   "seq": 224,
+   "unitId": "u6",
+   "unit": "الأخلاق",
+   "lessonId": "u6l6",
+   "lesson": "الشجاعة",
+   "kind": "interaction:classify",
+   "path": "u6/u6l6/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 61,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف الأوصاف بحسب ورودها في حديث أنس رضي الله عنه.\nالتفسير: الحديث في الكتاب ذكر ثلاثة أوصاف فقط: أحسن الناس وأشجع الناس وأجود الناس.",
+   "bookContext": {
+    "text": "كَانَ النَّبِيُّ ﷺ أَحْسَنَ النَّاسِ وَأَشْجَعَ النَّاسِ وَأَجْوَدَ النَّاسِ، وَلَقَدْ فَزِعَ أَهْلُ الْمَدِينَةِ، فَكَانَ النَّبِيُّ ﷺ سَبَقَهُمْ عَلَى فَرَسٍ.",
+    "page": 61,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u6/u6l6"
+  },
+  {
+   "seq": 225,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -4534,7 +5109,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 201,
+   "seq": 226,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -4557,7 +5132,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 202,
+   "seq": 227,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -4580,7 +5155,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 203,
+   "seq": 228,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l7",
@@ -4598,7 +5173,7 @@
    "route": "#/lesson/u6/u6l7"
   },
   {
-   "seq": 204,
+   "seq": 229,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -4621,7 +5196,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 205,
+   "seq": 230,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -4644,7 +5219,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 206,
+   "seq": 231,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -4667,7 +5242,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 207,
+   "seq": 232,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l8",
@@ -4685,7 +5260,7 @@
    "route": "#/lesson/u6/u6l8"
   },
   {
-   "seq": 208,
+   "seq": 233,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -4708,7 +5283,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 209,
+   "seq": 234,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -4731,7 +5306,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 210,
+   "seq": 235,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -4754,7 +5329,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 211,
+   "seq": 236,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -4777,7 +5352,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 212,
+   "seq": 237,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l9",
@@ -4795,7 +5370,7 @@
    "route": "#/lesson/u6/u6l9"
   },
   {
-   "seq": 213,
+   "seq": 238,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -4818,7 +5393,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 214,
+   "seq": 239,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -4841,7 +5416,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 215,
+   "seq": 240,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -4864,7 +5439,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 216,
+   "seq": 241,
    "unitId": "u6",
    "unit": "الأخلاق",
    "lessonId": "u6l10",
@@ -4882,7 +5457,7 @@
    "route": "#/lesson/u6/u6l10"
   },
   {
-   "seq": 217,
+   "seq": 242,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -4905,7 +5480,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 218,
+   "seq": 243,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -4928,7 +5503,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 219,
+   "seq": 244,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -4951,7 +5526,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 220,
+   "seq": 245,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l1",
@@ -4969,7 +5544,7 @@
    "route": "#/lesson/u7/u7l1"
   },
   {
-   "seq": 221,
+   "seq": 246,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -4992,7 +5567,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 222,
+   "seq": 247,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5015,7 +5590,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 223,
+   "seq": 248,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5038,7 +5613,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 224,
+   "seq": 249,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5061,7 +5636,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 225,
+   "seq": 250,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l2",
@@ -5079,7 +5654,7 @@
    "route": "#/lesson/u7/u7l2"
   },
   {
-   "seq": 226,
+   "seq": 251,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5102,7 +5677,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 227,
+   "seq": 252,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5125,7 +5700,7 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 228,
+   "seq": 253,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l3",
@@ -5148,7 +5723,53 @@
    "route": "#/lesson/u7/u7l3"
   },
   {
-   "seq": 229,
+   "seq": 254,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l3",
+   "lesson": "المبادرة بالأعمال الصالحة",
+   "kind": "interaction:order",
+   "path": "u7/u7l3/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 67,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب.",
+   "text": "رتّب معاني الحديث كما وردت في لفظه.\nالتفسير: هذا ترتيب لفظ الحديث كما أورده الكتاب.",
+   "bookContext": {
+    "text": "«بَادِرُوا بِالْأَعْمَالِ، فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ، يُصْبِحُ الرَّجُلُ مُؤْمِنًا وَيُمْسِي كَافِرًا، أَوْ يُمْسِي مُؤْمِنًا وَيُصْبِحُ كَافِرًا، يَبِيعُ دِينَهُ بِعَرَضٍ مِنَ الدُّنْيَا»",
+    "page": 67,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l3"
+  },
+  {
+   "seq": 255,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l3",
+   "lesson": "المبادرة بالأعمال الصالحة",
+   "kind": "interaction:complete",
+   "path": "u7/u7l3/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 67,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل لفظ الحديث.\n✔ الْمُظْلِمِ\n— الطَّوِيلِ\n— الْبَارِدِ\n— الْأَخِيرِ\nالتفسير: لفظ الحديث: «فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ».",
+   "bookContext": {
+    "text": "«بَادِرُوا بِالْأَعْمَالِ، فِتَنًا كَقِطَعِ اللَّيْلِ الْمُظْلِمِ، يُصْبِحُ الرَّجُلُ مُؤْمِنًا وَيُمْسِي كَافِرًا، أَوْ يُمْسِي مُؤْمِنًا وَيُصْبِحُ كَافِرًا، يَبِيعُ دِينَهُ بِعَرَضٍ مِنَ الدُّنْيَا»",
+    "page": 67,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l3"
+  },
+  {
+   "seq": 256,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5171,7 +5792,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 230,
+   "seq": 257,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5194,7 +5815,7 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 231,
+   "seq": 258,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l4",
@@ -5217,7 +5838,53 @@
    "route": "#/lesson/u7/u7l4"
   },
   {
-   "seq": 232,
+   "seq": 259,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l4",
+   "lesson": "عابر سبيل",
+   "kind": "interaction:match",
+   "path": "u7/u7l4/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين شطرَي وصية ابن عمر رضي الله عنهما.\nالتفسير: هذا نصّ قول ابن عمر رضي الله عنهما كما أورده الكتاب.",
+   "bookContext": {
+    "text": "«كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l4"
+  },
+  {
+   "seq": 260,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l4",
+   "lesson": "عابر سبيل",
+   "kind": "interaction:scenario",
+   "path": "u7/u7l4/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "موقف تطبيقي بصياغة مستحدثة يُعرض داخل الدرس؛ يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب.",
+   "text": "همَمْتَ بعمل صالح ثم قلت: أؤجّله إلى الغد. أيّ شطر من وصية ابن عمر رضي الله عنهما يخاطب حالك؟\n✔ «إِذَا أَصْبَحْتَ فَلَا تَنْتَظِرِ الْمَسَاءَ»\n— «كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ»\n— «وَخُذْ مِنْ صِحَّتِكَ لِمَرَضِكَ»\n— «وَمِنْ حَيَاتِكَ لِمَوْتِكَ»\nالتفسير: وصية ابن عمر في الكتاب تنهى عن انتظار الوقت التالي: «إِذَا أَمْسَيْتَ فَلَا تَنْتَظِرِ الصَّبَاحَ، وَإِذَا أَصْبَحْتَ فَلَا تَنْتَظِرِ الْمَسَاءَ».",
+   "bookContext": {
+    "text": "«كُنْ فِي الدُّنْيَا كَأَنَّكَ غَرِيبٌ أَوْ عَابِرُ سَبِيلٍ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l4"
+  },
+  {
+   "seq": 261,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5240,7 +5907,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 233,
+   "seq": 262,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5263,7 +5930,7 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 234,
+   "seq": 263,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l5",
@@ -5286,7 +5953,53 @@
    "route": "#/lesson/u7/u7l5"
   },
   {
-   "seq": 235,
+   "seq": 264,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l5",
+   "lesson": "الصور والأعمال",
+   "kind": "interaction:classify",
+   "path": "u7/u7l5/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف بحسب الحديث.\nالتفسير: لفظ الحديث: «إِنَّ اللهَ لَا يَنْظُرُ إِلَى صُوَرِكُمْ وَأَمْوَالِكُمْ، وَلَكِنْ يَنْظُرُ إِلَى قُلُوبِكُمْ وَأَعْمَالِكُمْ».",
+   "bookContext": {
+    "text": "«إِنَّ اللهَ لَا يَنْظُرُ إِلَى صُوَرِكُمْ وَأَمْوَالِكُمْ، وَلَكِنْ يَنْظُرُ إِلَى قُلُوبِكُمْ وَأَعْمَالِكُمْ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l5"
+  },
+  {
+   "seq": 265,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l5",
+   "lesson": "الصور والأعمال",
+   "kind": "interaction:complete",
+   "path": "u7/u7l5/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل لفظ الحديث.\n✔ قُلُوبِكُمْ\n— نِيَّاتِكُمْ\n— أَحْوَالِكُمْ\n— سَرَائِرِكُمْ\nالتفسير: لفظ الحديث في الكتاب: «وَلَكِنْ يَنْظُرُ إِلَى قُلُوبِكُمْ وَأَعْمَالِكُمْ».",
+   "bookContext": {
+    "text": "«إِنَّ اللهَ لَا يَنْظُرُ إِلَى صُوَرِكُمْ وَأَمْوَالِكُمْ، وَلَكِنْ يَنْظُرُ إِلَى قُلُوبِكُمْ وَأَعْمَالِكُمْ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l5"
+  },
+  {
+   "seq": 266,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -5309,7 +6022,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 236,
+   "seq": 267,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -5332,7 +6045,7 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 237,
+   "seq": 268,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l6",
@@ -5355,7 +6068,53 @@
    "route": "#/lesson/u7/u7l6"
   },
   {
-   "seq": 238,
+   "seq": 269,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l6",
+   "lesson": "لا يتبعك إلا عملك",
+   "kind": "interaction:classify",
+   "path": "u7/u7l6/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف الثلاثة الذين يتبعون الميت.\nالتفسير: لفظ الحديث: «فَيَرْجِعُ أَهْلُهُ وَمَالُهُ وَيَبْقَى عَمَلُهُ».",
+   "bookContext": {
+    "text": "«يَتْبَعُ الْمَيِّتَ ثَلَاثَةٌ، فَيَرْجِعُ اثْنَانِ وَيَبْقَى وَاحِدٌ، يَتْبَعُهُ أَهْلُهُ وَمَالُهُ وَعَمَلُهُ، فَيَرْجِعُ أَهْلُهُ وَمَالُهُ وَيَبْقَى عَمَلُهُ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l6"
+  },
+  {
+   "seq": 270,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l6",
+   "lesson": "لا يتبعك إلا عملك",
+   "kind": "interaction:complete",
+   "path": "u7/u7l6/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 68,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل لفظ الحديث.\n✔ ثَلَاثَةٌ\n— اثْنَانِ\n— أَرْبَعَةٌ\n— وَاحِدٌ\nالتفسير: لفظ الحديث: «يَتْبَعُ الْمَيِّتَ ثَلَاثَةٌ».",
+   "bookContext": {
+    "text": "«يَتْبَعُ الْمَيِّتَ ثَلَاثَةٌ، فَيَرْجِعُ اثْنَانِ وَيَبْقَى وَاحِدٌ، يَتْبَعُهُ أَهْلُهُ وَمَالُهُ وَعَمَلُهُ، فَيَرْجِعُ أَهْلُهُ وَمَالُهُ وَيَبْقَى عَمَلُهُ»",
+    "page": 68,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l6"
+  },
+  {
+   "seq": 271,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -5378,7 +6137,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 239,
+   "seq": 272,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -5401,7 +6160,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 240,
+   "seq": 273,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -5424,7 +6183,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 241,
+   "seq": 274,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -5447,7 +6206,7 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 242,
+   "seq": 275,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l7",
@@ -5470,7 +6229,53 @@
    "route": "#/lesson/u7/u7l7"
   },
   {
-   "seq": 243,
+   "seq": 276,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l7",
+   "lesson": "برحمة الله لا بالعمل",
+   "kind": "interaction:complete",
+   "path": "u7/u7l7/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 69,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل خاتمة الحديث.\n✔ أَدْوَمُهُ\n— أَكْثَرُهُ\n— أَشَقُّهُ\n— أَخْفَاهُ\nالتفسير: لفظ الحديث: «أَنَّ أَحَبَّ الْعَمَلِ إِلَى اللهِ أَدْوَمُهُ وَإِنْ قَلَّ».",
+   "bookContext": {
+    "text": "«سَدِّدُوا وَقَارِبُوا، وَأَبْشِرُوا، فَإِنَّهُ لَنْ يُدْخِلَ الْجَنَّةَ أَحَدًا عَمَلُهُ» قَالُوا: وَلَا أَنْتَ يَا رَسُولَ اللهِ؟ قَالَ: «وَلَا أَنَا، إِلَّا أَنْ يَتَغَمَّدَنِيَ اللهُ مِنْهُ بِرَحْمَةٍ، وَاعْلَمُوا أَنَّ أَحَبَّ الْعَمَلِ إِلَى اللهِ أَدْوَمُهُ وَإِنْ قَلَّ»",
+    "page": 69,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l7"
+  },
+  {
+   "seq": 277,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l7",
+   "lesson": "برحمة الله لا بالعمل",
+   "kind": "interaction:order",
+   "path": "u7/u7l7/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 69,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب.",
+   "text": "رتّب أوائل الحديث كما وردت في لفظه.\nالتفسير: لفظ الحديث في الكتاب: «سَدِّدُوا وَقَارِبُوا، وَأَبْشِرُوا».",
+   "bookContext": {
+    "text": "«سَدِّدُوا وَقَارِبُوا، وَأَبْشِرُوا، فَإِنَّهُ لَنْ يُدْخِلَ الْجَنَّةَ أَحَدًا عَمَلُهُ» قَالُوا: وَلَا أَنْتَ يَا رَسُولَ اللهِ؟ قَالَ: «وَلَا أَنَا، إِلَّا أَنْ يَتَغَمَّدَنِيَ اللهُ مِنْهُ بِرَحْمَةٍ، وَاعْلَمُوا أَنَّ أَحَبَّ الْعَمَلِ إِلَى اللهِ أَدْوَمُهُ وَإِنْ قَلَّ»",
+    "page": 69,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l7"
+  },
+  {
+   "seq": 278,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -5493,7 +6298,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 244,
+   "seq": 279,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -5516,7 +6321,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 245,
+   "seq": 280,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -5539,7 +6344,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 246,
+   "seq": 281,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -5557,7 +6362,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 247,
+   "seq": 282,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l8",
@@ -5575,7 +6380,7 @@
    "route": "#/lesson/u7/u7l8"
   },
   {
-   "seq": 248,
+   "seq": 283,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -5598,7 +6403,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 249,
+   "seq": 284,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -5621,7 +6426,7 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 250,
+   "seq": 285,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l9",
@@ -5644,7 +6449,53 @@
    "route": "#/lesson/u7/u7l9"
   },
   {
-   "seq": 251,
+   "seq": 286,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l9",
+   "lesson": "فتنة النساء",
+   "kind": "interaction:complete",
+   "path": "u7/u7l9/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 70,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل أول الحديث.\n✔ حُلْوَةٌ\n— زَائِلَةٌ\n— قَلِيلَةٌ\n— غَرَّارَةٌ\nالتفسير: لفظ الحديث: «إِنَّ الدُّنْيَا حُلْوَةٌ خَضِرَةٌ».",
+   "bookContext": {
+    "text": "«إِنَّ الدُّنْيَا حُلْوَةٌ خَضِرَةٌ، وَإِنَّ اللهَ مُسْتَخْلِفُكُمْ فِيهَا، فَيَنْظُرُ كَيْفَ تَعْمَلُونَ، فَاتَّقُوا الدُّنْيَا وَاتَّقُوا النِّسَاءَ، فَإِنَّ أَوَّلَ فِتْنَةِ بَنِي إِسْرَائِيلَ كَانَتْ فِي النِّسَاءِ»",
+    "page": 70,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l9"
+  },
+  {
+   "seq": 287,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l9",
+   "lesson": "فتنة النساء",
+   "kind": "interaction:match",
+   "path": "u7/u7l9/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 70,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب.",
+   "text": "طابِق بين الجملة وتمامها في الحديث.\nالتفسير: هذا لفظ الحديث كما رواه مسلم في الكتاب.",
+   "bookContext": {
+    "text": "«إِنَّ الدُّنْيَا حُلْوَةٌ خَضِرَةٌ، وَإِنَّ اللهَ مُسْتَخْلِفُكُمْ فِيهَا، فَيَنْظُرُ كَيْفَ تَعْمَلُونَ، فَاتَّقُوا الدُّنْيَا وَاتَّقُوا النِّسَاءَ، فَإِنَّ أَوَّلَ فِتْنَةِ بَنِي إِسْرَائِيلَ كَانَتْ فِي النِّسَاءِ»",
+    "page": 70,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l9"
+  },
+  {
+   "seq": 288,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -5667,7 +6518,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 252,
+   "seq": 289,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -5690,7 +6541,7 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 253,
+   "seq": 290,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l10",
@@ -5713,7 +6564,53 @@
    "route": "#/lesson/u7/u7l10"
   },
   {
-   "seq": 254,
+   "seq": 291,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l10",
+   "lesson": "فتنة المال",
+   "kind": "interaction:classify",
+   "path": "u7/u7l10/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 70,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد.",
+   "text": "صنّف بحسب الحديث.\nالتفسير: لفظ الحديث: «مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ، وَلَكِنِّي أَخْشَى أَنْ تُبْسَطَ الدُّنْيَا عَلَيْكُمْ… فَتَنَافَسُوهَا كَمَا تَنَافَسُوهَا».",
+   "bookContext": {
+    "text": "«وَاللهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ، وَلَكِنِّي أَخْشَى أَنْ تُبْسَطَ الدُّنْيَا عَلَيْكُمْ، كَمَا بُسِطَتْ عَلَى مَنْ كَانَ قَبْلَكُمْ، فَتَنَافَسُوهَا كَمَا تَنَافَسُوهَا، وَتُهْلِكَكُمْ كَمَا أَهْلَكَتْهُمْ»",
+    "page": 70,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l10"
+  },
+  {
+   "seq": 292,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l10",
+   "lesson": "فتنة المال",
+   "kind": "interaction:complete",
+   "path": "u7/u7l10/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 70,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات.",
+   "text": "أكمل أول الحديث.\n✔ الْفَقْرَ\n— الْمَرَضَ\n— الْعَدُوَّ\n— الْجَهْلَ\nالتفسير: لفظ الحديث: «وَاللهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ».",
+   "bookContext": {
+    "text": "«وَاللهِ مَا الْفَقْرَ أَخْشَى عَلَيْكُمْ، وَلَكِنِّي أَخْشَى أَنْ تُبْسَطَ الدُّنْيَا عَلَيْكُمْ، كَمَا بُسِطَتْ عَلَى مَنْ كَانَ قَبْلَكُمْ، فَتَنَافَسُوهَا كَمَا تَنَافَسُوهَا، وَتُهْلِكَكُمْ كَمَا أَهْلَكَتْهُمْ»",
+    "page": 70,
+    "cardId": "c1",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l10"
+  },
+  {
+   "seq": 293,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -5736,7 +6633,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 255,
+   "seq": 294,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -5759,7 +6656,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 256,
+   "seq": 295,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -5782,7 +6679,7 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 257,
+   "seq": 296,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l11",
@@ -5800,7 +6697,76 @@
    "route": "#/lesson/u7/u7l11"
   },
   {
-   "seq": 258,
+   "seq": 297,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l11",
+   "lesson": "المجاهدة",
+   "kind": "interaction:complete-quran",
+   "path": "u7/u7l11/interaction/i2",
+   "src": "derived",
+   "ref": null,
+   "page": 70,
+   "priority": "high",
+   "priorityAr": "عالية",
+   "reason": "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط.",
+   "text": "أكمل الآية.\n✔ لَنَهْدِيَنَّهُمْ سُبُلَنَا\n— لَنُدْخِلَنَّهُمُ الْجَنَّةَ\n— لَنَغْفِرَنَّ لَهُمْ\n— لَنُثِيبَنَّهُمْ أَجْرًا\nالتفسير: ﴿وَالَّذِينَ جَاهَدُوا فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا﴾ [العنكبوت: ٦٩].",
+   "bookContext": {
+    "text": "«حُجِبَتِ النَّارُ بِالشَّهَوَاتِ، وَحُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ»",
+    "page": 71,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l11"
+  },
+  {
+   "seq": 298,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l11",
+   "lesson": "المجاهدة",
+   "kind": "interaction:truefalse",
+   "path": "u7/u7l11/interaction/x1",
+   "src": "authored",
+   "ref": null,
+   "page": 71,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "صحيح/خطأ بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب.",
+   "text": "في الحديث: حُجبت النار بالمكاره، وحُجبت الجنة بالشهوات.\n— صحيح\n✔ خطأ\nالتفسير: اللفظ بعكس ذلك: «حُجِبَتِ النَّارُ بِالشَّهَوَاتِ، وَحُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ».",
+   "bookContext": {
+    "text": "«حُجِبَتِ النَّارُ بِالشَّهَوَاتِ، وَحُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ»",
+    "page": 71,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l11"
+  },
+  {
+   "seq": 299,
+   "unitId": "u7",
+   "unit": "الرقائق",
+   "lessonId": "u7l11",
+   "lesson": "المجاهدة",
+   "kind": "interaction:scenario",
+   "path": "u7/u7l11/interaction/x2",
+   "src": "authored",
+   "ref": null,
+   "page": 71,
+   "priority": "medium",
+   "priorityAr": "متوسطة",
+   "reason": "موقف تطبيقي بصياغة مستحدثة يُعرض داخل الدرس؛ يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب.",
+   "text": "شقّت عليك نافلة اعتدتَها في ليلة باردة، فحدّثتك نفسك بتركها. أيّ معنى في هذا الدرس يعينك؟\n✔ «حُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ»\n— «حُجِبَتِ النَّارُ بِالشَّهَوَاتِ»\n— أنّ النافلة تُترك عند المشقّة\n— أنّ الأعمال بالنيات\nالتفسير: لفظ الحديث في الكتاب يبيّن أنّ طريق الجنة محفوف بما تكرهه النفس.",
+   "bookContext": {
+    "text": "«حُجِبَتِ النَّارُ بِالشَّهَوَاتِ، وَحُجِبَتِ الْجَنَّةُ بِالْمَكَارِهِ»",
+    "page": 71,
+    "cardId": "c2",
+    "type": "hadith"
+   },
+   "route": "#/lesson/u7/u7l11"
+  },
+  {
+   "seq": 300,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",
@@ -5823,7 +6789,7 @@
    "route": "#/lesson/u7/u7l12"
   },
   {
-   "seq": 259,
+   "seq": 301,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",
@@ -5846,7 +6812,7 @@
    "route": "#/lesson/u7/u7l12"
   },
   {
-   "seq": 260,
+   "seq": 302,
    "unitId": "u7",
    "unit": "الرقائق",
    "lessonId": "u7l12",

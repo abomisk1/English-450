@@ -1,6 +1,6 @@
 /** الصفحة الرئيسة ومسار التعلّم. */
 
-import { h, ar, ring, icon, ICONS } from '../lib/dom.js';
+import { h, ar, arCount, COUNT_LESSON, ring, icon, ICONS } from '../lib/dom.js';
 import { progressBar, ornament, sectionTitle } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState } from '../store.js';
@@ -104,6 +104,36 @@ export function homeScreen(manifest, units) {
     ));
   }
   wrap.append(grid);
+
+  // دروس فيها نشاط أسري — من الدروس الموجودة فعلًا، بلا توليد أنشطة جديدة.
+  const familyLessons = [];
+  for (const u of units) {
+    for (const l of u.lessons) if (l.family) familyLessons.push({ u, l });
+  }
+  if (familyLessons.length) {
+    wrap.append(ornament(), sectionTitle('دروس مناسبة للأسرة',
+      h('span', { class: 'chip' }, arCount(familyLessons.length, COUNT_LESSON))));
+    wrap.append(h('p', { class: 'small muted', style: { marginTop: 0 } },
+      'دروس فيها سؤال نقاش تُدار به جلسة أسرية قصيرة. يظهر النشاط داخل الدرس نفسه.'));
+    const fam = h('div', { class: 'stack' });
+    for (const { u, l } of familyLessons.slice(0, 6)) {
+      fam.append(h('button', {
+        class: 'card', type: 'button',
+        style: { width: '100%', textAlign: 'start', cursor: 'pointer', font: 'inherit', color: 'inherit' },
+        onclick: () => navigate(`/lesson/${u.id}/${l.id}`),
+      },
+        h('div', { class: 'row', style: { flexWrap: 'nowrap', justifyContent: 'space-between' } },
+          h('span', { style: { flex: 1, minWidth: 0 } },
+            h('span', { class: 'small muted' }, u.shortTitle),
+            h('span', { style: { fontWeight: 700, display: 'block', fontFamily: 'var(--font-text)' } }, l.title)),
+          h('span', { class: 'chip chip--brand' }, 'نشاط أسري'))));
+    }
+    wrap.append(fam);
+    if (familyLessons.length > 6) {
+      wrap.append(h('p', { class: 'xsmall muted center' },
+        `وبقيّتها في الوحدات — ${arCount(familyLessons.length - 6, COUNT_LESSON)}.`));
+    }
+  }
 
   wrap.append(h('div', { class: 'card', style: { marginTop: '1rem' } },
     h('div', { class: 'row', style: { justifyContent: 'space-between' } },

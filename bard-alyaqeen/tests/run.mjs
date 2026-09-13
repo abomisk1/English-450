@@ -11,8 +11,10 @@ import { defaultState, migrate, createStorage, exportState, importState, mergeSt
 import * as SRS from '../js/lib/srs.js';
 import * as Q from '../js/lib/quiz.js';
 import * as P from '../js/lib/progress.js';
-import { normalizeAr, buildSearchIndex, search, cardsForMode, quizForMode, cardKindLabel } from '../js/lib/content.js';
+import { normalizeAr, buildSearchIndex, search, cardsForPath, interactionsForPath, quizForPath,
+  estimatedMinutes, pathLabel, reviewUnlocked, PATHS, cardKindLabel } from '../js/lib/content.js';
 import { isTTSAllowed, audioSourceFor } from '../js/lib/speech.js';
+import { arCount, COUNT_QUESTION, COUNT_MINUTE_GEN } from '../js/lib/dom.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
@@ -81,8 +83,11 @@ test('قائمة المراجعة تطابق العناصر المعلَّمة',
     n += l.interactions.filter((q) => q.needsReview).length;
     n += l.quiz.filter((q) => q.needsReview).length;
   }
-  assert.equal(needsReview.count, n);
-  assert.equal(needsReview.items.length, n);
+  // يُضاف إليها إكمال المقاطع القرآنية بالاختيار ولو كانت مشتقّة (أولوية عالية).
+  const quranComplete = needsReview.items.filter((i) => i.kind.endsWith(':complete-quran')).length;
+  assert.equal(needsReview.count, n + quranComplete);
+  assert.equal(needsReview.items.length, n + quranComplete);
+  assert.equal(quranComplete, 4);
 });
 
 test('كل سؤال اختيار له إجابة صحيحة ضمن الخيارات وتفسير', () => {
@@ -132,7 +137,7 @@ test('الترقية تحافظ على البيانات القديمة وتضي�
   const old = { version: 1, lessons: { a: { seen: true, quizBest: 90 } } };
   const m = migrate(old);
   assert.equal(m.lessons.a.quizBest, 90);
-  assert.ok(m.prefs && m.prefs.detail);
+  assert.ok(m.prefs && m.prefs.theme);
   assert.ok(Array.isArray(m.bookmarks));
   assert.equal(m.version, 1);
 });
@@ -305,6 +310,84 @@ test('إعادة المحاولة تحفظ أفضل نتيجة', () => {
 });
 
 /* ------------------------ المراجعة المتباعدة ------------------------ */
+group('التفاعلات المضافة وصياغة العدد');
+
+test('نشاط التصنيف يُجهَّز ويُصحَّح صحيحًا', () => {
+  const q = { id: 'c1', kind: 'classify',
+    groups: [{ label: 'أ', items: ['و١', 'و٢'] }, { label: 'ب', items: ['و٣'] }] };
+  const p = Q.prepare(q, 's');
+  assert.equal(p.items.length, 3);
+  assert.deepEqual(p.labels, ['أ', 'ب']);
+  const right = Object.fromEntries(p.items.map((t) => [t, p.answerOf[t]]));
+  assert.equal(Q.check(p, right).correct, true);
+  const wrong = { ...right, [p.items[0]]: (p.answerOf[p.items[0]] + 1) % 2 };
+  assert.equal(Q.check(p, wrong).correct, false);
+  assert.equal(Q.check(p, {}).correct, false);
+});
+
+test('كل درس فيه ثلاثة تفاعلات متنوّعة على الأقل بعد الإضافة', () => {
+  const short = [];
+  for (const u of units) for (const l of u.lessons) {
+    if (l.quiz.length + l.interactions.length < 3) short.push(l.id);
+  }
+  assert.deepEqual(short, [], `دروس دون ثلاثة عناصر: ${short.join('، ')}`);
+});
+
+test('الدروس ذات السؤال الواحد صار فيها ثلاثة أنواع مختلفة', () => {
+  for (const u of units) for (const l of u.lessons) {
+    if (Q.gradable(l.quiz).length > 1) continue;
+    const kinds = new Set([...l.interactions, ...l.quiz].map((q) => q.kind));
+    assert.ok(kinds.size >= 3, `${l.id}: ${[...kinds].join('، ')}`);
+  }
+});
+
+test('كل تفاعل مستحدث موسوم authored ومُدرَج في المراجعة ومنسوب لصفحة', () => {
+  for (const u of units) for (const l of u.lessons) {
+    for (const q of l.interactions) {
+      if (q.src !== 'authored') continue;
+      assert.equal(q.needsReview, true, `${l.id}/${q.id}`);
+      assert.ok(q.page, `${l.id}/${q.id}: بلا صفحة من الكتاب`);
+      assert.ok(q.why && q.why.length > 10, `${l.id}/${q.id}: بلا تفسير`);
+      assert.ok(needsReview.items.some((it) => it.lessonId === l.id && it.path.endsWith('/' + q.id)),
+        `${l.id}/${q.id}: غير موجود في needs-review.json`);
+    }
+  }
+});
+
+test('لا يُطلب إكمال نصّ قرآني كتابةً، ولا يُشترط لتقدّم المتعلّم', () => {
+  const bare = (t) => (t || '').replace(/[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\s\u2E2B﴿﴾]/g, '');
+  for (const u of units) for (const l of u.lessons) {
+    const quran = l.cards.filter((c) => c.type === 'quran').map((c) => bare(c.text));
+    if (!quran.length) continue;
+    for (const [grp, label] of [[l.interactions, 'interaction'], [l.quiz, 'quiz']]) {
+      for (const q of grp) {
+        if (q.kind !== 'complete') continue;
+        const probe = (bare(q.before) + bare(q.after)).slice(0, 12);
+        if (!probe || !quran.some((t) => t.includes(probe))) continue;
+        // بالاختيار لا بالكتابة: لا بدّ من خيارات جاهزة.
+        assert.ok(Array.isArray(q.options) && q.options.length >= 2, `${l.id}/${q.id}: بلا خيارات`);
+        // ولا يكون في الاختبار المُحتسَب في الدرجة.
+        assert.equal(label, 'interaction', `${l.id}/${q.id}: إكمال آية داخل الاختبار المُحتسَب`);
+        // ويدخل المراجعة بأعلى أولوية.
+        const it = needsReview.items.find((x) => x.lessonId === l.id && x.path.endsWith('/' + q.id));
+        assert.ok(it, `${l.id}/${q.id}: غير مُدرَج في المراجعة`);
+        assert.equal(it.priority, 'high', `${l.id}/${q.id}`);
+      }
+    }
+  }
+});
+
+test('صياغة العدد والمعدود عربية سليمة', () => {
+  assert.equal(arCount(0, COUNT_QUESTION), 'بلا أسئلة');
+  assert.equal(arCount(1, COUNT_QUESTION), 'سؤال واحد');
+  assert.equal(arCount(2, COUNT_QUESTION), 'سؤالان');
+  assert.equal(arCount(3, COUNT_QUESTION), '٣ أسئلة');
+  assert.equal(arCount(11, COUNT_QUESTION), '١١ سؤالًا');
+  assert.equal(arCount(1, COUNT_MINUTE_GEN), 'دقيقة');
+  assert.equal(arCount(2, COUNT_MINUTE_GEN), 'دقيقتين');
+  assert.equal(arCount(5, COUNT_MINUTE_GEN), '٥ دقائق');
+});
+
 group('المراجعة المتباعدة');
 
 test('الإجابة الصحيحة تباعد الموعد تدريجيًّا', () => {
@@ -354,33 +437,59 @@ test('عناصر المراجعة تشير إلى أسئلة موجودة فعل
   assert.ok(found);
 });
 
-/* ------------------------ أنماط العرض والوصول ------------------------ */
-group('أنماط العرض والبحث والاستماع');
+/* ------------------------ مسارا الدرس والوصول ------------------------ */
+group('مسارا الدرس والبحث والاستماع');
 
-test('النمط المختصر يعرض بطاقات أقل من المتعمّق', () => {
+test('المساران اثنان فقط: تعلّم الدرس ومراجعة سريعة', () => {
+  assert.deepEqual(PATHS, ['learn', 'review']);
+  assert.equal(pathLabel('learn'), 'تعلّم الدرس');
+  assert.equal(pathLabel('review'), 'مراجعة سريعة');
+});
+
+test('مسار التعلّم يعرض مادة الدرس كاملة بلا نقص', () => {
   for (const u of units) for (const l of u.lessons) {
-    const b = cardsForMode(l, 'brief').length;
-    const s = cardsForMode(l, 'standard').length;
-    const d = cardsForMode(l, 'deep').length;
-    assert.ok(b <= s && s <= d, l.id);
-    assert.equal(d, l.cards.length, l.id);
-    assert.ok(b > 0, `${l.id}: النمط المختصر بلا بطاقات`);
+    assert.equal(cardsForPath(l, 'learn').length, l.cards.length, l.id);
+    assert.equal(interactionsForPath(l, 'learn').length, l.interactions.length, l.id);
   }
 });
 
-test('النمط المختصر يحتوي دائمًا على النصّ الشرعي الأساسي', () => {
+test('المراجعة السريعة لا تُنقص من الأسئلة شيئًا', () => {
   for (const u of units) for (const l of u.lessons) {
-    const hasSource = l.cards.some((c) => ['quran', 'hadith', 'dhikr'].includes(c.type));
-    if (!hasSource) continue;
-    const brief = cardsForMode(l, 'brief');
-    assert.ok(brief.some((c) => ['quran', 'hadith', 'dhikr'].includes(c.type)), l.id);
+    assert.deepEqual(quizForPath(l), l.quiz, l.id);
   }
 });
 
-test('الاختبار في النمط المختصر لا يتجاوز ثلاثة أسئلة', () => {
+test('المراجعة السريعة تُبقي نصوص الكتاب متاحة', () => {
   for (const u of units) for (const l of u.lessons) {
-    assert.ok(quizForMode(l, 'brief').length <= 3, l.id);
-    assert.equal(quizForMode(l, 'deep').length, l.quiz.length, l.id);
+    const srcCards = l.cards.filter((c) => ['quran', 'hadith', 'dhikr'].includes(c.type));
+    assert.deepEqual(cardsForPath(l, 'review'), srcCards, l.id);
+  }
+});
+
+test('المراجعة السريعة لا تُتاح إلا بعد إتمام الدرس', () => {
+  assert.equal(reviewUnlocked(null), false);
+  assert.equal(reviewUnlocked({ seen: true, quizBest: 0 }), false);
+  assert.equal(reviewUnlocked({ seen: true, completedAt: 1 }), true);
+});
+
+test('الزمن التقريبي محسوب من محتوى كل درس، لا رقمًا ثابتًا', () => {
+  const vals = new Set();
+  for (const u of units) for (const l of u.lessons) {
+    const m = estimatedMinutes(l, 'learn');
+    assert.ok(Number.isInteger(m) && m >= 1, l.id);
+    assert.ok(estimatedMinutes(l, 'review') <= m, l.id);
+    vals.add(m);
+  }
+  assert.ok(vals.size >= 4, `الزمن لا يتمايز بين الدروس: ${[...vals]}`);
+});
+
+test('لا يبقى في الشفرة وعدٌ زمني ثابت (٥/١٠/١٨ دقيقة)', () => {
+  const files = ['js/lib/content.js', 'js/lib/progress.js', 'js/ui/lesson.js',
+    'js/ui/settings.js', 'js/ui/onboarding.js'];
+  for (const f of files) {
+    const src = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    assert.ok(!/MODE_MINUTES|modeLabel|cardsForMode|quizForMode/.test(src), f);
+    assert.ok(!/نحو ١٨ دقيقة|١٨ د|نحو ٥ دقائق/.test(src), f);
   }
 });
 

@@ -42,25 +42,84 @@ export function findLesson(unit, lessonId) {
 }
 
 /** بطاقات الدرس المعروضة في نمط معيّن. */
-export function cardsForMode(lesson, mode) {
-  const rank = { brief: 0, standard: 1, deep: 2 };
-  const max = rank[mode] ?? 1;
-  return (lesson.cards || []).filter((c) => (rank[c.level] ?? 1) <= max);
+/**
+ * مساران للدرس — لا «أنماط عرض» ولا وعود زمنية ثابتة:
+ *   learn  «تعلّم الدرس»   : المادة كاملة كما في الكتاب (المسار الافتراضي للدراسة الأولى).
+ *   review «مراجعة سريعة» : تثبيت لما دُرِس — خلاصة وبطاقات تذكّر وأسئلة أساسية.
+ * المحتوى الشرعي لا يختلف بين المسارين؛ المراجعة لا تُنقص نصًّا ولا تُضيف حكمًا،
+ * وإنما تُعيد عرض ما دُرِس، ونصوص الكتاب تبقى متاحة فيها بالإظهار التدريجي.
+ */
+export const PATHS = ['learn', 'review'];
+
+export function pathLabel(path) {
+  return path === 'review' ? 'مراجعة سريعة' : 'تعلّم الدرس';
 }
 
-/** التفاعلات المعروضة في نمط معيّن (النمط المختصر يعرض تفاعلًا واحدًا). */
-export function interactionsForMode(lesson, mode) {
+/** هل مسار المراجعة متاح؟ لا يُقدَّم بديلًا عن الدراسة الأولى، بل بعدها. */
+export function reviewUnlocked(lessonRecord) {
+  return !!(lessonRecord && lessonRecord.completedAt);
+}
+
+/** بطاقات المحتوى المعروضة في المسار. */
+export function cardsForPath(lesson, path) {
+  const all = lesson.cards || [];
+  if (path !== 'review') return all;
+  // في المراجعة: نصوص الكتاب المنقولة حرفيًّا فقط، وتُعرض بالإظهار التدريجي.
+  return all.filter((c) => ['quran', 'hadith', 'dhikr'].includes(c.type));
+}
+
+/** التفاعلات المعروضة في المسار. */
+export function interactionsForPath(lesson, path) {
   const all = lesson.interactions || [];
-  if (mode === 'brief') return all.slice(0, 1);
-  if (mode === 'standard') return all.slice(0, 2);
-  return all;
+  if (path !== 'review') return all;
+  return all.filter((q) => q.kind === 'flashcards');
 }
 
-/** أسئلة الاختبار القصير بحسب النمط. */
-export function quizForMode(lesson, mode) {
-  const all = lesson.quiz || [];
-  if (mode === 'brief') return all.slice(0, Math.min(3, all.length));
-  return all;
+/** أسئلة الاختبار — واحدة في المسارين؛ لا يُنقص التقييم في المراجعة. */
+export function quizForPath(lesson) {
+  return lesson.quiz || [];
+}
+
+/* ------------------------- الزمن التقريبي للدرس ------------------------- */
+
+const WORDS_PER_MINUTE = 120;   // قراءة متأنّية لنصّ شرعي
+const SECONDS_PER_ITEM = 30;    // تفاعل أو سؤال، بالتغذية الراجعة
+
+function words(t) {
+  return t ? String(t).trim().split(/\s+/).filter(Boolean).length : 0;
+}
+
+function cardWords(c) {
+  return words(c.title) + words(c.text) + words(c.note)
+    + (c.items || []).reduce((n, i) => n + words(i.term) + words(i.def), 0);
+}
+
+function itemWords(q) {
+  return words(q.prompt) + words(q.why) + words(q.before) + words(q.after)
+    + (q.options || []).reduce((n, o) => n + words(o), 0)
+    + (q.items || []).reduce((n, o) => n + words(o), 0)
+    + (q.pairs || []).reduce((n, pr) => n + words(pr[0]) + words(pr[1]), 0)
+    + (q.groups || []).reduce(
+      (n, g) => n + words(g.label) + g.items.reduce((m, o) => m + words(o), 0), 0);
+}
+
+/**
+ * زمن تقريبي محسوب من محتوى الدرس نفسه — لا رقم ثابت على كل الدروس.
+ * يُقرَّب إلى أقرب دقيقة، وأدناه دقيقة واحدة.
+ */
+export function estimatedMinutes(lesson, path = 'learn') {
+  const cards = cardsForPath(lesson, path);
+  const inter = interactionsForPath(lesson, path);
+  const quiz = quizForPath(lesson);
+  let w = cards.reduce((n, c) => n + cardWords(c), 0)
+    + inter.reduce((n, q) => n + itemWords(q), 0)
+    + quiz.reduce((n, q) => n + itemWords(q), 0);
+  if (path !== 'review') {
+    w += words(lesson.hook && lesson.hook.text) + words(lesson.objective && lesson.objective.text);
+  }
+  w += ((lesson.summary && lesson.summary.points) || []).reduce((n, t) => n + words(t), 0);
+  const mins = w / WORDS_PER_MINUTE + ((inter.length + quiz.length) * SECONDS_PER_ITEM) / 60;
+  return Math.max(1, Math.round(mins));
 }
 
 /** هل نصّ هذه البطاقة منقول حرفيًّا من الكتاب أو من القرآن؟ */

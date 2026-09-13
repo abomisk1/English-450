@@ -23,8 +23,8 @@ const browser = await chromium.launch({ executablePath: fs.existsSync(EXEC) ? EX
 /** حالة تقدّم واقعية لتظهر الشاشات بمحتوى حيّ لا فارغ. */
 const SEED = {
   version: 1, createdAt: Date.now(), updatedAt: Date.now(), onboarded: true,
-  prefs: { sessionLength: 'standard', detail: 'standard', largeText: false, audio: false,
-    highContrast: false, theme: 'system', familyMode: true, reduceMotion: false, fontScale: 1 },
+  prefs: { largeText: false, audio: false,
+    highContrast: false, theme: 'system', reduceMotion: false, fontScale: 1 },
   lessons: {
     u1l1: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 4e8 },
     u1l2: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: Date.now() - 3e8 },
@@ -59,10 +59,11 @@ const SEED = {
  */
 const SHOTS = [
   { id: '01-splash', title: 'الصفحة الافتتاحية', route: '/', fresh: true },
-  { id: '02-setup', title: 'التهيئة الأولى واختيار نمط التعلّم', route: '/#/setup', fresh: true,
+  { id: '02-setup', title: 'التهيئة الأولى: حجم الخطّ بمعاينة حيّة وتيسير العرض',
+    route: '/#/setup', fresh: true,
     prep: async (p) => {
-      await p.locator('.choice', { hasText: 'عشر دقائق' }).click();
-      await p.locator('.choice', { hasText: 'متوسّط' }).click();
+      await p.locator('input[type="range"][aria-label="حجم الخطّ"]').fill('1.2');
+      await p.waitForTimeout(150);
     } },
   { id: '03-home', title: 'الصفحة الرئيسة ومسار التعلّم', route: '/#/home' },
   { id: '04-units', title: 'قائمة الوحدات السبع', route: '/#/units' },
@@ -125,8 +126,18 @@ const EXTRA = [
     prep: async (p) => { await p.fill('input[type="search"]', 'الوضوء'); await p.waitForTimeout(450); } },
   { id: 'x4-settings', title: 'الإعدادات وإمكانية الوصول', route: '/#/settings' },
   { id: 'x5-adhkar', title: 'درس الأذكار (أذكار الصباح)', route: '/#/lesson/u5/u5l1' },
-  { id: 'x6-family', title: 'الوضع الأسري داخل الدرس', route: '/#/lesson/u1/u1l3',
-    scroll: '.card[style*="soft-brand"]' },
+  { id: 'x6-family', title: 'النشاط الأسري داخل الدرس (بلا إعداد يفعّله)',
+    route: '/#/lesson/u1/u1l3', scroll: '.card[style*="soft-brand"]' },
+  { id: 'x7-paths', title: 'مسارا الدرس بعد إتمامه: تعلّم الدرس / مراجعة سريعة',
+    route: '/#/lesson/u1/u1l3', scroll: '.mode-switch' },
+  { id: 'x8-review-path', title: 'مسار «مراجعة سريعة»: خلاصة وبطاقات تذكّر ونصوص الكتاب',
+    route: '/#/lesson/u1/u1l3?path=review' },
+  { id: 'x9-classify', title: 'نشاط التصنيف (تفاعل مضاف مستمدّ من نصّ الدرس)',
+    route: '/#/lesson/u5/u5l14', scroll: '.q .match' },
+  { id: 'x10-audio-note', title: 'سبب تعطيل الاستماع للآيات ظاهرًا في الواجهة',
+    route: '/#/lesson/u1/u1l4', scroll: '.audio-note' },
+  { id: 'x11-family-home', title: 'قسم «دروس مناسبة للأسرة» في الصفحة الرئيسة',
+    route: '/#/home', scroll: 'text=دروس مناسبة للأسرة' },
 ];
 
 const manifest = [];

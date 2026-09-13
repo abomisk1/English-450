@@ -1,6 +1,6 @@
 /** شاشات: المهام الأدائية، المراجعة الذكية، الإنجاز، المفضلة، البحث. */
 
-import { h, ar, icon, ICONS, toast, focusMain } from '../lib/dom.js';
+import { h, ar, arCount, COUNT_LESSON, COUNT_MINUTE_GEN, icon, ICONS, toast, focusMain } from '../lib/dom.js';
 import { progressBar, sectionTitle, emptyState, renderQuestion, ornament } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState, update, saveNow } from '../store.js';
@@ -75,6 +75,39 @@ export function tasksScreen(units, focusUnitId) {
 
 /* ------------------------- المراجعة الذكية ------------------------- */
 
+/**
+ * مدخل «المراجعة السريعة» لكل درس أُتمّ — خلاصته وبطاقات تذكّره وأسئلته.
+ * لا يظهر إلا للدروس المكتملة، فلا يُقدَّم بديلًا عن الدراسة الأولى.
+ */
+function quickReviewSection(units, s) {
+  const done = [];
+  for (const u of units) {
+    for (const l of u.lessons) {
+      if (P.isLessonComplete(P.lessonRecord(s, l.id))) done.push({ u, l });
+    }
+  }
+  if (!done.length) return null;
+  const box = h('div', { class: 'stack', style: { marginTop: '1.5rem' } },
+    sectionTitle('مراجعة سريعة لدرس أتممتَه',
+      h('span', { class: 'chip' }, arCount(done.length, COUNT_LESSON))),
+    h('p', { class: 'small muted', style: { marginTop: 0 } },
+      'خلاصة الدرس وبطاقات تذكّره وأسئلته الأساسية، ونصوص الكتاب فيه كما هي.'));
+  for (const { u, l } of done.slice(-8).reverse()) {
+    box.append(h('button', {
+      class: 'card', type: 'button',
+      style: { width: '100%', textAlign: 'start', cursor: 'pointer', font: 'inherit', color: 'inherit' },
+      onclick: () => navigate(`/lesson/${u.id}/${l.id}?path=review`),
+    },
+      h('div', { class: 'row', style: { flexWrap: 'nowrap', justifyContent: 'space-between' } },
+        h('span', { style: { flex: 1, minWidth: 0 } },
+          h('span', { class: 'small muted' }, u.shortTitle),
+          h('span', { style: { fontWeight: 700, display: 'block', fontFamily: 'var(--font-text)' } }, l.title)),
+        h('span', { class: 'chip chip--brand' },
+          `نحو ${arCount(C.estimatedMinutes(l, 'review'), COUNT_MINUTE_GEN)}`))));
+  }
+  return box;
+}
+
 export function reviewScreen(units) {
   const s = getState();
   const due = SRS.dueItems(s.review, Date.now(), 20);
@@ -88,6 +121,8 @@ export function reviewScreen(units) {
         : 'ابدأ بدرس واحد، وستُبنى لك خطة مراجعة تلقائيًّا مما لم تُتقنه.',
       h('button', { class: 'btn btn--primary', type: 'button', onclick: () => navigate('/units') },
         'انتقل إلى الوحدات')));
+    const qr = quickReviewSection(units, s);
+    if (qr) wrap.append(qr);
     return wrap;
   }
 
@@ -103,6 +138,8 @@ export function reviewScreen(units) {
 
   if (!items.length) {
     wrap.append(emptyState('🌿', 'لا توجد عناصر صالحة للمراجعة', ''));
+    const qr = quickReviewSection(units, s);
+    if (qr) wrap.append(qr);
     return wrap;
   }
 
@@ -111,6 +148,8 @@ export function reviewScreen(units) {
   const stage = h('div', {});
   const head = h('div', {});
   wrap.append(head, stage);
+  const qrTail = quickReviewSection(units, s);
+  if (qrTail) wrap.append(qrTail);
 
   function paint() {
     head.replaceChildren(

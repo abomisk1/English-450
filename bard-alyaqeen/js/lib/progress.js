@@ -106,9 +106,3 @@ export function nextUp(state, units) {
   return null;
 }
 
-/** الزمن التقريبي للدرس بحسب نمط العرض المختار. */
-export const MODE_MINUTES = { brief: 5, standard: 10, deep: 18 };
-
-export function modeLabel(mode) {
-  return { brief: 'مختصر', standard: 'معتدل', deep: 'متعمّق' }[mode] || 'معتدل';
-}

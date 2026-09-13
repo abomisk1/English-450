@@ -57,8 +57,8 @@ function ok(area) { checks++; }
 
 const SEED = {
   version: 1, createdAt: Date.now(), updatedAt: Date.now(), onboarded: true,
-  prefs: { sessionLength: 'standard', detail: 'standard', largeText: false, audio: false,
-    highContrast: false, theme: 'system', familyMode: true, reduceMotion: false, fontScale: 1 },
+  prefs: { largeText: false, audio: false,
+    highContrast: false, theme: 'system', reduceMotion: false, fontScale: 1 },
   lessons: { u1l1: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: 1 },
     u1l2: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: 1 },
     u1l3: { seen: true, quizBest: 80, quizAttempts: 2, completedAt: 1 } },
@@ -178,28 +178,57 @@ console.log('› فحص اتجاه RTL …');
 
 /* ============ ٣) الوضع الفاتح والداكن: تباين ووضوح النصّ القرآني ============ */
 console.log('› فحص الوضعين الفاتح والداكن …');
+// نصوص بتدرّج لوني (background-clip:text) لا يُقاس تباينها آليًّا؛ تُراجَع بصريًّا.
+const UNMEASURED = new Set();
 const CONTRAST = `(() => {
   const lum = (c) => { const [r,g,b]=c.map(v=>{v/=255;return v<=.03928?v/12.92:Math.pow((v+.055)/1.055,2.4);});
     return .2126*r+.7152*g+.0722*b; };
-  const parse = (s) => (s.match(/[\\d.]+/g)||[]).slice(0,3).map(Number);
-  const bgOf = (el) => { let e=el; while(e){ const c=getComputedStyle(e).backgroundColor;
-    const a=(c.match(/[\\d.]+/g)||[])[3]; if(c&&c!=='rgba(0, 0, 0, 0)'&&a!=='0') return parse(c); e=e.parentElement; }
-    return [255,255,255]; };
-  const out=[];
+  const rgba = (s) => { const n=(s.match(/[\\d.]+/g)||[]).map(Number);
+    return n.length<3?null:{ c:n.slice(0,3), a:n.length>3?n[3]:1 }; };
+  const over = (fg, bg) => fg.c.map((v,i) => v*fg.a + bg[i]*(1-fg.a));
+  // الخلفية الفعلية: تركيب الطبقات نصف الشفّافة بعضها فوق بعض (لا أخذ أول لون كأنه معتم).
+  const bgOf = (el) => {
+    const layers=[];
+    // خلفية مرسومة على عنصر زائف (::before/::after) — كالمربّع خلف علامة ✓.
+    for (const pseudo of ['::before','::after']) {
+      const ps=getComputedStyle(el,pseudo);
+      if (!ps || ps.content==='none') continue;
+      const p=rgba(ps.backgroundColor);
+      if (p && p.a>0) { layers.push(p); break; }
+    }
+    for (let e=el; e; e=e.parentElement) {
+      const p=rgba(getComputedStyle(e).backgroundColor);
+      if (!p || p.a===0) continue;
+      layers.push(p);
+      if (p.a===1) break;
+    }
+    let base=[255,255,255];
+    for (let i=layers.length-1;i>=0;i--) base = over(layers[i], base);
+    return base;
+  };
+  const out=[], unmeasured=[];
   for (const el of document.querySelectorAll('#view *')) {
     if (el.children.length) continue;
     const t=(el.textContent||'').trim(); if(!t) continue;
     const r=el.getBoundingClientRect(); if(r.width<4||r.height<4) continue;
     const st=getComputedStyle(el); if(st.visibility==='hidden'||st.opacity==='0') continue;
-    const fg=parse(st.color), bg=bgOf(el);
+    // محتوى تزييني محض (aria-hidden) مستثنى من معيار التباين — WCAG 1.4.3.
+    if (el.closest('[aria-hidden="true"]')) continue;
+    const name=(el.className||el.tagName);
+    // نصّ مُلوَّن بتدرّج (background-clip:text) لونه شفّاف، فلا يُقاس بهذه الطريقة.
+    const clip=st.webkitBackgroundClip||st.backgroundClip;
+    const fgp=rgba(st.color);
+    if (clip==='text' || !fgp || fgp.a===0) { unmeasured.push(name); continue; }
+    const bg=bgOf(el);
+    const fg=over(fgp, bg);
     const l1=lum(fg),l2=lum(bg);
     const ratio=(Math.max(l1,l2)+.05)/(Math.min(l1,l2)+.05);
     const size=parseFloat(st.fontSize);
     const large=size>=24||(size>=18.66&&Number(st.fontWeight)>=700);
     const need=large?3:4.5;
-    if(ratio<need) out.push((el.className||el.tagName)+' ratio='+ratio.toFixed(2)+' need='+need+' «'+t.slice(0,24)+'»');
+    if(ratio<need) out.push(name+' ratio='+ratio.toFixed(2)+' need='+need+' «'+t.slice(0,24)+'»');
   }
-  return [...new Set(out)].slice(0,4);
+  return { bad: [...new Set(out)].slice(0,6), unmeasured: [...new Set(unmeasured)] };
 })()`;
 
 for (const [themeLabel, opts] of [
@@ -212,9 +241,10 @@ for (const [themeLabel, opts] of [
     if (route.startsWith('/admin')) continue;
     await page.goto(BASE + route, { waitUntil: 'networkidle' });
     await page.waitForTimeout(160);
-    const bad = await page.evaluate(CONTRAST);
-    if (bad.length) note('خطأ', `الوضع ${themeLabel} · ${label}`, 'تباين دون WCAG AA: ' + bad.join(' | '));
+    const res = await page.evaluate(CONTRAST);
+    if (res.bad.length) note('خطأ', `الوضع ${themeLabel} · ${label}`, 'تباين دون WCAG AA: ' + res.bad.join(' | '));
     else ok();
+    if (res.unmeasured.length) UNMEASURED.add(`${themeLabel} · ${res.unmeasured.join('، ')}`);
   }
   // وضوح النصّ القرآني تحديدًا
   for (const route of ['/#/lesson/u1/u1l3', '/#/lesson/u1/u1l4', '/#/lesson/u6/u6l5']) {
@@ -401,6 +431,10 @@ for (const lvl of ['خطأ', 'تنبيه', 'معلومة']) {
     seen.add(k);
     console.log(`  • [${f.area}] ${f.msg}`);
   }
+}
+if (UNMEASURED.size) {
+  console.log('\n— لم يُقَس آليًّا (نصّ بتدرّج لوني، يُراجَع بصريًّا) —');
+  for (const u of UNMEASURED) console.log('  • ' + u);
 }
 console.log('='.repeat(64));
 

@@ -3,7 +3,8 @@
  * مدخل → هدف → بطاقات المحتوى → تفاعل أثناء الدرس → خلاصة → اختبار قصير → مهمة.
  */
 
-import { h, ar, icon, ICONS, toast, focusMain, announce } from '../lib/dom.js';
+import { h, ar, arCount, COUNT_QUESTION, COUNT_CARD, COUNT_MINUTE_GEN,
+  icon, ICONS, toast, focusMain, announce } from '../lib/dom.js';
 import { renderCard, renderQuestion, progressBar, ornament, sectionTitle } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState, update, saveNow } from '../store.js';
@@ -11,9 +12,6 @@ import * as C from '../lib/content.js';
 import * as Q from '../lib/quiz.js';
 import * as P from '../lib/progress.js';
 import * as SRS from '../lib/srs.js';
-import { modeLabel, MODE_MINUTES } from '../lib/progress.js';
-
-const MODES = ['brief', 'standard', 'deep'];
 
 function markSeen(lessonId) {
   update((s) => {
@@ -27,8 +25,10 @@ function savePosition(unitId, lessonId, lessonTitle) {
 }
 
 export function lessonScreen(unit, lesson, units) {
-  const s = getState();
-  let mode = s.prefs.detail || 'standard';
+  // المسار الافتراضي دائمًا «تعلّم الدرس»؛ و«المراجعة السريعة» تُتاح بعد إتمامه.
+  const wanted = (typeof location !== 'undefined' && /[?&]path=review/.test(location.hash)) ? 'review' : 'learn';
+  let path = (wanted === 'review' && C.reviewUnlocked(P.lessonRecord(getState(), lesson.id)))
+    ? 'review' : 'learn';
 
   markSeen(lesson.id);
   savePosition(unit.id, lesson.id, lesson.title);
@@ -40,19 +40,28 @@ export function lessonScreen(unit, lesson, units) {
   const prev = idx > 0 ? unit.lessons[idx - 1] : null;
   const next = idx < unit.lessons.length - 1 ? unit.lessons[idx + 1] : null;
 
-  const modeSwitch = h('div', { class: 'mode-switch', role: 'group', 'aria-label': 'نمط عرض الدرس' },
-    ...MODES.map((m) => {
+  const unlocked = () => C.reviewUnlocked(P.lessonRecord(getState(), lesson.id));
+
+  // مبدّل المسار — يظهر فقط بعد إتمام الدرس، فلا يُعرض بديلًا عن الدراسة الأولى.
+  const pathSwitch = h('div', { class: 'mode-switch', role: 'group', 'aria-label': 'مسار الدرس' });
+  function paintPathSwitch() {
+    pathSwitch.replaceChildren();
+    if (!unlocked()) { pathSwitch.hidden = true; return; }
+    pathSwitch.hidden = false;
+    C.PATHS.forEach((pth) => {
       const b = h('button', {
-        class: 'mode-switch__btn', type: 'button', 'aria-pressed': String(m === mode),
-      }, `${modeLabel(m)} · ${ar(MODE_MINUTES[m])}د`);
+        class: 'mode-switch__btn', type: 'button', 'aria-pressed': String(pth === path),
+      }, `${C.pathLabel(pth)} · نحو ${arCount(C.estimatedMinutes(lesson, pth), COUNT_MINUTE_GEN)}`);
       b.addEventListener('click', () => {
-        mode = m;
-        [...modeSwitch.children].forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
+        path = pth;
+        [...pathSwitch.children].forEach((c) => c.setAttribute('aria-pressed', String(c === b)));
         paint();
-        announce(`نمط العرض: ${modeLabel(m)}`);
+        announce(`المسار: ${C.pathLabel(pth)}`);
       });
-      return b;
-    }));
+      pathSwitch.append(b);
+    });
+  }
+  paintPathSwitch();
 
   const bookmarked = () => getState().bookmarks.some((b) => b.type === 'lesson' && b.id === lesson.id);
   const bmBtn = h('button', {
@@ -83,13 +92,27 @@ export function lessonScreen(unit, lesson, units) {
       h('h1', { class: 'lesson-head__title', style: { fontFamily: 'var(--font-text)' } }, lesson.title),
       h('div', { class: 'row', style: { justifyContent: 'space-between' } },
         h('span', { class: 'small muted' }, `الكتاب، ص ${lesson.source.pages.map(ar).join('، ')}`),
-        modeSwitch),
+        pathSwitch),
     ),
     body,
   );
 
   function paint() {
     body.replaceChildren();
+
+    if (path === 'review') {
+      body.append(h('div', { class: 'card card--flat', style: { background: 'var(--bg-sunken)' } },
+        h('div', { class: 'row', style: { flexWrap: 'nowrap', alignItems: 'flex-start' } },
+          icon(ICONS.flag, 20),
+          h('div', {},
+            h('div', { style: { fontWeight: 700, fontSize: 'var(--fs-sm)' } }, 'مراجعة سريعة'),
+            h('div', { class: 'small' },
+              'تثبيت لما دَرَستَه في هذا الدرس: خلاصته وبطاقات تذكّره وأسئلته. '
+              + 'وهي ليست بديلًا عن دراسة الدرس كاملًا، ونصوص الكتاب تحتها كما هي.')))));
+      paintReview();
+      paintNav();
+      return;
+    }
 
     // ١) مدخل جذّاب
     body.append(h('div', { class: 'card' },
@@ -105,7 +128,7 @@ export function lessonScreen(unit, lesson, units) {
           h('div', { class: 'small' }, lesson.objective.text)))));
 
     // ٣) بطاقات المحتوى
-    const cards = C.cardsForMode(lesson, mode);
+    const cards = C.cardsForPath(lesson, path);
     body.append(sectionTitle('المحتوى'));
     for (const c of cards) body.append(renderCard(c));
 
@@ -121,7 +144,7 @@ export function lessonScreen(unit, lesson, units) {
     }
 
     // ٤) تفاعل أثناء الدرس
-    const inter = C.interactionsForMode(lesson, mode);
+    const inter = C.interactionsForPath(lesson, path);
     if (inter.length) {
       body.append(ornament(), sectionTitle('تفاعل أثناء الدرس'));
       const seed = lesson.id;
@@ -139,29 +162,78 @@ export function lessonScreen(unit, lesson, units) {
         ...lesson.summary.points.map((t) => h('li', {}, t))),
     ));
 
-    // وضع أسري
-    if (getState().prefs.familyMode && lesson.family) {
-      body.append(h('div', { class: 'card', style: { background: 'var(--soft-brand-bg)' } },
-        h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--brand' }, 'وضع أسري')),
-        h('div', {}, lesson.family.text)));
-    }
+    // نشاط أسري — يظهر على الدروس التي فيها نشاط فعلًا، بلا إعداد عام يُفعّله.
+    if (lesson.family) body.append(familyBox());
 
     // ٦) الاختبار القصير
     const rec = P.lessonRecord(getState(), lesson.id);
     body.append(h('div', { class: 'card stack' },
       h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'اختبار قصير'),
       h('p', { class: 'small muted', style: { margin: 0 } },
-        `${ar(C.quizForMode(lesson, mode).length)} أسئلة، وتغذية راجعة فورية تشرح سبب صحة الإجابة أو خطئها.`),
+        `${arCount(C.quizForPath(lesson).length, COUNT_QUESTION)}، وتغذية راجعة فورية تشرح سبب صحة الإجابة أو خطئها.`),
       rec && rec.quizBest
         ? h('div', { class: rec.quizBest >= Q.PASS_MARK ? 'chip chip--ok' : 'chip chip--warn' },
           `أفضل نتيجة: ${ar(rec.quizBest)}٪`) : null,
       h('button', {
         class: 'btn btn--accent btn--block', type: 'button',
-        onclick: () => navigate(`/quiz/${unit.id}/${lesson.id}?mode=${mode}`),
+        onclick: () => navigate(`/quiz/${unit.id}/${lesson.id}`),
       }, 'ابدأ الاختبار'),
     ));
 
-    // التنقّل
+    paintNav();
+  }
+
+  /** مسار المراجعة: خلاصة ← بطاقات تذكّر ← نصوص الكتاب (إظهار تدريجي) ← الأسئلة الأساسية. */
+  function paintReview() {
+    body.append(h('div', { class: 'card' },
+      h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--warn' }, 'خلاصة — صياغة تعليمية مساعدة')),
+      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'خلاصة الدرس'),
+      h('ul', { style: { margin: 0, paddingInlineStart: '1.2rem', lineHeight: '2' } },
+        ...lesson.summary.points.map((t) => h('li', {}, t))),
+    ));
+
+    const flash = C.interactionsForPath(lesson, 'review');
+    if (flash.length) {
+      body.append(ornament(), sectionTitle('بطاقات التذكّر'));
+      for (const raw of flash) {
+        body.append(h('div', { class: 'card' }, renderQuestion(Q.prepare(raw, lesson.id), () => {}, {})));
+      }
+    }
+
+    const texts = C.cardsForPath(lesson, 'review');
+    if (texts.length) {
+      const det = h('details', { class: 'more' },
+        h('summary', {}, `نصوص الدرس من الكتاب — ${arCount(texts.length, COUNT_CARD)}`));
+      det.addEventListener('toggle', () => {
+        if (det.open && det.children.length === 1) for (const c of texts) det.append(renderCard(c));
+      });
+      body.append(det);
+    }
+
+    if (lesson.family) body.append(familyBox());
+
+    const rec = P.lessonRecord(getState(), lesson.id);
+    body.append(h('div', { class: 'card stack' },
+      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, 'الأسئلة الأساسية'),
+      h('p', { class: 'small muted', style: { margin: 0 } },
+        `${arCount(C.quizForPath(lesson).length, COUNT_QUESTION)} — هي نفسها أسئلة الدرس، لم يُنقص منها شيء.`),
+      rec && rec.quizBest
+        ? h('div', { class: rec.quizBest >= Q.PASS_MARK ? 'chip chip--ok' : 'chip chip--warn' },
+          `أفضل نتيجة: ${ar(rec.quizBest)}٪`) : null,
+      h('button', {
+        class: 'btn btn--accent btn--block', type: 'button',
+        onclick: () => navigate(`/quiz/${unit.id}/${lesson.id}`),
+      }, 'أعد الاختبار'),
+    ));
+  }
+
+  function familyBox() {
+    return h('div', { class: 'card', style: { background: 'var(--soft-brand-bg)' } },
+      h('div', { class: 'lesson-card__label' }, h('span', { class: 'chip chip--brand' }, 'نشاط أسري')),
+      h('div', {}, lesson.family.text));
+  }
+
+  function paintNav() {
     body.append(h('div', { class: 'lesson-nav', style: { marginTop: '1rem' } },
       prev ? h('button', {
         class: 'btn btn--ghost', type: 'button',
@@ -184,8 +256,8 @@ export function lessonScreen(unit, lesson, units) {
 
 /* ----------------------------- شاشة الاختبار ----------------------------- */
 
-export function quizScreen(unit, lesson, mode, units) {
-  const list = Q.gradable(C.quizForMode(lesson, mode || 'standard'));
+export function quizScreen(unit, lesson, units) {
+  const list = Q.gradable(C.quizForPath(lesson));
   const prepared = list.map((q) => Q.prepare(q, lesson.id + ':quiz'));
   const results = [];
   let i = 0;

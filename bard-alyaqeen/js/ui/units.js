@@ -1,10 +1,11 @@
 /** صفحة الوحدات، وصفحة وحدة واحدة بدروسها وأنشطتها ومهامها. */
 
-import { h, ar, icon, ICONS } from '../lib/dom.js';
+import { h, ar, arCount, COUNT_MINUTE_GEN, icon, ICONS } from '../lib/dom.js';
 import { progressBar, sectionTitle, ornament } from './widgets.js';
 import { navigate } from '../lib/router.js';
 import { getState } from '../store.js';
 import * as P from '../lib/progress.js';
+import * as C from '../lib/content.js';
 
 export function unitsScreen(units) {
   const s = getState();
@@ -71,7 +72,9 @@ export function unitScreen(unit) {
         h('span', { style: { flex: 1, minWidth: 0 } },
           h('span', { class: 'small muted' }, `الدرس ${ar(i + 1)}`),
           h('span', { style: { fontWeight: 700, display: 'block', fontFamily: 'var(--font-text)', fontSize: 'var(--fs-lg)' } }, l.title),
-          h('span', { class: 'xsmall muted' }, `ص ${l.source.pages.map(ar).join('، ')}`)),
+          h('span', { class: 'xsmall muted' },
+            `ص ${l.source.pages.map(ar).join('، ')} · نحو ${arCount(C.estimatedMinutes(l), COUNT_MINUTE_GEN)}`),
+          l.family ? h('span', { class: 'chip chip--brand', style: { marginTop: '.35rem' } }, 'نشاط أسري') : null),
         done ? h('span', { class: 'chip chip--ok' }, '✓ أُتمّ')
           : (rec && rec.seen ? h('span', { class: 'chip chip--warn' }, 'قيد المتابعة') : h('span', { class: 'chip' }, 'ابدأ')),
       ),

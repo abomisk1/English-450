@@ -113,10 +113,10 @@ function defineRoutes() {
     return l ? lessonScreen(u, l, units) : errorScreen('درس غير معروف.');
   }));
 
-  route('/quiz/:unitId/:lessonId', ({ params, query }) => withUnits((units) => {
+  route('/quiz/:unitId/:lessonId', ({ params }) => withUnits((units) => {
     const u = units.find((x) => x.id === params.unitId);
     const l = u && C.findLesson(u, params.lessonId);
-    return l ? quizScreen(u, l, query.mode || getState().prefs.detail, units)
+    return l ? quizScreen(u, l, units)
       : errorScreen('درس غير معروف.');
   }));
 

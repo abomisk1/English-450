@@ -12,6 +12,7 @@
 """
 import json
 import os
+import re
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
@@ -23,6 +24,7 @@ from content.unit4 import UNIT4  # noqa: E402
 from content.unit5 import UNIT5  # noqa: E402
 from content.unit6 import UNIT6  # noqa: E402
 from content.unit7 import UNIT7  # noqa: E402
+from content.added_interactions import ADDED  # noqa: E402
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 CONTENT = os.path.join(ROOT, "content")
@@ -62,12 +64,28 @@ PROGRAM = {
 #   medium : محتوى تعليمي يُعرض داخل الدرس ويؤثّر في الفهم.
 #   low    : إطار تربوي حول الدرس لا يضيف حكمًا.
 PRIORITY = {
+    "interaction:complete-quran": ("high",
+        "إكمال مقطع من آية بالاختيار — الخيارات الثلاثة الأخرى صياغات تُشبه القرآن "
+        "وليست منه، فيحتاج إقرارًا صريحًا لأسلوب السؤال قبل النشر، لا لنصّه فقط."),
     "card:quran":          ("high", "نصّ قرآني كُتب بالرسم المعتمد ولم يُستخرج من ملف الكتاب؛ "
                                     "يحتاج تدقيقًا حرفيًّا وتشكيليًّا وتحقّقًا من حدود المقطع."),
     "quiz:scenario":       ("high", "موقف تطبيقي يُحتسب في درجة المتعلّم؛ "
                                     "يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب."),
     "interaction:scenario": ("medium", "موقف تطبيقي بصياغة مستحدثة يُعرض داخل الدرس؛ "
                                        "يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب."),
+    # تفاعلات تعليمية مساعدة أُضيفت للدروس ذات السؤال الواحد (مستمدّة من نصّ الدرس).
+    "interaction:complete":  ("medium", "إكمال نصّ بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ "
+                                        "يحتاج تأكيد مطابقة النصّ للكتاب وسلامة الخيارات."),
+    "interaction:mcq":       ("medium", "سؤال اختيار بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ "
+                                        "يحتاج تأكيد أنه لا يضيف حكمًا ولا معلومة من خارج الكتاب."),
+    "interaction:match":     ("medium", "مطابقة بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ "
+                                        "يحتاج تأكيد صحّة الأزواج ومطابقتها لنصّ الكتاب."),
+    "interaction:order":     ("medium", "ترتيب خطوات بصياغة تعليمية مساعدة مستمدّة من نصّ الدرس؛ "
+                                        "يحتاج تأكيد أنّ الترتيب ثابت في نصّ الكتاب."),
+    "interaction:classify":  ("medium", "تصنيف بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ "
+                                        "يحتاج تأكيد أنّ التصنيف مأخوذ من الكتاب لا من اجتهاد."),
+    "interaction:truefalse": ("medium", "صحيح/خطأ بصياغة تعليمية مساعدة مستمدّ من نصّ الدرس؛ "
+                                        "يحتاج تأكيد أنّ الحكم فيه مطابق لنصّ الكتاب."),
     "card:note":           ("medium", "ملحوظة تعليمية مستحدثة تُعرض ضمن محتوى الدرس؛ "
                                       "يحتاج تأكيد أنها لا تضيف حكمًا ولا تفسيرًا من خارج الكتاب."),
     "summary":             ("medium", "خلاصة مستحدثة تلخّص الدرس؛ "
@@ -77,7 +95,17 @@ PRIORITY = {
     "family":              ("low", "اقتراح نشاط أسري مستحدث؛ يحتاج إقرار الصياغة."),
 }
 
+PRIORITY["quiz:complete-quran"] = PRIORITY["interaction:complete-quran"]
+
 PRIORITY_AR = {"high": "عالية", "medium": "متوسطة", "low": "منخفضة"}
+
+
+_TASHKEEL = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\s\u2E2B﴿﴾]")
+
+
+def _bare(t):
+    """تجريد النصّ من التشكيل والمسافات لمقارنة المقاطع القرآنية."""
+    return _TASHKEEL.sub("", t or "")
 
 
 def _book_anchor(lesson):
@@ -142,8 +170,24 @@ def walk_review(unit):
                 push("card:" + c["type"], lesson, "%s/cards/%s" % (base, c["id"]), c,
                      txt, c.get("ref"), c.get("page"),
                      anchor=None if c["type"] == "quran" else anchor)
+        quran_texts = [_bare(c.get("text")) for c in lesson["cards"] if c.get("type") == "quran"]
         for group, label in ((lesson["interactions"], "interaction"), (lesson["quiz"], "quiz")):
             for q in group:
+                # إكمال مقطع قرآني بالاختيار: يدخل المراجعة بأعلى أولوية ولو كان مشتقًّا،
+                # لأنّ خيارات الإلهاء صياغات تُشبه القرآن وليست منه.
+                if q.get("kind") == "complete" and quran_texts:
+                    probe = (_bare(q.get("before")) + _bare(q.get("after")))[:12]
+                    if probe and any(probe in t for t in quran_texts):
+                        body = q.get("prompt", "") + "\n" + "\n".join(
+                            ("✔ " if i == q.get("answer") else "— ") + o
+                            for i, o in enumerate(q.get("options") or []))
+                        if q.get("why"):
+                            body += "\nالتفسير: " + q["why"]
+                        push("interaction:complete-quran" if label == "interaction"
+                             else "quiz:complete-quran",
+                             lesson, "%s/%s/%s" % (base, label, q["id"]), q, body,
+                             None, q.get("page"), anchor=anchor)
+                        continue
                 if q.get("needsReview"):
                     body = q.get("prompt", "")
                     if q.get("options"):
@@ -158,6 +202,33 @@ def walk_review(unit):
     return out
 
 
+def merge_added_interactions():
+    """يدمج التفاعلات التعليمية المساعدة المضافة للدروس ذات السؤال الواحد.
+
+    الشرط: أن يكون معرّف الدرس معروفًا، وألّا يتكرّر معرّف التفاعل داخل الدرس.
+    وكلّها `src="authored"` فتدخل قائمة المراجعة تلقائيًّا ولا تُعتمد إلا بإقرار.
+    """
+    seen = set()
+    added = 0
+    for u in UNITS:
+        for l in u["lessons"]:
+            extra = ADDED.get(l["id"])
+            if not extra:
+                continue
+            seen.add(l["id"])
+            have = {q["id"] for q in l["interactions"]}
+            for q in extra:
+                if q["id"] in have:
+                    raise SystemExit("تكرار معرّف تفاعل في الدرس %s: %s" % (l["id"], q["id"]))
+                have.add(q["id"])
+                l["interactions"].append(q)
+                added += 1
+    missing = set(ADDED) - seen
+    if missing:
+        raise SystemExit("دروس غير موجودة في المحتوى: %s" % ", ".join(sorted(missing)))
+    return added
+
+
 def strip_nulls(obj):
     if isinstance(obj, dict):
         return {k: strip_nulls(v) for k, v in obj.items() if v is not None}
@@ -168,8 +239,10 @@ def strip_nulls(obj):
 
 def main():
     os.makedirs(os.path.join(CONTENT, "units"), exist_ok=True)
+    n_added = merge_added_interactions()
     index, review = [], []
     total_lessons = total_cards = total_quiz = total_tasks = 0
+    total_interactions = 0
 
     for u in UNITS:
         u = strip_nulls(u)
@@ -178,6 +251,7 @@ def main():
             json.dump(u, f, ensure_ascii=False, indent=1)
         n_cards = sum(len(l["cards"]) for l in u["lessons"])
         n_quiz = sum(len(l["quiz"]) for l in u["lessons"])
+        total_interactions += sum(len(l["interactions"]) for l in u["lessons"])
         total_lessons += len(u["lessons"])
         total_cards += n_cards
         total_quiz += n_quiz
@@ -199,7 +273,8 @@ def main():
     manifest["units"] = index
     manifest["stats"] = {
         "units": len(UNITS), "lessons": total_lessons,
-        "cards": total_cards, "quizItems": total_quiz, "tasks": total_tasks,
+        "cards": total_cards, "quizItems": total_quiz,
+        "interactions": total_interactions, "tasks": total_tasks,
         "needsReview": len(review),
     }
     with open(os.path.join(CONTENT, "manifest.json"), "w", encoding="utf-8") as f:
@@ -221,8 +296,10 @@ def main():
             "items": review,
         }, f, ensure_ascii=False, indent=1)
 
-    print("units=%d lessons=%d cards=%d quiz=%d tasks=%d needsReview=%d"
-          % (len(UNITS), total_lessons, total_cards, total_quiz, total_tasks, len(review)))
+    print("units=%d lessons=%d cards=%d interactions=%d (+%d مساعدة) "
+          "quiz=%d tasks=%d needsReview=%d"
+          % (len(UNITS), total_lessons, total_cards, total_interactions, n_added,
+             total_quiz, total_tasks, len(review)))
 
 
 if __name__ == "__main__":

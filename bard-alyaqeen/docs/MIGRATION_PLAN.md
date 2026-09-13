@@ -13,17 +13,20 @@
 
 | العنصر | العدد | أين هو |
 |---|---:|---|
-| ملفات المشروع المتتبَّعة | ١١٠ | `bard-alyaqeen/**` |
+| ملفات المشروع المتتبَّعة | ١٦٨ | `bard-alyaqeen/**` |
 | ملفات المحتوى العلمي | ٩ | `content/manifest.json` · `content/units/u1–u7.json` · `content/needs-review.json` |
-| مصادر المحتوى المنظَّمة | ٨ | `scripts/content/*.py` |
+| مصادر المحتوى المنظَّمة | ٩ | `scripts/content/*.py` |
 | الخطوط المضمَّنة (SIL OFL) | ٤ | `assets/fonts/*.woff2` |
 | ملفات الاختبارات | ٤ | `tests/run.mjs` · `e2e.mjs` · `visual-audit.mjs` · `persona-walkthrough.mjs` |
 | الوثائق | ٨ | `docs/*.md` |
-| صور المراجعة | ٨٤ | `docs/screenshots/` |
+| صور المراجعة | ١٠٣ | `docs/screenshots/` |
 | ملفات المراجعة المصدَّرة | ٢ | `docs/review/review-items.csv` · `.xls` |
-| سجلّ Git | التزام واحد | `89abaec` |
+| سجلّ Git | التزامات الفرع `claude/bard-al-yaqeen-program-jckzr0` | — |
 
-**الحجم الكلي:** ٢٠ ميغابايت (منها ٥ ميغابايت صور مراجعة، و٣٥٠ كيلوبايت خطوط).
+**الحجم الكلي:** 27M (منها 24M صور مراجعة، و٣٥٠ كيلوبايت خطوط).
+
+> `node_modules/` ليس جزءًا من المشروع — هو وصلة رمزية إلى Playwright المثبَّت في
+> البيئة، وغير متتبَّع في Git، ولا يُنقل.
 
 ---
 
@@ -66,29 +69,30 @@ git ls-files | wc -l    # يجب أن يساوي ١١٠
 تُنفَّذ داخل المستودع الجديد **قبل** أي دفع إلى مستودع بعيد:
 
 ```bash
-python3 scripts/build_content.py     # يجب: units=7 lessons=66 cards=192 quiz=148 tasks=35 needsReview=260
+python3 scripts/build_content.py     # يجب: units=7 lessons=66 cards=192 interactions=167 quiz=148 tasks=35 needsReview=302
 python3 scripts/audit_counts.py      # يجب: بلا تحذيرات
-python3 scripts/export_review.py     # يجب: 260 عنصرًا
+python3 scripts/export_review.py     # يجب: 302 عنصرًا
 python3 scripts/build_docs.py
 
 npm i -D playwright@1.49.1
 node scripts/serve.mjs &
-node tests/run.mjs                   # يجب: ٤٥ ناجح، ٠ فاشل
-node tests/e2e.mjs                   # يجب: ٤٧ ناجح، ٠ فاشل
-node tests/visual-audit.mjs
+node tests/run.mjs                   # يجب: ٥٥ ناجح، ٠ فاشل
+node tests/e2e.mjs                   # يجب: ٥٧ ناجح، ٠ فاشل
+node tests/visual-audit.mjs          # يجب: ٠ خطأ، ٠ تنبيه
 node tests/screenshots.mjs
 ```
 
 | الفحص | القيمة المتوقَّعة |
 |---|---|
-| `git ls-files \| wc -l` | ١١٠ |
+| `git ls-files \| wc -l` | ١٦٨ |
 | `git log --oneline \| wc -l` | ١ |
 | محتوى `content/units/` | ٧ ملفات |
-| `content/needs-review.json` → `count` | ٢٦٠ |
-| `docs/screenshots/*.png` | ٨٤ |
+| `content/needs-review.json` → `count` | ٣٠٢ |
+| `docs/screenshots/*.png` | ١٠٣ |
 | `assets/fonts/*.woff2` | ٤ |
-| اختبارات المنطق | ٤٥ / ٤٥ |
-| اختبارات الواجهة | ٤٧ / ٤٧ |
+| اختبارات المنطق | ٥٥ / ٥٥ |
+| اختبارات الواجهة | ٥٧ / ٥٧ |
+| الفحص البصري | ٦٧٢ فحصًا · ٠ خطأ |
 | فتح `index.html` عبر خادم محلي | الشاشة الافتتاحية تظهر واسم الكتاب ومؤلفه |
 
 **لا يُحذف المجلد من `English-450` إلا بعد اجتياز هذه القائمة كاملة**، ويُفضَّل

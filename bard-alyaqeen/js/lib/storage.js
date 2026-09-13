@@ -16,13 +16,11 @@ export function defaultState() {
     updatedAt: Date.now(),
     onboarded: false,
     prefs: {
-      sessionLength: 'standard', // brief | standard | deep
-      detail: 'standard',        // brief | standard | deep — مستوى التفصيل الافتراضي للدرس
       largeText: false,
       audio: false,
       highContrast: false,
       theme: 'system',           // system | light | dark
-      familyMode: false,
+      fontScale: 1,              // مُعامل تكبير الخطّ (٠٫٩–١٫٦)
       reduceMotion: false,
     },
     // تقدّم الدروس: { [lessonId]: { seen, quizBest, quizAttempts, completedAt } }
@@ -52,6 +50,9 @@ export function migrate(raw) {
   const base = defaultState();
   const merged = { ...base, ...s };
   merged.prefs = { ...base.prefs, ...(s.prefs || {}) };
+  // تفضيلات أُلغيت: أنماط العرض الثلاثة و«الوضع الأسري» كإعداد عام.
+  // (المسارات الآن: تعلّم الدرس / مراجعة سريعة، والنشاط الأسري يظهر في الدروس التي فيه.)
+  for (const k of ['detail', 'sessionLength', 'familyMode']) delete merged.prefs[k];
   merged.streak = { ...base.streak, ...(s.streak || {}) };
   merged.stats = { ...base.stats, ...(s.stats || {}) };
   merged.lessons = s.lessons || {};

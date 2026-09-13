@@ -37,6 +37,7 @@ warn = []
 counts = collections.Counter()
 card_types = collections.Counter()
 inter_kinds = collections.Counter()
+BARE = re.compile(r"[\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06ED\s\u2E2B﴿﴾]")
 quiz_kinds = collections.Counter()
 authored = collections.Counter()
 
@@ -56,16 +57,24 @@ for u in units:
                 authored['card:note'] += 1
             if c.get('src') == 'quran':
                 authored['quran'] += 1
+        quran_txt = [BARE.sub('', c.get('text') or '')
+                     for c in l['cards'] if c['type'] == 'quran']
         for q in l['interactions']:
             counts['interactions'] += 1
             inter_kinds[q['kind']] += 1
             if q.get('src') == 'authored':
-                authored['interaction:scenario'] += 1
+                authored['interaction:' + q['kind']] += 1
+            # إكمال مقطع قرآني بالاختيار: يدخل المراجعة ولو كان مشتقًّا
+            if q['kind'] == 'complete' and quran_txt and q.get('src') != 'authored':
+                probe = (BARE.sub('', q.get('before') or '')
+                         + BARE.sub('', q.get('after') or ''))[:12]
+                if probe and any(probe in t for t in quran_txt):
+                    authored['interaction:complete-quran'] += 1
         for q in l['quiz']:
             counts['quiz'] += 1
             quiz_kinds[q['kind']] += 1
             if q.get('src') == 'authored':
-                authored['quiz:scenario'] += 1
+                authored['quiz:' + q['kind']] += 1
         for k in ('hook', 'objective', 'summary', 'family'):
             if l.get(k):
                 counts[k] += 1
@@ -233,9 +242,25 @@ AUTH = [
  ('objective', 'هدف الدرس', 'بعد المدخل', 'صياغة هدف إجرائي للدرس الواحد؛ الكتاب يذكر أهداف الفصل لا الدرس.'),
  ('summary', 'خلاصة الدرس', 'آخر الدرس', 'تلخيص في ٢-٤ نقاط؛ الكتاب لا يحتوي خلاصات.'),
  ('interaction:scenario', 'موقف حياتي (تفاعل)', 'داخل الدرس', 'موقف واقعي مُصاغ؛ الحكم فيه من الكتاب والصياغة مساعدة.'),
- ('family', 'سؤال النقاش الأسري', 'آخر الدرس، في الوضع الأسري فقط', 'اقتراح نشاط أسري؛ ليس من الكتاب.'),
- ('card:note', 'بطاقة ملحوظة تعليمية', 'داخل المحتوى، في النمط المتعمّق', 'ربط أو تنبيه يعين على الحفظ؛ لا يضيف حكمًا.'),
+ ('family', 'سؤال النقاش الأسري', 'آخر الدرس، في الاثني عشر درسًا التي فيها نشاط أسري', 'اقتراح نشاط أسري؛ ليس من الكتاب.'),
+ ('card:note', 'بطاقة ملحوظة تعليمية', 'داخل محتوى الدرس', 'ربط أو تنبيه يعين على الحفظ؛ لا يضيف حكمًا.'),
  ('quiz:scenario', 'موقف حياتي (اختبار)', 'في الاختبار القصير', 'كسابقه، لكنه يُحتسب في الدرجة.'),
+ # تفاعلات مضافة للدروس ذات السؤال الواحد — مستمدّة من نصّ الدرس، صياغتها مساعدة.
+ ('interaction:complete', 'إكمال نصّ (تفاعل مضاف)', 'داخل الدرس',
+  'إكمال عبارة من نصّ الكتاب بالاختيار؛ لا يضيف حكمًا ولا معلومة من خارجه.'),
+ ('interaction:mcq', 'اختيار (تفاعل مضاف)', 'داخل الدرس',
+  'سؤال اختيار مبنيّ على نصّ الدرس نفسه.'),
+ ('interaction:match', 'مطابقة (تفاعل مضاف)', 'داخل الدرس',
+  'مطابقة بين لفظ الكتاب وموضعه أو معناه كما ورد فيه.'),
+ ('interaction:order', 'ترتيب خطوات (تفاعل مضاف)', 'داخل الدرس',
+  'ترتيب خطوات ثابت في نصّ الكتاب.'),
+ ('interaction:classify', 'تصنيف (تفاعل مضاف)', 'داخل الدرس',
+  'تصنيف أمثلة ذكرها الكتاب أو نفاها.'),
+ ('interaction:truefalse', 'صحيح/خطأ (تفاعل مضاف)', 'داخل الدرس',
+  'حكم على عبارة مأخوذ من نصّ الكتاب.'),
+ ('interaction:complete-quran', 'إكمال مقطع قرآني بالاختيار', 'داخل الدرس',
+  'موجود من قبل ومشتقّ من الآية، لكنّ خيارات الإلهاء تُشبه القرآن وليست منه '
+  '— فرُفع إلى أعلى أولوية مراجعة.'),
 ]
 tot = 0
 for key, name, where, why in AUTH:

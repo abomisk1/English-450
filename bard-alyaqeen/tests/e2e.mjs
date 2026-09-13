@@ -53,17 +53,28 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert(await page.evaluate(() => getComputedStyle(document.body).direction) === 'rtl');
   });
 
-  await check('التهيئة الأولية تعمل وتحفظ التفضيلات', async () => {
+  await check('التهيئة الأولية فيها خيار الخط الكبير وتحفظ التفضيلات', async () => {
     await page.click('text=ابدأ الرحلة');
     await page.waitForSelector('text=تهيئة أولية');
-    assert((await page.locator('.choice').count()) >= 6, 'خيارات التهيئة ناقصة');
-    await page.locator('.choice', { hasText: 'عشر دقائق' }).click();
-    await page.locator('.choice', { hasText: 'متوسّط' }).click();
+    // ع-٦: خيار حجم الخطّ صار ضمن التهيئة الأولى، بمعاينة حيّة.
+    const slider = page.locator('input[type="range"][aria-label="حجم الخطّ"]');
+    assert(await slider.count() === 1, 'لا خيار لحجم الخطّ في التهيئة');
+    assert((await page.locator('#setup-sample').count()) === 1, 'لا معاينة للنصّ');
+    await slider.fill('1.3');
+    await page.waitForTimeout(120);
+    const live = await page.evaluate(() =>
+      getComputedStyle(document.documentElement).getPropertyValue('--font-scale').trim());
+    assert(live === '1.3', `المعاينة الحيّة لا تعمل: ${live}`);
+    await page.locator('.switch-row', { hasText: 'وضع قراءة مريح' }).locator('input').check();
     await page.click('text=ابدأ التعلّم');
     await page.waitForSelector('text=مسار الجزء الأول');
     await page.waitForTimeout(400);
-    const detail = await page.evaluate(() => JSON.parse(localStorage.getItem('bay.state.v1')).prefs.detail);
-    assert(detail === 'standard', 'لم تُحفظ التفضيلات');
+    const prefs = await page.evaluate(() => JSON.parse(localStorage.getItem('bay.state.v1')).prefs);
+    assert(prefs.fontScale === 1.3, `لم يُحفظ حجم الخطّ: ${prefs.fontScale}`);
+    assert(prefs.largeText === true, 'لم يُحفظ وضع القراءة المريح');
+    // التفضيلات الملغاة لا تعود
+    assert(!('detail' in prefs) && !('sessionLength' in prefs) && !('familyMode' in prefs),
+      'تفضيلات أنماط العرض ما زالت محفوظة');
   });
 
   await check('كل شاشة رئيسة تُعرض بلا رسالة خطأ', async () => {
@@ -99,7 +110,12 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert((await page.locator('text=هدف الدرس').count()) > 0, 'الهدف غير ظاهر');
     assert((await page.locator('.lesson-card').count()) > 0, 'لا بطاقات');
     assert((await page.locator('text=خلاصة الدرس').count()) > 0, 'الخلاصة غير ظاهرة');
-    assert((await page.locator('.mode-switch__btn').count()) === 3, 'أنماط العرض الثلاثة ناقصة');
+    // درس لم يُتمّ بعدُ: لا يظهر فيه مبدّل المسار، فلا تُعرض «المراجعة السريعة» بديلًا عن الدراسة.
+    assert((await page.locator('.mode-switch__btn:visible').count()) === 0,
+      'مبدّل المسار ظاهر قبل إتمام الدرس');
+    // ع-٥: صياغة العدد
+    const quizLine = await page.locator('text=/وتغذية راجعة فورية/').first().innerText();
+    assert(!/^١ أسئلة|\s١ أسئلة/.test(quizLine), `صياغة عدد خاطئة: ${quizLine}`);
   });
 
   await check('النصّ الشرعي مميّز عن الصياغة التعليمية المساعدة', async () => {
@@ -109,28 +125,98 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert(aid > 0, 'لا تمييز للصياغة المساعدة');
   });
 
-  await check('زر الاستماع معطّل للآيات مع بيان السبب', async () => {
+  await check('زر الاستماع معطّل للآيات وسببه ظاهر في الواجهة لا في title وحده', async () => {
     await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
     await page.waitForSelector('.quran');
     const card = page.locator('.lesson-card').filter({ has: page.locator('.quran') }).first();
     const btn = card.locator('button[disabled]');
     assert(await btn.count() > 0, 'زر الاستماع غير معطّل على الآية');
-    const title = await btn.first().getAttribute('title');
-    assert(title.includes('لا تُستخدم القراءة الآلية للقرآن'), 'سبب التعطيل غير مذكور');
+    // ع-٦: السبب مكتوب ومرئي داخل البطاقة (الجوال لا يُظهر title عند اللمس).
+    const reason = card.locator('.audio-note');
+    assert(await reason.count() > 0, 'سبب التعطيل غير ظاهر في الواجهة');
+    assert(await reason.first().isVisible(), 'سبب التعطيل مخفي');
+    const txt = await reason.first().innerText();
+    assert(txt.includes('لا تُستخدم القراءة الآلية للقرآن'), `نصّ السبب ناقص: ${txt}`);
   });
 
-  await check('تغيير نمط العرض يغيّر عدد البطاقات', async () => {
-    const deep = page.locator('.mode-switch__btn').nth(2);
-    const brief = page.locator('.mode-switch__btn').nth(0);
-    await deep.click();
-    const nDeep = await page.locator('.lesson-card').count();
-    await brief.click();
-    const nBrief = await page.locator('.lesson-card').count();
-    assert(nBrief < nDeep, `مختصر=${nBrief} متعمّق=${nDeep}`);
+  // حالة مبذورة في سياق مستقلّ: الحفظ التلقائي في الصفحة الحيّة يطمس أي كتابة مباشرة.
+  const doneCtx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ar' });
+  await doneCtx.addInitScript((st) => {
+    try { localStorage.setItem('bay.state.v1', JSON.stringify(st)); } catch (_) {}
+  }, {
+    version: 1, createdAt: 1, updatedAt: 1, onboarded: true,
+    prefs: { largeText: false, audio: false, highContrast: false, theme: 'system', fontScale: 1, reduceMotion: false },
+    lessons: { u1l3: { seen: true, quizBest: 100, quizAttempts: 1, completedAt: 1 } },
+    tasks: {}, review: {}, bookmarks: [], activity: [], badges: {},
+    lastPosition: null, streak: { count: 1, lastDay: null, best: 1 }, stats: {},
   });
+  const donePage = await doneCtx.newPage();
+
+  await check('المسار الثاني «مراجعة سريعة» يُتاح بعد إتمام الدرس فقط', async () => {
+    // قبل الإتمام: لا مبدّل مسار (تحقّق سابق على درس آخر)
+    await donePage.goto(BASE + '/#/lesson/u1/u1l1', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(200);
+    assert((await donePage.locator('.mode-switch__btn:visible').count()) === 0,
+      'مبدّل المسار ظاهر على درس لم يُتمّ');
+
+    await donePage.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(200);
+    const btns = donePage.locator('.mode-switch__btn');
+    assert(await btns.count() === 2, `المساران اثنان لا ${await btns.count()}`);
+    const labels = await btns.allInnerTexts();
+    assert(labels[0].includes('تعلّم الدرس') && labels[1].includes('مراجعة سريعة'), labels.join(' | '));
+    // لا وعود زمنية ثابتة: الزمن تقريبي ومحسوب من محتوى الدرس
+    assert(labels.every((t) => t.includes('نحو')), `صيغة الزمن غير تقريبية: ${labels.join(' | ')}`);
+    assert(!labels.some((t) => /١٨د|١٠د|٥د/.test(t)), `وعد زمني ثابت: ${labels.join(' | ')}`);
+
+    const nLearn = await donePage.locator('.lesson-card').count();
+    await btns.nth(1).click();
+    await donePage.waitForTimeout(250);
+    assert((await donePage.locator('text=خلاصة الدرس').count()) > 0, 'المراجعة بلا خلاصة');
+    const nReview = await donePage.locator('.lesson-card').count();
+    assert(nReview < nLearn, `المراجعة لا تختصر: ${nReview}/${nLearn}`);
+    assert((await donePage.locator('details.more', { hasText: 'نصوص الدرس من الكتاب' }).count()) > 0,
+      'نصوص الكتاب غير متاحة في المراجعة');
+    assert((await donePage.locator('text=لم يُنقص منها شيء').count()) > 0, 'بيان الأسئلة ناقص');
+  });
+
+  await check('صفحة المراجعة فيها مدخل المراجعة السريعة للدروس المكتملة', async () => {
+    await donePage.goto(BASE + '/#/review', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(300);
+    const txt = await donePage.locator('#view').innerText();
+    assert(txt.includes('مراجعة سريعة لدرس أتممتَه'), 'لا مدخل للمراجعة السريعة');
+    assert(txt.includes('نحو'), 'لا زمن تقريبي في مدخل المراجعة');
+  });
+
+  await check('قسم «دروس مناسبة للأسرة» في الرئيسة، ولا إعداد عامّ للوضع الأسري', async () => {
+    await donePage.goto(BASE + '/#/home', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(250);
+    const home = await donePage.locator('#view').innerText();
+    assert(home.includes('دروس مناسبة للأسرة'), 'لا قسم للدروس الأسرية في الرئيسة');
+    assert((await donePage.locator('.chip--brand', { hasText: 'نشاط أسري' }).count()) > 0, 'لا شارة نشاط أسري');
+    await donePage.goto(BASE + '/#/settings', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(200);
+    const st = await donePage.locator('#view').innerText();
+    assert(!st.includes('وضع أسري'), 'الوضع الأسري ما زال إعدادًا عامًّا');
+    assert(!st.includes('نمط الدرس الافتراضي'), 'إعداد أنماط العرض ما زال موجودًا');
+  });
+
+  await check('النشاط الأسري يظهر في الدرس الذي فيه، بلا إعداد', async () => {
+    await donePage.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
+    await donePage.waitForTimeout(250);
+    const has = await donePage.locator('.chip--brand', { hasText: 'نشاط أسري' }).count();
+    const family = await donePage.evaluate(async () => {
+      const u = await (await fetch('/content/units/u1.json')).json();
+      return !!u.lessons.find((l) => l.id === 'u1l3').family;
+    });
+    assert(has > 0 === family, `التطابق مختلّ: شارة=${has} محتوى=${family}`);
+  });
+
+  await doneCtx.close();
 
   await check('التفاعل أثناء الدرس يعطي تغذية راجعة فورية', async () => {
-    await page.locator('.mode-switch__btn').nth(1).click();
+    await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
+    await page.waitForSelector('.q');
     const q = page.locator('.q').first();
     await q.scrollIntoViewIfNeeded();
     const opt = q.locator('.opt').first();
@@ -139,14 +225,45 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
       await page.waitForSelector('.feedback', { timeout: 3000 });
       assert((await page.locator('.feedback').count()) > 0, 'لا تغذية راجعة');
     } else {
-      // سؤال ترتيب أو مطابقة
       await q.locator('button', { hasText: 'تحقّق' }).first().click();
       await page.waitForSelector('.feedback', { timeout: 3000 });
     }
   });
 
+  await check('نشاط التصنيف يعمل ويصحّح', async () => {
+    await page.goto(BASE + '/#/lesson/u5/u5l14', { waitUntil: 'networkidle' });
+    await page.waitForSelector('.q');
+    const q = page.locator('.q').filter({ has: page.locator('button', { hasText: 'تحقّق من التصنيف' }) }).first();
+    assert(await q.count() > 0, 'نشاط التصنيف غير موجود');
+    const sels = q.locator('.match__select');
+    const n = await sels.count();
+    assert(n >= 3, `عناصر التصنيف قليلة: ${n}`);
+    for (let i = 0; i < n; i++) await sels.nth(i).selectOption('0');
+    await q.locator('button', { hasText: 'تحقّق من التصنيف' }).click();
+    await page.waitForSelector('.feedback', { timeout: 3000 });
+    assert((await q.locator('.aid').count()) > 0, 'لا يُعرض التصنيف الصحيح عند الخطأ');
+  });
+
+  await check('الدروس ذات السؤال الواحد صار فيها ثلاثة تفاعلات متنوّعة', async () => {
+    for (const [u, l] of [['u5', 'u5l14'], ['u7', 'u7l10'], ['u2', 'u2l0']]) {
+      await page.goto(`${BASE}/#/lesson/${u}/${l}`, { waitUntil: 'networkidle' });
+      await page.waitForSelector('.q');
+      const kinds = await page.evaluate(() => [...document.querySelectorAll('.q')].map((el) => {
+        if (el.querySelector('.opts')) return el.querySelector('.cloze') ? 'complete' : 'choice';
+        if (el.querySelector('.order-list')) return 'order';
+        if (el.querySelector('.match')) return 'match/classify';
+        if (el.querySelector('.flash')) return 'flashcards';
+        return '?';
+      }));
+      assert(kinds.length >= 2, `${l}: تفاعلات قليلة (${kinds.length})`);
+      // ولصيقة الصياغة المساعدة ظاهرة على المستحدث
+      assert((await page.locator('text=صياغة تعليمية مساعدة — مستمدّة من نصّ الدرس').count()) > 0,
+        `${l}: التفاعل المستحدث بلا لصيقة`);
+    }
+  });
+
   await check('الاختبار القصير يحتسب النتيجة ويحدّث التقدّم', async () => {
-    await page.goto(BASE + '/#/quiz/u2/u2l0?mode=standard', { waitUntil: 'networkidle' });
+    await page.goto(BASE + '/#/quiz/u2/u2l0', { waitUntil: 'networkidle' });
     await page.waitForSelector('.opt');
     // نجيب إجابة صحيحة: نقرأ موضع الصحيح من الحالة المعروضة بعد المحاولة
     let guard = 0;
@@ -241,9 +358,9 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
   await check('لوحة المراجعة: العرض والتصفية الرباعية', async () => {
     await page.goto(BASE + '/admin/index.html', { waitUntil: 'networkidle' });
     await page.waitForSelector('.rv', { timeout: 8000 });
-    assert((await page.locator('#rv-count').innerText()).includes('٢٦٠'), 'العدّاد لا يعرض ٢٦٠');
+    assert((await page.locator('#rv-count').innerText()).includes('٣٠٢'), 'العدّاد لا يعرض ٣٠٢');
     for (const [sel, val, expect] of [
-      ['select[aria-label="الأولوية"]', 'high', '٢٤'],
+      ['select[aria-label="الأولوية"]', 'high', '٢٨'],
       ['select[aria-label="الوحدة"]', 'u2', null],
       ['select[aria-label="نوع العنصر"]', 'hook', null],
       ['select[aria-label="حالة الاعتماد"]', 'pending', null],

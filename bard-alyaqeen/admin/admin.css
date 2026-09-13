@@ -65,6 +65,17 @@ mark.hit { background: color-mix(in srgb, var(--c-gold) 35%, transparent); color
 .tabs__btn {
   appearance: none; border: 0; background: transparent; cursor: pointer; font-family: inherit;
   padding: var(--sp-2) var(--sp-4); border-radius: var(--r-full);
-  font-size: var(--fs-sm); font-weight: 600; color: var(--fg-muted); min-height: 40px;
+  font-size: var(--fs-sm); font-weight: 600; color: var(--fg-muted); min-height: 44px;
 }
 .tabs__btn[aria-pressed="true"] { background: var(--bg-elev); color: var(--fg); box-shadow: var(--sh-1); }
+
+/* ع-٧: الشريط العلوي ينكسر بدل أن يفيض على الشاشات الضيقة. */
+.topbar {
+  display: flex; align-items: center; gap: var(--sp-2);
+  flex-wrap: wrap; row-gap: var(--sp-2);
+  padding: var(--sp-3) var(--sp-4);
+  border-bottom: 1px solid var(--border); background: var(--bg-elev);
+}
+.topbar__title { font-weight: 700; flex: 1 1 12rem; min-width: 0; }
+.topbar__spacer { flex: 1 1 0; min-width: 0; }
+.topbar .btn { flex: 0 0 auto; }

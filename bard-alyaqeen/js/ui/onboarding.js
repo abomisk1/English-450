@@ -50,35 +50,8 @@ export function splashScreen(manifest) {
   );
 }
 
-const TIME_CHOICES = [
-  { id: 'brief', title: 'خمس دقائق', desc: 'جرعة قصيرة: النصّ الأساسي وخلاصة الدرس.' },
-  { id: 'standard', title: 'عشر دقائق', desc: 'النصّ والشرح والتفاعل والاختبار القصير.' },
-  { id: 'deep', title: 'وقت أطول', desc: 'جميع التفاصيل والأنشطة والمهام.' },
-];
-
 export function setupScreen() {
   const draft = { ...getState().prefs };
-
-  const choiceGroup = (name, options, key) => h('div', { class: 'choice-grid', role: 'radiogroup', 'aria-label': name },
-    ...options.map((o) => {
-      const b = h('button', {
-        class: 'choice', type: 'button', role: 'radio',
-        'aria-pressed': String(draft[key] === o.id),
-        'aria-checked': String(draft[key] === o.id),
-      },
-        h('span', { style: { flex: 1 } },
-          h('span', { class: 'choice__title' }, o.title),
-          h('span', { class: 'choice__desc', style: { display: 'block' } }, o.desc)),
-      );
-      b.addEventListener('click', () => {
-        draft[key] = o.id;
-        [...b.parentElement.children].forEach((c) => {
-          c.setAttribute('aria-pressed', String(c === b));
-          c.setAttribute('aria-checked', String(c === b));
-        });
-      });
-      return b;
-    }));
 
   const toggle = (label, desc, key) => {
     const input = h('input', {
@@ -91,30 +64,46 @@ export function setupScreen() {
       input);
   };
 
+  // مُعامل تكبير الخطّ ضمن التهيئة الأولى، مع معاينة حيّة للنصّ.
+  const fontScaleRow = (() => {
+    const input = h('input', {
+      type: 'range', min: '0.9', max: '1.6', step: '0.05',
+      value: String(draft.fontScale || 1),
+      'aria-label': 'حجم الخطّ',
+      style: { flex: '1 1 10rem' },
+    });
+    const out = h('span', { class: 'small muted', style: { minWidth: '3.5rem', textAlign: 'center' } },
+      `${ar(Math.round((draft.fontScale || 1) * 100))}٪`);
+    input.addEventListener('input', (e) => {
+      const v = Number(e.target.value);
+      draft.fontScale = v;
+      out.textContent = `${ar(Math.round(v * 100))}٪`;
+      // معاينة فورية على الصفحة نفسها.
+      document.documentElement.style.setProperty('--font-scale', String(v));
+    });
+    return h('div', { class: 'row', style: { flexWrap: 'nowrap', gap: '.75rem' } }, input, out);
+  })();
+
   return h('div', { class: 'container container--narrow section stack' },
     h('h1', { style: { marginBottom: '.25rem' } }, 'تهيئة أولية'),
-    h('p', { class: 'muted' }, 'ثلاثة أسئلة فقط، ويمكنك تغييرها متى شئت من الإعدادات.'),
+    h('p', { class: 'muted' }, 'سؤالان فقط في تيسير العرض، ويمكنك تغييرهما متى شئت من الإعدادات.'),
 
     h('div', { class: 'card stack' },
-      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, '١. كم من الوقت تفضّل للدرس؟'),
-      choiceGroup('مدة الدرس', TIME_CHOICES, 'sessionLength'),
+      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, '١. حجم الخطّ المريح لك'),
+      h('p', { class: 'small muted', style: { margin: 0 } },
+        'حرّك المؤشّر حتى يصير النصّ أدناه مريحًا لعينك.'),
+      fontScaleRow,
+      h('div', { class: 'card card--flat', id: 'setup-sample', style: { background: 'var(--bg-sunken)' } },
+        h('div', { class: 'small muted' }, 'نموذج للقراءة'),
+        h('p', { style: { margin: '.35rem 0 0', fontFamily: 'var(--font-text)', lineHeight: '1.9' } },
+          'الحمدُ للهِ ربِّ العالمين، وأشهدُ أن لا إلهَ إلا الله وحدَه لا شريكَ له.')),
+      toggle('وضع قراءة مريح', 'خطّ أكبر ومسافات أوسع، مناسب لكبار السنّ ومن يقرأ بصعوبة.', 'largeText'),
     ),
 
     h('div', { class: 'card stack' },
-      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, '٢. ما مستوى التفصيل المناسب لك؟'),
-      choiceGroup('مستوى التفصيل', [
-        { id: 'brief', title: 'الأساسيات', desc: 'النصّ الشرعي والخلاصة، مع إمكانية التوسّع في أي لحظة.' },
-        { id: 'standard', title: 'متوسّط', desc: 'النصّ مع الشرح المستمدّ من الكتاب.' },
-        { id: 'deep', title: 'مفصّل', desc: 'كل ما في الكتاب من مسائل وتنبيهات.' },
-      ], 'detail'),
-    ),
-
-    h('div', { class: 'card stack' },
-      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, '٣. هل تحتاج إلى تيسير في العرض؟'),
-      toggle('خط كبير ووضع قراءة مريح', 'مناسب لكبار السن ومن يقرأ بصعوبة.', 'largeText'),
-      toggle('تفعيل الاستماع', 'للشروح والصياغات التعليمية. أما الآيات فلا تُقرأ آليًّا.', 'audio'),
-      toggle('وضع أسري', 'يُظهر سؤال نقاش أسري في نهاية كل درس.', 'familyMode'),
+      h('h2', { style: { marginTop: 0, fontSize: 'var(--fs-lg)' } }, '٢. هل تحتاج إلى تيسير آخر؟'),
       toggle('تباين عالٍ', 'ألوان أوضح لمن يحتاج تباينًا أقوى.', 'highContrast'),
+      toggle('تفعيل الاستماع', 'للشروح والصياغات التعليمية. أمّا الآيات فلا تُقرأ آليًّا.', 'audio'),
     ),
 
     h('button', {

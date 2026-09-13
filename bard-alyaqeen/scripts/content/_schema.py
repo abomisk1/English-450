@@ -43,6 +43,14 @@ def card(cid, ctype, text, src, page=None, ref=None, level="standard",
     return c
 
 
+def classify(qid, prompt, groups, why, page=None, src="derived"):
+    """تصنيف الأمثلة — groups: [{"label": "...", "items": [...]}, ...]"""
+    return {
+        "id": qid, "kind": "classify", "prompt": prompt, "groups": groups,
+        "why": why, "src": src, "page": page, "needsReview": src == "authored",
+    }
+
+
 def mcq(qid, prompt, options, answer, why, src="derived", page=None):
     return {
         "id": qid, "kind": "mcq", "prompt": prompt, "options": options,
@@ -51,27 +59,27 @@ def mcq(qid, prompt, options, answer, why, src="derived", page=None):
     }
 
 
-def truefalse(qid, prompt, answer, why, page=None):
+def truefalse(qid, prompt, answer, why, page=None, src="derived"):
     return {
         "id": qid, "kind": "truefalse", "prompt": prompt,
         "options": ["صحيح", "خطأ"], "answer": 0 if answer else 1,
-        "why": why, "src": "derived", "page": page, "needsReview": False,
+        "why": why, "src": src, "page": page, "needsReview": src == "authored",
     }
 
 
-def order(qid, prompt, items, why, page=None):
+def order(qid, prompt, items, why, page=None, src="derived"):
     """ترتيب الخطوات — items بالترتيب الصحيح."""
     return {
         "id": qid, "kind": "order", "prompt": prompt, "items": items,
-        "why": why, "src": "derived", "page": page, "needsReview": False,
+        "why": why, "src": src, "page": page, "needsReview": src == "authored",
     }
 
 
-def match(qid, prompt, pairs, why, page=None):
+def match(qid, prompt, pairs, why, page=None, src="derived"):
     """مطابقة بين مصطلح ومعناه — pairs قائمة [يمين, يسار]."""
     return {
         "id": qid, "kind": "match", "prompt": prompt, "pairs": pairs,
-        "why": why, "src": "derived", "page": page, "needsReview": False,
+        "why": why, "src": src, "page": page, "needsReview": src == "authored",
     }
 
 
@@ -84,12 +92,12 @@ def complete(qid, prompt, before, after, options, answer, why, page=None, src="d
     }
 
 
-def scenario(qid, prompt, options, answer, why, page=None):
+def scenario(qid, prompt, options, answer, why, page=None, src="authored"):
     """موقف حياتي تطبيقي — الصياغة مساعدة والحكم مأخوذ من الكتاب."""
     return {
         "id": qid, "kind": "scenario", "prompt": prompt, "options": options,
-        "answer": answer, "why": why, "src": "authored", "page": page,
-        "needsReview": True,
+        "answer": answer, "why": why, "src": src, "page": page,
+        "needsReview": src == "authored",
     }
 
 

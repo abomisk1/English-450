@@ -19,7 +19,7 @@ TYPE_AR = {'quran': 'نصّ قرآني', 'hadith': 'حديث نبوي', 'dhikr':
            'text': 'نصّ من الكتاب', 'list': 'قائمة من الكتاب', 'note': 'صياغة تعليمية مساعدة'}
 KIND_AR = {'mcq': 'اختيار', 'truefalse': 'صحيح/خطأ', 'order': 'ترتيب خطوات',
            'match': 'مطابقة', 'complete': 'إكمال نصّ', 'scenario': 'موقف حياتي',
-           'flashcards': 'بطاقات تذكّر'}
+           'flashcards': 'بطاقات تذكّر', 'classify': 'تصنيف'}
 
 # ------------------------------ خريطة المحتوى ------------------------------
 out = []
@@ -38,6 +38,7 @@ st = manifest['stats']
 w('| البند | العدد |')
 w('|---|---|')
 for k, lbl in [('units', 'الوحدات'), ('lessons', 'الدروس'), ('cards', 'بطاقات المحتوى'),
+               ('interactions', 'تفاعلات أثناء الدروس'),
                ('quizItems', 'أسئلة الاختبارات'), ('tasks', 'المهام الأدائية'),
                ('needsReview', 'عناصر تحتاج مراجعة بشرية')]:
     w(f'| {lbl} | {ar(st[k])} |')
@@ -122,16 +123,24 @@ w('|---|---|')
 NA = {'card:quran': 'بطاقة نصّ قرآني', 'card:note': 'بطاقة ملحوظة تعليمية',
       'hook': 'مدخل الدرس', 'objective': 'هدف الدرس', 'summary': 'خلاصة الدرس',
       'family': 'سؤال النقاش الأسري', 'interaction:scenario': 'موقف حياتي (تفاعل)',
-      'quiz:scenario': 'موقف حياتي (اختبار)'}
+      'quiz:scenario': 'موقف حياتي (اختبار)',
+      'interaction:complete': 'إكمال نصّ (تفاعل مستحدث)',
+      'interaction:mcq': 'اختيار (تفاعل مستحدث)',
+      'interaction:match': 'مطابقة (تفاعل مستحدث)',
+      'interaction:order': 'ترتيب خطوات (تفاعل مستحدث)',
+      'interaction:classify': 'تصنيف (تفاعل مستحدث)',
+      'interaction:truefalse': 'صحيح/خطأ (تفاعل مستحدث)',
+      'interaction:complete-quran': 'إكمال مقطع قرآني بالاختيار',
+      'quiz:complete-quran': 'إكمال مقطع قرآني بالاختيار (اختبار)'}
 for k, n in by_kind.most_common():
     w(f'| {NA.get(k, k)} | {ar(n)} |')
 w('')
 
-w('## النصوص القرآنية (أولوية المراجعة)\n')
+w('## النصوص القرآنية وما بُني عليها (أعلى أولوية المراجعة)\n')
 w('| الموضع | المرجع | ص | مطلع النصّ |')
 w('|---|---|---|---|')
 for it in review['items']:
-    if it['src'] != 'quran':
+    if it['src'] != 'quran' and not it['kind'].endswith(':complete-quran'):
         continue
     ex = it['text'].replace('|', '/').replace('\n', ' ')[:90]
     w(f"| `{it['path']}` | {it.get('ref') or '—'} | {ar(it['page']) if it.get('page') else '—'} | {ex}… |")
@@ -147,7 +156,7 @@ w('هذه ليست من الكتاب، وهي بصياغة تعليمية تُع
 w('| الموضع | النوع | الأولوية | ص | مطلع النصّ |')
 w('|---|---|---|---|---|')
 for it in review['items']:
-    if it['src'] != 'authored':
+    if it['src'] != 'authored' or it['kind'].endswith(':complete-quran'):
         continue
     ex = it['text'].replace('|', '/').replace('\n', ' ')[:90]
     w(f"| `{it['path']}` | {NA.get(it['kind'], it['kind'])} | {it['priorityAr']} | "

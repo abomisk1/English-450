@@ -16,17 +16,18 @@ const WPM = { beginner: 110, youth: 165, busy: 150, parent: 130, elder: 85, audi
 
 const PERSONAS = [
   { id: 'beginner', name: 'مبتدئ في طلب العلم', wpm: WPM.beginner,
-    prefs: { detail: 'standard', largeText: false, fontScale: 1 }, viewport: { width: 390, height: 844 } },
+    prefs: { largeText: false, fontScale: 1 }, viewport: { width: 390, height: 844 } },
   { id: 'youth', name: 'شاب / طالب', wpm: WPM.youth,
-    prefs: { detail: 'deep', largeText: false, fontScale: 1 }, viewport: { width: 430, height: 932 } },
+    prefs: { largeText: false, fontScale: 1 }, viewport: { width: 430, height: 932 } },
   { id: 'busy', name: 'موظف مشغول', wpm: WPM.busy,
-    prefs: { detail: 'brief', largeText: false, fontScale: 1 }, viewport: { width: 390, height: 844 } },
+    prefs: { largeText: false, fontScale: 1 }, viewport: { width: 390, height: 844 } },
   { id: 'parent', name: 'ولي أمر مع أسرته', wpm: WPM.parent,
-    prefs: { detail: 'standard', familyMode: true, fontScale: 1 }, viewport: { width: 768, height: 1024 } },
+    prefs: { largeText: false, fontScale: 1 }, viewport: { width: 768, height: 1024 },
+    wantsFamily: true },
   { id: 'elder', name: 'كبير السن', wpm: WPM.elder,
-    prefs: { detail: 'brief', largeText: true, fontScale: 1.3 }, viewport: { width: 390, height: 844 } },
+    prefs: { largeText: true, fontScale: 1.3 }, viewport: { width: 390, height: 844 } },
   { id: 'audio', name: 'يفضّل الاستماع / يحتاج خطًّا كبيرًا', wpm: WPM.audio,
-    prefs: { detail: 'standard', largeText: true, audio: true, fontScale: 1.4 },
+    prefs: { largeText: true, audio: true, fontScale: 1.4 },
     viewport: { width: 390, height: 844 } },
 ];
 
@@ -45,22 +46,15 @@ for (const P of PERSONAS) {
   r.steps.push('نقرة ١: «ابدأ الرحلة» من الشاشة الافتتاحية');
   await page.waitForSelector('text=تهيئة أولية');
 
-  // اختيارات التهيئة بحسب الفئة
-  const timeChoice = P.prefs.detail === 'brief' ? 'خمس دقائق'
-    : P.prefs.detail === 'deep' ? 'وقت أطول' : 'عشر دقائق';
-  await page.locator('.choice', { hasText: timeChoice }).click(); taps++;
-  const detailChoice = P.prefs.detail === 'brief' ? 'الأساسيات'
-    : P.prefs.detail === 'deep' ? 'مفصّل' : 'متوسّط';
-  await page.locator('.choice', { hasText: detailChoice }).click(); taps++;
-  r.steps.push(`نقرتان ٢-٣: اختيار «${timeChoice}» و«${detailChoice}»`);
-
-  if (P.prefs.largeText) {
-    await page.locator('.switch').first().check(); taps++;
-    r.steps.push('نقرة: تفعيل «خط كبير ووضع قراءة مريح»');
+  // التهيئة صارت سؤالين في تيسير العرض: حجم الخطّ ثم تيسير إضافي.
+  if (P.prefs.fontScale && P.prefs.fontScale !== 1) {
+    await page.locator('input[type="range"][aria-label="حجم الخطّ"]').fill(String(P.prefs.fontScale));
+    taps++;
+    r.steps.push(`نقرة: ضبط حجم الخطّ ×${P.prefs.fontScale} بمعاينة حيّة في التهيئة نفسها`);
   }
-  if (P.prefs.familyMode) {
-    await page.locator('label.switch-row', { hasText: 'وضع أسري' }).locator('.switch').check(); taps++;
-    r.steps.push('نقرة: تفعيل «الوضع الأسري»');
+  if (P.prefs.largeText) {
+    await page.locator('label.switch-row', { hasText: 'وضع قراءة مريح' }).locator('.switch').check(); taps++;
+    r.steps.push('نقرة: تفعيل «وضع قراءة مريح»');
   }
   if (P.prefs.audio) {
     await page.locator('label.switch-row', { hasText: 'تفعيل الاستماع' }).locator('.switch').check(); taps++;
@@ -70,17 +64,6 @@ for (const P of PERSONAS) {
   await page.click('text=ابدأ التعلّم'); taps++;
   r.steps.push('نقرة: «ابدأ التعلّم» → الصفحة الرئيسة');
   await page.waitForSelector('text=مسار الجزء الأول');
-
-  if (P.prefs.fontScale && P.prefs.fontScale !== 1) {
-    await page.evaluate((fs_) => {
-      const s = JSON.parse(localStorage.getItem('bay.state.v1'));
-      s.prefs.fontScale = fs_;
-      localStorage.setItem('bay.state.v1', JSON.stringify(s));
-    }, P.prefs.fontScale);
-    await page.reload({ waitUntil: 'networkidle' });
-    r.steps.push(`(ضبط تكبير الخط ×${P.prefs.fontScale} من الإعدادات — خطوة إضافية)`);
-    taps += 2;
-  }
 
   await page.click('text=ابدأ الدرس'); taps++;
   r.steps.push('نقرة: «ابدأ الدرس» → أول درس (الاستعاذة)');
@@ -129,11 +112,16 @@ for (const P of PERSONAS) {
     const out = [];
     const txt = document.getElementById('view').innerText;
     // مصطلحات اللوحة
-    if (document.querySelector('.mode-switch')) out.push('mode-switch: ثلاثة أزرار «مختصر/معتدل/متعمّق» بلا شرح لما تفعله');
+    const ms = document.querySelector('.mode-switch');
+    if (ms && !ms.hidden && ms.children.length) {
+      out.push('mode-switch: مبدّل المسار ظاهر — يُتوقَّع ألّا يظهر إلا بعد إتمام الدرس');
+    }
     if (/صياغة تعليمية مساعدة/.test(txt)) out.push('لصيقة «صياغة تعليمية مساعدة» تظهر ٣ مرات على الأقل بلا تفسير لمعناها');
     const disabled = [...document.querySelectorAll('button[disabled]')]
       .filter((b) => /الاستماع/.test(b.innerText));
-    if (disabled.length) out.push(`زرّ «الاستماع غير متاح» معطّل ×${disabled.length} — السبب في tooltip فقط لا في الشاشة`);
+    if (disabled.length && !document.querySelector('.audio-note')) {
+      out.push(`زرّ «الاستماع غير متاح» معطّل ×${disabled.length} — والسبب غير ظاهر في الشاشة`);
+    }
     if (!document.querySelector('.lesson-nav')) out.push('لا يظهر زرّ «التالي» إلا بعد تمرير الصفحة كاملة');
     return out;
   });
@@ -165,18 +153,22 @@ for (const P of PERSONAS) {
   await page.goto(BASE + '/#/home', { waitUntil: 'networkidle' });
   nav['فتح المراجعة اليومية'] = 1;      // من الشريط السفلي
   nav['فتح المهام الأدائية'] = 1;
-  nav['تغيير حجم الخط'] = 2;            // إعدادات ← المفتاح
+  nav['تغيير حجم الخط'] = 2;            // إعدادات ← المؤشّر (وهو متاح أصلًا في التهيئة الأولى)
   nav['البحث عن موضوع'] = 2;            // أيقونة البحث ← الكتابة
   nav['العودة لآخر موضع'] = 1;          // بطاقة «تابع من حيث توقّفت»
   r.navTaps = nav;
 
-  /* ---- ٦) الوضع الأسري: هل يظهر فعلًا؟ ---- */
-  if (P.prefs.familyMode) {
+  /* ---- ٦) النشاط الأسري: يظهر في دروسه بلا إعداد، ومدخله في الرئيسة ---- */
+  if (P.wantsFamily) {
+    await page.goto(BASE + '/#/home', { waitUntil: 'networkidle' });
+    await page.waitForTimeout(350);
+    const section = await page.locator('text=دروس مناسبة للأسرة').count();
     await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
-    await page.waitForTimeout(400);
-    const has = await page.locator('text=وضع أسري').count();
+    await page.waitForTimeout(350);
+    const has = await page.locator('.chip--brand', { hasText: 'نشاط أسري' }).count();
     r.familyVisible = has > 0;
-    if (!has) r.issues.push('الوضع الأسري مفعّل لكن لا يظهر سؤال النقاش في هذا الدرس');
+    r.familySection = section > 0;
+    if (!section) r.issues.push('لا يوجد مدخل «دروس مناسبة للأسرة» في الصفحة الرئيسة');
   }
 
   /* ---- ٧) الاستماع: ما المتاح فعلًا؟ ---- */

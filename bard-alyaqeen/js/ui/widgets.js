@@ -18,11 +18,15 @@ function sourceRef(card) {
 function listenButton(card) {
   const src = speech.audioSourceFor(card);
   if (!src) {
-    return h('button', {
-      class: 'btn btn--quiet btn--sm', type: 'button', disabled: true,
-      title: speech.unavailableReason(card),
-      'aria-label': speech.unavailableReason(card),
-    }, icon(ICONS.sound, 18), 'الاستماع غير متاح');
+    // ع-٦: السبب مكتوب ظاهرًا لا في سمة title وحدها — الجوال لا يُظهر title عند اللمس.
+    const reason = speech.unavailableReason(card);
+    const id = `audio-note-${card.id}`;
+    return h('div', { class: 'stack', style: { gap: '.35rem' } },
+      h('button', {
+        class: 'btn btn--quiet btn--sm', type: 'button', disabled: true,
+        'aria-describedby': id,
+      }, icon(ICONS.sound, 18), 'الاستماع غير متاح'),
+      h('p', { class: 'audio-note', id }, icon(ICONS.info, 15), h('span', {}, reason)));
   }
   if (src === 'recording') {
     return h('button', {
@@ -109,7 +113,9 @@ export function renderQuestion(q, onAnswer, opts = {}) {
   wrap.append(prompt);
   if (q.src === 'authored') {
     wrap.append(h('div', { class: 'chip chip--warn', style: { marginBottom: '.5rem' } },
-      'موقف تطبيقي بصياغة تعليمية مساعدة'));
+      q.kind === 'scenario'
+        ? 'موقف تطبيقي بصياغة تعليمية مساعدة'
+        : 'صياغة تعليمية مساعدة — مستمدّة من نصّ الدرس'));
   }
 
   let answered = false;
@@ -214,6 +220,39 @@ export function renderQuestion(q, onAnswer, opts = {}) {
         wrap.append(h('div', { class: 'aid' },
           h('span', { class: 'aid__tag' }, 'المطابقة الصحيحة'),
           ...q.pairs.map(([a, b]) => h('div', {}, `${a} ← ${b}`))));
+      }
+      done(res.correct, res.detail);
+    });
+    wrap.append(rows, submit);
+    return wrap;
+  }
+
+  if (q.kind === 'classify') {
+    const answer = {};
+    const rows = h('div', { class: 'match' });
+    q.items.forEach((text) => {
+      const sel = h('select', { class: 'match__select', 'aria-label': `تصنيف: ${text}` },
+        h('option', { value: '' }, '— اختر الصنف —'),
+        ...q.labels.map((lbl, gi) => h('option', { value: String(gi) }, lbl)));
+      sel.addEventListener('change', () => {
+        answer[text] = sel.value === '' ? undefined : Number(sel.value);
+      });
+      rows.append(h('div', { class: 'match__row' }, h('div', { class: 'match__term' }, text), sel));
+    });
+    const submit = h('button', { class: 'btn btn--accent btn--block', type: 'button', style: { marginTop: '.75rem' } },
+      'تحقّق من التصنيف');
+    submit.addEventListener('click', () => {
+      if (answered) return;
+      const res = Q.check(q, answer);
+      submit.disabled = true;
+      [...rows.children].forEach((row, i) => {
+        row.classList.add(res.detail[i] ? 'match__row--right' : 'match__row--wrong');
+        row.querySelector('select').disabled = true;
+      });
+      if (!res.correct) {
+        wrap.append(h('div', { class: 'aid' },
+          h('span', { class: 'aid__tag' }, 'التصنيف الصحيح'),
+          ...q.groups.map((g) => h('div', {}, `${g.label}: ${g.items.join(' · ')}`))));
       }
       done(res.correct, res.detail);
     });

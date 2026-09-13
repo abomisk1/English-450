@@ -67,17 +67,20 @@
   --bg-sunken:     var(--c-ivory-2);
   --fg:            var(--c-ink);
   --fg-muted:      #4c6276;
-  --fg-subtle:     #6b7f90;
+  --fg-subtle:     #566b7c;   /* غُمِّق ليبلغ WCAG AA على الخلفيات الثلاث (ع-٣) */
   --border:        #e2dbca;
   --border-strong: #cfc5ae;
   --accent:        var(--c-teal-600);
   --accent-fg:     #ffffff;
+  --accent-text:   var(--c-teal-700);   /* الأكسنت حين يكون لون نصّ لا خلفية */
   --brand:         var(--c-navy-700);
   --brand-fg:      #ffffff;
   --brand-hover:   var(--c-navy-600);
   --quran-fg:      var(--c-navy-800);
   --soft-brand-bg: var(--c-teal-100);
   --soft-brand-fg: var(--c-teal-700);
+  --check-fg:      #ffffff;       /* علامة ✓ داخل مربّع المهمة */
+  --switch-knob-on: #ffffff;      /* قرص المفتاح وهو مُفعَّل */
   --hero-a:        var(--c-navy-800);
   --hero-b:        var(--c-teal-700);
   --ring:          color-mix(in srgb, var(--c-teal-500) 55%, transparent);
@@ -125,13 +128,16 @@
     --fg-subtle:     #8ba3b6;
     --border:        #1b415f;
     --border-strong: #27587c;
-    --accent:        var(--c-teal-500);
+    --accent:        #0e7c76;   /* غُمِّق ليبلغ النصّ الأبيض فوقه AA (ع-٢) */
+    --accent-text:   #6fd8d0;   /* لون النصّ حين يكون الأكسنت نصًّا لا خلفية */
     --brand:         #cfe6ea;
     --brand-fg:      #071a2a;
     --brand-hover:   #b7dbe1;
     --quran-fg:      #d9ecf5;
-    --soft-brand-bg: rgba(28,155,149,.16);
-    --soft-brand-fg: #7fc9c5;
+    --soft-brand-bg: #123b3c;   /* معتم لا نصف شفّاف: يضمن تباينًا ثابتًا (ع-٢) */
+    --soft-brand-fg: #a8e6e1;
+    --check-fg:      #06231a;   /* ✓ داكن على الأخضر الفاتح — الأبيض كان ١٫٦٧ */
+    --switch-knob-on: #06231a;
     --hero-a:        #dff0f5;
     --hero-b:        #7fc9c5;
     --c-gold-soft:   #2a2416;
@@ -157,13 +163,16 @@
   --fg-subtle:     #8ba3b6;
   --border:        #1b415f;
   --border-strong: #27587c;
-  --accent:        var(--c-teal-500);
+  --accent:        #0e7c76;
+  --accent-text:   #6fd8d0;
   --brand:     #cfe6ea;
   --brand-fg:    #071a2a;
   --brand-hover:   #b7dbe1;
   --quran-fg:    #d9ecf5;
-  --soft-brand-bg: rgba(28,155,149,.16);
-  --soft-brand-fg: #7fc9c5;
+  --soft-brand-bg: #123b3c;   /* معتم لا نصف شفّاف: يضمن تباينًا ثابتًا (ع-٢) */
+  --soft-brand-fg: #a8e6e1;
+  --check-fg:    #06231a;   /* ✓ داكن على الأخضر الفاتح — الأبيض كان ١٫٦٧ */
+  --switch-knob-on: #06231a;
   --hero-a:    #dff0f5;
   --hero-b:    #7fc9c5;
   --c-gold-soft:   #2a2416;
@@ -187,6 +196,7 @@
   --border: #444; --border-strong: #000;
   --brand: #00314d; --accent: #005a55; --brand-hover: #00415f;
   --quran-fg: #000; --soft-brand-bg: #e6f2f1; --soft-brand-fg: #00413e;
+  --accent-text: #00413e; --check-fg: #fff; --switch-knob-on: #fff;
   --hero-a: #00314d; --hero-b: #00413e;
 }
 :root[data-theme="dark"][data-contrast="high"],
@@ -195,4 +205,5 @@
   --border: #bbb; --border-strong: #fff; --brand: #bfe3ff; --accent: #5ce0d8;
   --brand-hover: #d6eeff; --quran-fg: #fff; --soft-brand-bg: #10322f;
   --soft-brand-fg: #9fe8e2; --hero-a: #fff; --hero-b: #9fe8e2;
+  --accent-text: #9fe8e2; --check-fg: #00201e; --switch-knob-on: #00201e;
 }

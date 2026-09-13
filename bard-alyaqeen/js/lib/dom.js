@@ -63,6 +63,7 @@ export const ICONS = {
   lamp: '<path d="M9 18h6M10 21h4"/><path d="M12 2a7 7 0 0 0-4 12.7V17h8v-2.3A7 7 0 0 0 12 2z"/>',
   moon: '<path d="M20 14.5A8.5 8.5 0 0 1 9.5 4a8.5 8.5 0 1 0 10.5 10.5z"/>',
   flag: '<path d="M5 21V4M5 4h11l-2 4 2 4H5"/>',
+  info: '<circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 7.6v.1"/>',
 };
 
 /** الشعار: قوس محراب داخل ثمانية مضلّعة — أصالة وحداثة بلا ازدحام. */
@@ -134,6 +135,36 @@ export function ring(percent, label) {
   wrap.append(svg, h('div', { class: 'ring__label' }, label ?? `${percent}٪`));
   return wrap;
 }
+
+/**
+ * صيغة العدد العربية الصحيحة: مفرد ومثنّى وجمع قلّة وجمع كثرة.
+ * forms = { one, two, few, many } — و«#» في few/many تُستبدل بالعدد.
+ * مثال: arCount(1, Q_FORMS) ← «سؤال واحد»، و arCount(3, …) ← «٣ أسئلة».
+ */
+export function arCount(n, forms) {
+  if (n === 0 && forms.zero) return forms.zero;
+  if (n === 1) return forms.one;
+  if (n === 2) return forms.two;
+  const t = (n >= 3 && n <= 10) ? forms.few : forms.many;
+  return t.replace('#', ar(n));
+}
+
+export const COUNT_QUESTION = {
+  zero: 'بلا أسئلة', one: 'سؤال واحد', two: 'سؤالان',
+  few: '# أسئلة', many: '# سؤالًا',
+};
+export const COUNT_CARD = {
+  zero: 'بلا بطاقات', one: 'بطاقة واحدة', two: 'بطاقتان',
+  few: '# بطاقات', many: '# بطاقةً',
+};
+export const COUNT_LESSON = {
+  zero: 'بلا دروس', one: 'درس واحد', two: 'درسان',
+  few: '# دروس', many: '# درسًا',
+};
+/** صيغة المدّة في سياق الجرّ: «نحو دقيقتين»، «نحو ٣ دقائق». */
+export const COUNT_MINUTE_GEN = {
+  one: 'دقيقة', two: 'دقيقتين', few: '# دقائق', many: '# دقيقة',
+};
 
 /** تحويل الأرقام إلى أرقام عربية-هندية للعرض. */
 export function ar(n) {
