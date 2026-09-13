@@ -330,6 +330,49 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
     assert(bad.length === 0, bad.join(' | '));
   });
 
+  await check('نشاط ترتيب الآيات: النصّ بخطّ المصحف، غير قابل للتحرير، ويُصحَّح', async () => {
+    await page.goto(BASE + '/#/lesson/u1/u1l3', { waitUntil: 'networkidle' });
+    await page.waitForSelector('.order-list');
+    const info = await page.evaluate(() => {
+      const items = [...document.querySelectorAll('.order-item__text')];
+      return items.map((el) => ({
+        t: el.textContent,
+        font: getComputedStyle(el).fontFamily,
+        editable: el.isContentEditable,
+        inputs: el.querySelectorAll('input,textarea').length,
+        draggable: el.draggable,
+      }));
+    });
+    assert(info.length === 5, `عناصر الترتيب ${info.length} لا ٥`);
+    for (const it of info) {
+      assert(/Amiri Quran/i.test(it.font), `النصّ القرآني بخطّ ${it.font} لا خطّ المصحف`);
+      assert(!it.editable, 'النصّ قابل للتحرير');
+      assert(it.inputs === 0, 'حقل إدخال داخل النصّ');
+      assert(!it.draggable, 'النصّ قابل للسحب');
+      assert(/[\uFD3E\uFD3F]/.test(it.t), 'عنصر بلا أقواس آية');
+    }
+    // صياغة النشاط تُبيّن أنّ العرض للترتيب
+    const prompt = await page.locator('.q').filter({ has: page.locator('.order-list') })
+      .locator('.q__prompt').innerText();
+    assert(/رتّب/.test(prompt), `الصياغة لا تُبيّن الغرض: ${prompt}`);
+
+    // التصحيح يظهر بعد الإجابة، والترتيب الصحيح يُعرض عند الخطأ
+    const q = page.locator('.q').filter({ has: page.locator('.order-list') });
+    await q.locator('button', { hasText: 'تحقّق من الترتيب' }).click();
+    await page.waitForSelector('.feedback', { timeout: 3000 });
+    const marks = await page.evaluate(() =>
+      document.querySelectorAll('.order-item--right,.order-item--wrong').length);
+    assert(marks === 5, `علامات التصحيح ${marks} لا ٥`);
+  });
+
+  await check('الهيئة الخاطئة لا تُحفظ في حالة المتعلّم', async () => {
+    const state = await page.evaluate(() => localStorage.getItem('bay.state.v1') || '');
+    assert(!/الْحَمْدُ|اهْدِنَا|\uFD3F/.test(state), 'نصّ قرآني مخزَّن في حالة المتعلّم');
+    const st = JSON.parse(state || '{}');
+    assert(!st.review || Object.keys(st.review).every((k) => !k.includes('i1')),
+      'تفاعل الدرس دخل خطة المراجعة');
+  });
+
   await check('نشاط التصنيف يعمل ويصحّح', async () => {
     await page.goto(BASE + '/#/lesson/u5/u5l14', { waitUntil: 'networkidle' });
     await page.waitForSelector('.q');

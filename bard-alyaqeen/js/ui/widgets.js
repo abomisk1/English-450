@@ -118,6 +118,11 @@ function feedbackBox(ok, why) {
 
 const KEYS = ['أ', 'ب', 'ج', 'د', 'هـ'];
 
+/** هل هذا النصّ نصٌّ قرآني؟ (يُعرَف بأقواس الآية) */
+export function isQuranText(t) {
+  return /[\uFD3E\uFD3F]/.test(String(t || ''));
+}
+
 /**
  * يرسم سؤالًا تفاعليًّا.
  * @param {object} q سؤال مُجهَّز عبر Q.prepare
@@ -176,7 +181,11 @@ export function renderQuestion(q, onAnswer, opts = {}) {
     const paint = () => {
       list.replaceChildren(...items.map((text, i) => h('li', { class: 'order-item' },
         h('span', { class: 'opt__key' }, ar(i + 1)),
-        h('span', { class: 'order-item__text' }, text),
+        // النصّ القرآني يبقى بخطّ المصحف المعتمد ولونه حيثما عُرض.
+        h('span', {
+          class: 'order-item__text' + (isQuranText(text) ? ' qtext' : ''),
+          lang: 'ar',
+        }, text),
         h('span', { class: 'order-item__ctrls' },
           h('button', {
             class: 'btn btn--ghost btn--icon', type: 'button', 'aria-label': 'إلى الأعلى',

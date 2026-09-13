@@ -418,6 +418,60 @@ test('كل مقطع قرآني في البرنامج داخل الجَرْد ا�
     'تقرير تدقيق القرآن يذكر مخالفات — شغّل: python3 scripts/audit_quran.py');
 });
 
+test('نشاط ترتيب آيات الفاتحة: عناصره آيات صحيحة كاملة بترتيب المصحف', () => {
+  const l = units.flatMap((u) => u.lessons).find((x) => x.id === 'u1l3');
+  const q = l.interactions.find((x) => x.id === 'i1');
+  assert.ok(q && q.kind === 'order', 'النشاط غير موجود');
+
+  // ١) العناصر آيات كاملة من بطاقة السورة نفسها، لا كلمات مجزّأة.
+  const card = l.cards.find((c) => c.type === 'quran');
+  const bare = (t) => (t || '').replace(/[\uFD3E\uFD3F]/g, '').trim();
+  const inCard = card.text;
+  for (const it of q.items) {
+    assert.ok(/[\uFD3E\uFD3F]/.test(it), `عنصر بلا أقواس آية: ${it}`);
+    const body = bare(it);
+    assert.ok(inCard.includes(body), `العنصر ليس نصًّا حرفيًّا من بطاقة السورة: ${body}`);
+    assert.ok(body.split(/\s+/).length >= 2, `عنصر من كلمة واحدة (تجزئة): ${body}`);
+  }
+
+  // ٢) ترتيب الإجابة الصحيحة هو ترتيب المصحف: مواضعها في السورة متصاعدة.
+  // (بعض المقاطع تتكرّر — كالبسملة وآخرها — فيُبحث عمّا بعد الموضع السابق)
+  let prev = -1;
+  for (const it of q.items) {
+    const at = inCard.indexOf(bare(it), prev + 1);
+    assert.ok(at > prev, `الترتيب ليس ترتيب المصحف عند: ${bare(it)}`);
+    prev = at;
+  }
+
+  // ٣) لا نصّ مولَّد: كل عنصر داخل جَرْد بطاقة السورة.
+  assert.equal(new Set(q.items).size, q.items.length, 'عناصر مكرّرة');
+});
+
+test('نشاط الترتيب لا يُجزّئ الآية ولا يقبل تعديل نصّها', () => {
+  const src = fs.readFileSync(path.join(ROOT, 'js/ui/widgets.js'), 'utf8');
+  const block = src.slice(src.indexOf("if (q.kind === 'order')"),
+    src.indexOf("if (q.kind === 'match')"));
+  assert.ok(!/contenteditable/i.test(block), 'النصّ قابل للتحرير');
+  assert.ok(!/<input|createElement\('input'\)|'input'/.test(block), 'حقل إدخال في نشاط الترتيب');
+  assert.ok(/draggable/.test(block) === false, 'سحب بالماوس قد يمسّ النصّ');
+  // التصحيح يظهر بعد الإجابة
+  assert.ok(/order-item--right/.test(block) && /order-item--wrong/.test(block),
+    'لا تظهر علامات التصحيح');
+  assert.ok(/الترتيب الصحيح/.test(block), 'لا يُعرض الترتيب الصحيح عند الخطأ');
+  // النصّ القرآني بخطّ المصحف
+  assert.ok(/isQuranText/.test(block), 'لا يُميَّز النصّ القرآني بخطّه');
+});
+
+test('التفاعلات لا تُحفظ في حالة المتعلّم، فلا تُخزَّن هيئة خاطئة', () => {
+  // شاشة الدرس تمرّر دالة فارغة لتفاعلات الدرس، والحفظ للاختبار وحده.
+  const src = fs.readFileSync(path.join(ROOT, 'js/ui/lesson.js'), 'utf8');
+  const inter = src.slice(src.indexOf('// ٤) تفاعل أثناء الدرس'), src.indexOf('// ٥) الخلاصة'));
+  assert.ok(inter.length > 40 && inter.length < 900, `مقطع غير متوقّع (${inter.length})`);
+  assert.ok(/renderQuestion\(q, \(\) => \{\}/.test(inter),
+    'تفاعل الدرس يمرّر معالجًا قد يحفظ');
+  assert.ok(!/update\(/.test(inter), 'تفاعل الدرس يكتب في الحالة');
+});
+
 test('صياغة العدد والمعدود عربية سليمة', () => {
   assert.equal(arCount(0, COUNT_QUESTION), 'بلا أسئلة');
   assert.equal(arCount(1, COUNT_QUESTION), 'سؤال واحد');

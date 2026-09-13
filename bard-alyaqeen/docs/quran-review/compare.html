@@ -1,0 +1,862 @@
+<!doctype html><html lang='ar' dir='rtl'><head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width,initial-scale=1'>
+<title>مقابلة النصوص القرآنية — بَرْدُ اليقين</title>
+<style>
+:root{--bg:#fbf8f1;--paper:#fff;--ink:#12283a;--muted:#566b7c;--line:#e2dbca;
+ --brand:#0e4f6e;--teal:#0e7c76;--warn:#8a6d1f;--warnbg:#fbf0d9;--err:#a33a33;--errbg:#fbe9e7;
+ --ok:#1d7a4c;--okbg:#e8f5ee;--rep:#ffe08a;--ins:#bfe3c0;--del:#f6c6c2}
+@media(prefers-color-scheme:dark){:root{--bg:#071a2a;--paper:#0d2941;--ink:#e8eef4;--muted:#a8bccc;
+ --line:#1b415f;--brand:#cfe6ea;--teal:#6fd8d0;--warnbg:#35290f;--errbg:#3a1d1a;--okbg:#0f3225;
+ --rep:#6b5316;--ins:#1c5230;--del:#5d2420}}
+@font-face{font-family:'Amiri Quran';src:url('../../assets/fonts/amiri-quran-400.woff2') format('woff2');font-display:swap}
+@font-face{font-family:'Cairo';src:url('../../assets/fonts/cairo-var.woff2') format('woff2-variations');font-weight:200 1000;font-display:swap}
+*{box-sizing:border-box}
+body{margin:0;direction:rtl;background:var(--bg);color:var(--ink);
+ font-family:'Cairo',system-ui,sans-serif;line-height:1.8;padding:0 16px 64px}
+.wrap{max-width:70rem;margin-inline:auto}
+h1{font-size:1.7rem;margin:1.5rem 0 .3rem}
+h2{font-size:1.15rem;margin:0}
+.lede{color:var(--muted);margin:0 0 1.2rem}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:14px;padding:16px;margin:14px 0}
+.head{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;justify-content:space-between;
+ border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:12px}
+.meta{color:var(--muted);font-size:.85rem}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:.8rem;font-weight:700}
+.p-ok{background:var(--okbg);color:var(--ok)} .p-warn{background:var(--warnbg);color:var(--warn)}
+.p-err{background:var(--errbg);color:var(--err)}
+.row{display:grid;gap:10px;grid-template-columns:1fr;margin-bottom:12px}
+@media(min-width:820px){.row{grid-template-columns:1fr 1fr}}
+.box{border:1px solid var(--line);border-radius:10px;padding:10px 12px;min-width:0}
+.box>.lbl{font-size:.75rem;color:var(--muted);font-weight:700;margin-bottom:6px;letter-spacing:.02em}
+.q{font-family:'Amiri Quran',serif;font-size:1.45rem;line-height:2.5;word-wrap:break-word}
+mark{background:transparent;padding:0 1px;border-radius:3px}
+mark.d-rep{background:var(--rep)} mark.d-ins{background:var(--ins)} mark.d-del{background:var(--del)}
+mark.d-gap{background:var(--del);padding-inline:3px}
+mark.d-conv{background:transparent;box-shadow:0 1px 0 var(--line);opacity:.72}
+.omit{opacity:.35;font-style:normal}
+.omit-key{font-weight:400;opacity:.8}
+body.hide-conv mark.d-conv{box-shadow:none;opacity:1}
+.toggle{display:inline-flex;gap:8px;align-items:center;font-size:.85rem;cursor:pointer;
+ background:var(--paper);border:1px solid var(--line);border-radius:999px;padding:6px 14px}
+table{width:100%;border-collapse:collapse;font-size:.85rem;margin-top:8px}
+th,td{text-align:start;padding:6px 8px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--muted);font-weight:700;white-space:nowrap}
+details{margin-top:10px}summary{cursor:pointer;color:var(--teal);font-weight:700;font-size:.9rem}
+img{max-width:100%;border:1px solid var(--line);border-radius:8px;margin-top:8px}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:.85rem;color:var(--muted);margin:.5rem 0 0}
+.legend b{font-weight:700}
+.sum td,.sum th{font-size:.85rem}
+.note{background:var(--warnbg);border-inline-start:3px solid var(--warn);border-radius:8px;
+ padding:10px 14px;margin:14px 0;font-size:.9rem}
+</style></head><body><div class='wrap'>
+<h1>مقابلة النصوص القرآنية الأربعة والعشرين</h1>
+<p class='lede'>صفحة محلية للمقارنة البصرية. <strong>لم يُعدَّل أيّ نصّ، ولم تُغيَّر حالة أيّ عنصر عن «بانتظار المراجعة».</strong></p>
+<div class='note'><b>منهج المقابلة:</b> لم يُتَّخذ نصّ البرنامج مرجعًا لنفسه. قوبل كل نصّ بمصدرين عثمانيين مستقلّين، وقُوبلا أحدهما بالآخر على ٦٢٣٦ آية فاتّفقا على الهيكل الحرفيّ اتّفاقًا تامًّا. وصفحة الكتاب مرفقة تحت كل نصّ للمقابلة البصرية، لأنّ نصّ القرآن في ملف الكتاب مكتوب بخطّ مصحفيّ (QCF) لا يحمل ترميزًا يمكن استخراجه، فلا سبيل إلى مقابلته آليًّا.</div>
+<div class='legend'><span><b>التظليل:</b></span><span><mark class='d-conv'>خطّ خفيف</mark> صورة معروفة مختلفة للكلمة نفسها (ٱ/ا · ـٰ/ا · هُۥ/هُ · اختلاف تشكيل) — لا يمسّ الحرف</span><span><mark class='d-rep'>أصفر</mark> استبدال غير مفسَّر</span><span><mark class='d-ins'>أخضر</mark> زيادة في المرجع</span><span><mark class='d-del'>أحمر</mark> زيادة في البرنامج</span></div>
+<p><label class='toggle'><input type='checkbox' id='hc'> إخفاء تظليل فروق الرسم المعروفة، وإبقاء ما يستحقّ النظر</label></p>
+<div class='card'><h2>الخلاصة</h2><table class='sum'>
+<tr><th>النصوص المراجَعة</th><td>٢٤</td></tr>
+<tr><th>مطابق</th><td>٠</td></tr>
+<tr><th>يحتاج تصحيحًا</th><td>٠</td></tr>
+<tr><th>تحتاج تحققًا بشريًا</th><td>٢٤</td></tr>
+<tr><th>اختلاف في الحروف</th><td>٠</td></tr>
+<tr><th>مواضع ظهور النصوص القرآنية</th><td>١٦٧ موضعًا · ٩١ مقطعًا مميّزًا</td></tr>
+<tr><th>تعارض بين المواضع</th><td>٠</td></tr>
+</table></div>
+<div class='card'><div class='head'><div>
+<h2>١. الفاتحة: ١</h2>
+<div class='meta'>u1 / u1l2 / c1 · البسملة · الكتاب ص ٧</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>بِ<mark class="d-conv">سْمِ ا</mark>للَّهِ <mark class="d-conv">الرَّحْ</mark>مَٰنِ <mark class="d-conv">ا</mark>لرَّحِيمِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>بِ<mark class="d-conv">سۡمِ ٱ</mark>للَّهِ <mark class="d-conv">ٱلرَّحۡ</mark>مَٰنِ <mark class="d-conv">ٱ</mark>لرَّحِيمِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>بِسْمِ <mark class="d-conv">ٱ</mark>للَّهِ <mark class="d-conv">ٱ</mark>لرَّحْ<mark class="d-conv">مَـٰنِ ٱ</mark>لرَّحِيمِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٥</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٧ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p007.png' alt='صفحة ٧ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢. سورة الفاتحة: ١-٧</h2>
+<div class='meta'>u1 / u1l3 / c1 · سورة الفاتحة · الكتاب ص ٨</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>بِ<mark class="d-conv">سْمِ ا</mark>للَّهِ <mark class="d-conv">الرَّحْ</mark>مَٰنِ <mark class="d-conv">ا</mark>لرَّحِيمِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>بِ<mark class="d-conv">سۡمِ ٱ</mark>للَّهِ <mark class="d-conv">ٱلرَّحۡ</mark>مَٰنِ <mark class="d-conv">ٱ</mark>لرَّحِيمِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>بِسْمِ <mark class="d-conv">ٱ</mark>للَّهِ <mark class="d-conv">ٱ</mark>لرَّحْ<mark class="d-conv">مَـٰنِ ٱ</mark>لرَّحِيمِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٥</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'><mark class="d-conv">الْحَمْ</mark>دُ لِلَّهِ رَبِّ <mark class="d-conv">الْعَا</mark>لَمِينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱلۡحَمۡ</mark>دُ لِلَّهِ رَبِّ <mark class="d-conv">ٱلۡعَٰ</mark>لَمِينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>لْحَمْدُ لِلَّهِ رَبِّ <mark class="d-conv">ٱلْعَـٰ</mark>لَمِينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'><mark class="d-conv">الرَّحْ</mark>مَٰنِ <mark class="d-conv">ا</mark>لرَّحِيمِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱلرَّحۡ</mark>مَٰنِ <mark class="d-conv">ٱ</mark>لرَّحِيمِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>لرَّحْ<mark class="d-conv">مَـٰنِ ٱ</mark>لرَّحِيمِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'><mark class="d-conv">مَا</mark>لِكِ يَ<mark class="d-conv">وْمِ ا</mark>لدِّينِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">مَٰ</mark>لِكِ يَ<mark class="d-conv">وۡمِ ٱ</mark>لدِّينِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>مَ<mark class="d-conv">ـٰ</mark>لِكِ يَوْمِ <mark class="d-conv">ٱ</mark>لدِّينِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥</div><div class='q'><mark class="d-conv">إِ</mark>يَّاكَ نَ<mark class="d-conv">عْ</mark>بُدُ وَإِيَّاكَ نَ<mark class="d-conv">سْ</mark>تَعِينُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>إِ</span>يَّاكَ نَ<mark class="d-conv">عۡ</mark>بُدُ وَإِيَّاكَ نَ<mark class="d-conv">سۡ</mark>تَعِينُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>يَّاكَ نَعْبُدُ وَإِيَّاكَ نَسْتَعِينُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>مطابق تمامًا لمرجع عثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٦</div><div class='q'><mark class="d-conv">اهْ</mark>دِنَا <mark class="d-conv">الصِّرَاطَ الْمُسْ</mark>تَقِيمَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱهۡ</mark>دِنَا <mark class="d-conv">ٱلصِّرَٰطَ ٱلۡمُسۡ</mark>تَقِيمَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>هْدِنَا <mark class="d-conv">ٱلصِّرَٰطَ ٱ</mark>لْمُسْتَقِيمَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٥</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٧</div><div class='q'>صِ<mark class="d-conv">رَاطَ ا</mark>لَّذِينَ أَ<mark class="d-conv">نْعَمْ</mark>تَ عَلَ<mark class="d-conv">يْهِمْ غَيْرِ الْمَغْ</mark>ضُوبِ عَلَ<mark class="d-conv">يْهِمْ</mark> وَلَا <mark class="d-conv">الضَّا</mark>لِّينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>صِ<mark class="d-conv">رَٰطَ ٱ</mark>لَّذِينَ أَ<mark class="d-conv">نۡعَمۡ</mark>تَ عَلَ<mark class="d-conv">يۡهِمۡ غَيۡرِ ٱلۡمَغۡ</mark>ضُوبِ عَلَ<mark class="d-conv">يۡهِمۡ</mark> وَلَا <mark class="d-conv">ٱلضَّآ</mark>لِّينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>صِ<mark class="d-conv">رَٰطَ ٱ</mark>لَّذِينَ أَنْعَمْتَ عَلَيْهِمْ غَيْرِ <mark class="d-conv">ٱ</mark>لْمَغْضُوبِ عَلَيْهِمْ وَلَا <mark class="d-conv">ٱلضَّآ</mark>لِّينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١٣</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١، ٢، ٣، ٤، ٥، ٦، ٧</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٨ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p008.png' alt='صفحة ٨ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٣. البقرة: ٢٥٥</h2>
+<div class='meta'>u1 / u1l4 / c1 · آية الكرسي · الكتاب ص ١٠</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢٥٥</div><div class='q'><mark class="d-conv">ا</mark>للَّهُ لَ<mark class="d-conv">ا</mark> إِلَٰهَ إِلَّا هُوَ <mark class="d-conv">الْ</mark>حَيُّ <mark class="d-conv">الْ</mark>قَيُّو<mark class="d-conv">مُ ۚ</mark> لَا تَ<mark class="d-conv">أْخُذُهُ</mark> سِنَ<mark class="d-conv">ةٌ وَلَا نَوْمٌ ۚ لَهُ</mark> مَا فِي <mark class="d-conv">السَّمَاوَا</mark>تِ وَمَا فِي <mark class="d-conv">الْأَرْضِ ۗ مَنْ</mark> ذَا <mark class="d-conv">ا</mark>لَّذِي يَ<mark class="d-conv">شْ</mark>فَعُ عِ<mark class="d-conv">نْدَهُ</mark> إِلَّا بِإِ<mark class="d-conv">ذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ</mark> وَمَا خَ<mark class="d-conv">لْفَهُمْ ۖ</mark> وَلَا يُحِيطُونَ بِشَ<mark class="d-conv">يْءٍ مِنْ عِلْمِهِ</mark> إِلَّا بِمَا شَ<mark class="d-conv">اءَ ۚ</mark> وَسِعَ كُ<mark class="d-conv">رْ</mark>سِيُّهُ <mark class="d-conv">السَّمَاوَا</mark>تِ وَ<mark class="d-conv">الْأَرْضَ ۖ</mark> وَلَا يَ<mark class="d-conv">ئُودُهُ حِفْ</mark>ظُهُمَ<mark class="d-conv">ا ۚ وَهُوَ الْ</mark>عَلِيُّ <mark class="d-conv">الْ</mark>عَظِيمُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱ</mark>للَّهُ لَ<mark class="d-conv">آ</mark> إِلَٰهَ إِلَّا هُوَ <mark class="d-conv">ٱلۡ</mark>حَيُّ <mark class="d-conv">ٱلۡ</mark>قَيُّو<mark class="d-conv">مُۚ</mark> لَا تَ<mark class="d-conv">أۡخُذُهُۥ</mark> سِنَ<mark class="d-conv">ةٞ وَلَا نَوۡمٞۚ لَّهُۥ</mark> مَا فِي <mark class="d-conv">ٱلسَّمَٰوَٰ</mark>تِ وَمَا فِي <mark class="d-conv">ٱلۡأَرۡضِۗ مَن</mark> ذَا <mark class="d-conv">ٱ</mark>لَّذِي يَ<mark class="d-conv">شۡ</mark>فَعُ عِ<mark class="d-conv">ندَهُۥٓ</mark> إِلَّا بِإِ<mark class="d-conv">ذۡنِهِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِيهِمۡ</mark> وَمَا خَ<mark class="d-conv">لۡفَهُمۡۖ</mark> وَلَا يُحِيطُونَ بِشَ<mark class="d-conv">يۡءٖ مِّنۡ عِلۡمِهِۦٓ</mark> إِلَّا بِمَا شَ<mark class="d-conv">آءَۚ</mark> وَسِعَ كُ<mark class="d-conv">رۡ</mark>سِيُّهُ <mark class="d-conv">ٱلسَّمَٰوَٰ</mark>تِ وَ<mark class="d-conv">ٱلۡأَرۡضَۖ</mark> وَلَا يَ<mark class="d-conv">ـُٔودُهُۥ حِفۡ</mark>ظُهُمَ<mark class="d-conv">اۚ وَهُوَ ٱلۡ</mark>عَلِيُّ <mark class="d-conv">ٱلۡ</mark>عَظِيمُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>للَّهُ لَ<mark class="d-conv">آ إِلَـٰ</mark>هَ إِلَّا هُوَ <mark class="d-conv">ٱلْحَىُّ ٱ</mark>لْقَيُّومُ ۚ لَا تَأْخُذُ<mark class="d-conv">هُۥ</mark> سِنَةٌ وَلَا نَوْمٌ ۚ <mark class="d-conv">لَّهُۥ</mark> مَا فِ<mark class="d-conv">ى ٱ</mark>لسَّمَ<mark class="d-conv">ـٰوَٰ</mark>تِ وَمَا فِ<mark class="d-conv">ى ٱ</mark>لْأَرْضِ ۗ مَ<mark class="d-conv">ن</mark> ذَا <mark class="d-conv">ٱلَّذِى</mark> يَشْفَعُ عِ<mark class="d-conv">ندَهُۥٓ</mark> إِلَّا بِإِذْنِ<mark class="d-conv">هِۦ</mark> ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَ<mark class="d-conv">ىْءٍ مِّنْ عِلْمِهِۦٓ</mark> إِلَّا بِمَا شَ<mark class="d-conv">آ</mark>ءَ ۚ وَسِعَ كُرْسِيُّهُ <mark class="d-conv">ٱ</mark>لسَّمَ<mark class="d-conv">ـٰوَٰ</mark>تِ وَ<mark class="d-conv">ٱ</mark>لْأَرْضَ ۖ وَلَا يَ<mark class="d-conv">ـُٔودُهُۥ</mark> حِفْظُهُمَا ۚ وَهُوَ <mark class="d-conv">ٱ</mark>لْعَلِ<mark class="d-conv">ىُّ ٱ</mark>لْعَظِيمُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٨ · المرجع ١٤</td></tr>
+<tr><th>الفروق الحرفية</th><td>⚠️ فروق غير مفسَّرة (٤): insert: «∅» ← «هِۦۚ يَعۡلَمُ مَا بَيۡنَ أَيۡدِي» | replace: « ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ» ← «مۡ» | replace: «يْءٍ » ← «يۡءٖ مِّنۡ عِلۡ» | replace: «نْ عِلْمِهِ» ← «هِۦٓ» · فروق رسم وتشكيل معروفة: ٣٠</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٢٥٥</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١٠ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p010.png' alt='صفحة ١٠ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٤. البقرة: ٢٨٥</h2>
+<div class='meta'>u1 / u1l5 / c1 · آخر آيتين من سورة البقرة · الكتاب ص ١١</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢٨٥</div><div class='q'><mark class="d-conv">آ</mark>مَنَ <mark class="d-conv">ا</mark>لرَّسُولُ بِمَ<mark class="d-conv">ا أُنْ</mark>زِلَ إِلَ<mark class="d-conv">يْ</mark>هِ مِ<mark class="d-conv">نْ رَبِّهِ وَالْمُؤْ</mark>مِنُو<mark class="d-conv">نَ ۚ</mark> كُلٌّ <mark class="d-conv">آ</mark>مَنَ بِ<mark class="d-conv">ا</mark>للَّهِ وَمَلَ<mark class="d-conv">ا</mark>ئِكَتِ<mark class="d-conv">هِ</mark> وَكُتُبِ<mark class="d-conv">هِ</mark> وَرُسُلِ<mark class="d-conv">هِ</mark> لَا نُفَرِّقُ بَ<mark class="d-conv">يْ</mark>نَ أَحَ<mark class="d-conv">دٍ مِنْ رُسُلِهِ ۚ</mark> وَقَالُو<mark class="d-conv">ا</mark> سَمِ<mark class="d-conv">عْ</mark>نَا وَأَطَ<mark class="d-conv">عْنَا ۖ غُفْ</mark>رَانَكَ رَبَّنَا وَإِلَ<mark class="d-conv">يْكَ الْ</mark>مَصِيرُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>ءَ</span><mark class="d-conv">ا</mark>مَنَ <mark class="d-conv">ٱ</mark>لرَّسُولُ بِمَ<mark class="d-conv">آ أُن</mark>زِلَ إِلَ<mark class="d-conv">يۡ</mark>هِ مِ<mark class="d-conv">ن رَّبِّهِۦ وَٱلۡمُؤۡ</mark>مِنُو<mark class="d-conv">نَۚ</mark> كُلٌّ <mark class="d-conv">ءَا</mark>مَنَ بِ<mark class="d-conv">ٱ</mark>للَّهِ وَمَلَ<mark class="d-conv">ـٰٓ</mark>ئِكَتِ<mark class="d-conv">هِۦ</mark> وَكُتُبِ<mark class="d-conv">هِۦ</mark> وَرُسُلِ<mark class="d-conv">هِۦ</mark> لَا نُفَرِّقُ بَ<mark class="d-conv">يۡ</mark>نَ أَحَ<mark class="d-conv">دٖ مِّن رُّسُلِهِۦۚ</mark> وَقَالُو<mark class="d-conv">اْ</mark> سَمِ<mark class="d-conv">عۡ</mark>نَا وَأَطَ<mark class="d-conv">عۡنَاۖ غُفۡ</mark>رَانَكَ رَبَّنَا وَإِلَ<mark class="d-conv">يۡكَ ٱلۡ</mark>مَصِيرُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ا</mark>مَنَ <mark class="d-conv">ٱ</mark>لرَّسُولُ بِمَ<mark class="d-conv">آ أُن</mark>زِلَ إِلَيْهِ مِ<mark class="d-conv">ن رَّبِّهِۦ وَٱ</mark>لْمُؤْمِنُونَ ۚ كُلٌّ <mark class="d-conv">ءَا</mark>مَنَ بِ<mark class="d-conv">ٱ</mark>للَّهِ وَمَلَ<mark class="d-conv">ـٰٓ</mark>ئِكَتِ<mark class="d-conv">هِۦ</mark> وَكُتُبِ<mark class="d-conv">هِۦ</mark> وَرُسُلِ<mark class="d-conv">هِۦ</mark> لَا نُفَرِّقُ بَيْنَ أَحَدٍ <mark class="d-conv">مِّن رُّسُلِهِۦ</mark> ۚ وَقَالُو<mark class="d-conv">ا۟</mark> سَمِعْنَا وَأَطَعْنَا ۖ غُفْرَانَكَ رَبَّنَا وَإِلَيْكَ <mark class="d-conv">ٱ</mark>لْمَصِيرُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٣ · المرجع ٨</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢٩</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٢٨٥</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١١ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p011.png' alt='صفحة ١١ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٥. البقرة: ٢٨٦</h2>
+<div class='meta'>u1 / u1l5 / c2 · آخر آيتين من سورة البقرة · الكتاب ص ١١</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢٨٦</div><div class='q'>لَا يُكَلِّفُ <mark class="d-conv">ا</mark>للَّهُ نَ<mark class="d-conv">فْ</mark>سًا إِلَّا وُ<mark class="d-conv">سْعَهَا ۚ</mark> لَهَا مَا كَسَبَ<mark class="d-conv">تْ وَعَلَيْ</mark>هَا مَا <mark class="d-conv">اكْ</mark>تَسَبَ<mark class="d-conv">تْ ۗ</mark> رَبَّنَا لَا تُؤَاخِ<mark class="d-conv">ذْنَا إِنْ نَ</mark>سِينَ<mark class="d-conv">ا أَوْ أَخْطَأْنَا ۚ</mark> رَبَّنَا وَلَا تَ<mark class="d-conv">حْمِلْ عَلَيْنَا إِصْرً</mark>ا كَمَا حَمَ<mark class="d-conv">لْتَهُ</mark> عَلَى <mark class="d-conv">ا</mark>لَّذِينَ مِ<mark class="d-conv">نْ قَبْلِنَا ۚ</mark> رَبَّنَا وَلَا تُحَمِّ<mark class="d-conv">لْ</mark>نَا مَا لَا طَاقَةَ لَنَا بِ<mark class="d-conv">هِ ۖ وَاعْ</mark>فُ عَنَّا وَ<mark class="d-conv">اغْفِرْ لَنَا وَارْحَمْنَا ۚ أَنْتَ مَوْلَا</mark>نَا فَ<mark class="d-conv">انْصُرْ</mark>نَا عَلَى <mark class="d-conv">الْقَوْمِ الْكَا</mark>فِرِينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>لَا يُكَلِّفُ <mark class="d-conv">ٱ</mark>للَّهُ نَ<mark class="d-conv">فۡ</mark>سًا إِلَّا وُ<mark class="d-conv">سۡعَهَاۚ</mark> لَهَا مَا كَسَبَ<mark class="d-conv">تۡ وَعَلَيۡ</mark>هَا مَا <mark class="d-conv">ٱكۡ</mark>تَسَبَ<mark class="d-conv">تۡۗ</mark> رَبَّنَا لَا تُؤَاخِ<mark class="d-conv">ذۡنَآ إِن نَّ</mark>سِينَ<mark class="d-conv">آ أَوۡ أَخۡطَأۡنَاۚ</mark> رَبَّنَا وَلَا تَ<mark class="d-conv">حۡمِلۡ عَلَيۡنَآ إِصۡرٗ</mark>ا كَمَا حَمَ<mark class="d-conv">لۡتَهُۥ</mark> عَلَى <mark class="d-conv">ٱ</mark>لَّذِينَ مِ<mark class="d-conv">ن قَبۡلِنَاۚ</mark> رَبَّنَا وَلَا تُحَمِّ<mark class="d-conv">لۡ</mark>نَا مَا لَا طَاقَةَ لَنَا بِ<mark class="d-conv">هِۦۖ وَٱعۡ</mark>فُ عَنَّا وَ<mark class="d-conv">ٱغۡفِرۡ لَنَا وَٱرۡحَمۡنَآۚ أَنتَ مَوۡلَىٰ</mark>نَا فَ<mark class="d-conv">ٱنصُرۡ</mark>نَا عَلَى <mark class="d-conv">ٱلۡقَوۡمِ ٱلۡكَٰ</mark>فِرِينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>لَا يُكَلِّفُ <mark class="d-conv">ٱ</mark>للَّهُ نَفْسًا إِلَّا وُسْعَهَا ۚ لَهَا مَا كَسَبَتْ وَعَلَيْهَا مَا <mark class="d-conv">ٱ</mark>كْتَسَبَتْ ۗ رَبَّنَا لَا تُؤَاخِذْنَ<mark class="d-conv">آ إِن نَّ</mark>سِينَ<mark class="d-conv">آ</mark> أَوْ أَخْطَأْنَا ۚ رَبَّنَا وَلَا تَحْمِلْ عَلَيْنَ<mark class="d-conv">آ</mark> إِصْرًا كَمَا حَمَلْتَ<mark class="d-conv">هُۥ</mark> عَلَى <mark class="d-conv">ٱ</mark>لَّذِينَ مِ<mark class="d-conv">ن</mark> قَبْلِنَا ۚ رَبَّنَا وَلَا تُحَمِّلْنَا مَا لَا طَاقَةَ لَنَا بِ<mark class="d-conv">هِۦ</mark> ۖ وَ<mark class="d-conv">ٱ</mark>عْفُ عَنَّا وَ<mark class="d-conv">ٱ</mark>غْفِرْ لَنَا وَ<mark class="d-conv">ٱ</mark>رْحَمْنَ<mark class="d-conv">آ</mark> ۚ أَ<mark class="d-conv">ن</mark>تَ مَوْلَ<mark class="d-conv">ىٰ</mark>نَا فَ<mark class="d-conv">ٱن</mark>صُرْنَا عَلَى <mark class="d-conv">ٱ</mark>لْقَوْمِ <mark class="d-conv">ٱلْكَـٰ</mark>فِرِينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٦ · المرجع ٨</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣٢</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٢٨٦</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١١ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p011.png' alt='صفحة ١١ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٦. سورة الكافرون</h2>
+<div class='meta'>u1 / u1l6 / c1 · سورة الكافرون · الكتاب ص ١٢</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>قُ<mark class="d-conv">لْ يَا </mark>أَيُّهَا <mark class="d-conv">الْكَا</mark>فِرُونَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>قُ<mark class="d-conv">لۡ يَـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱلۡكَٰ</mark>فِرُونَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>قُلْ يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱلْكَـٰ</mark>فِرُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'>لَ<mark class="d-conv">ا أَعْ</mark>بُدُ مَا تَ<mark class="d-conv">عْ</mark>بُدُونَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>لَ<mark class="d-conv">آ أَعۡ</mark>بُدُ مَا تَ<mark class="d-conv">عۡ</mark>بُدُونَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>لَ<mark class="d-conv">آ</mark> أَعْبُدُ مَا تَعْبُدُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'>وَلَ<mark class="d-conv">ا أَنْتُمْ عَا</mark>بِدُونَ مَ<mark class="d-conv">ا أَعْ</mark>بُدُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَلَ<mark class="d-conv">آ أَنتُمۡ عَٰ</mark>بِدُونَ مَ<mark class="d-conv">آ أَعۡ</mark>بُدُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَلَ<mark class="d-conv">آ أَن</mark>تُمْ عَ<mark class="d-conv">ـٰ</mark>بِدُونَ مَ<mark class="d-conv">آ</mark> أَعْبُدُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٦</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'>وَلَ<mark class="d-conv">ا</mark> أَنَ<mark class="d-conv">ا</mark> عَابِ<mark class="d-conv">دٌ مَ</mark>ا عَبَ<mark class="d-conv">دْتُمْ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَلَ<mark class="d-conv">آ</mark> أَنَ<mark class="d-conv">ا۠</mark> عَابِ<mark class="d-conv">دٞ مَّ</mark>ا عَبَ<mark class="d-conv">دتُّمۡ</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَلَ<mark class="d-conv">آ</mark> أَنَ<mark class="d-conv">ا۠</mark> عَابِدٌ <mark class="d-conv">مَّ</mark>ا عَبَ<mark class="d-conv">دتُّ</mark>مْ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ١</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٥</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥</div><div class='q'>وَلَ<mark class="d-conv">ا أَنْتُمْ عَا</mark>بِدُونَ مَ<mark class="d-conv">ا أَعْ</mark>بُدُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَلَ<mark class="d-conv">آ أَنتُمۡ عَٰ</mark>بِدُونَ مَ<mark class="d-conv">آ أَعۡ</mark>بُدُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَلَ<mark class="d-conv">آ أَن</mark>تُمْ عَ<mark class="d-conv">ـٰ</mark>بِدُونَ مَ<mark class="d-conv">آ</mark> أَعْبُدُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٦</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٦</div><div class='q'>لَكُ<mark class="d-conv">مْ</mark> دِينُكُ<mark class="d-conv">مْ</mark> وَلِيَ دِينِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>لَكُ<mark class="d-conv">مۡ</mark> دِينُكُ<mark class="d-conv">مۡ</mark> وَلِيَ دِينِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>لَكُمْ دِينُكُمْ وَلِ<mark class="d-conv">ىَ</mark> دِينِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١، ٢، ٣، ٤، ٥، ٦</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١٢ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p012.png' alt='صفحة ١٢ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٧. سورة الإخلاص</h2>
+<div class='meta'>u1 / u1l7 / c1 · سورة الإخلاص · الكتاب ص ١٣</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>قُ<mark class="d-conv">لْ</mark> هُوَ <mark class="d-conv">ا</mark>للَّهُ أَحَدٌ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>قُ<mark class="d-conv">لۡ</mark> هُوَ <mark class="d-conv">ٱ</mark>للَّهُ أَحَدٌ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>قُلْ هُوَ <mark class="d-conv">ٱ</mark>للَّهُ أَحَدٌ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'><mark class="d-conv">ا</mark>للَّهُ <mark class="d-conv">ا</mark>لصَّمَدُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱ</mark>للَّهُ <mark class="d-conv">ٱ</mark>لصَّمَدُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>للَّهُ <mark class="d-conv">ٱ</mark>لصَّمَدُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'>لَ<mark class="d-conv">مْ</mark> يَلِ<mark class="d-conv">دْ</mark> وَلَ<mark class="d-conv">مْ</mark> يُولَ<mark class="d-conv">دْ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>لَ<mark class="d-conv">مۡ</mark> يَلِ<mark class="d-conv">دۡ</mark> وَلَ<mark class="d-conv">مۡ</mark> يُولَ<mark class="d-conv">دۡ</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>لَمْ يَلِدْ وَلَمْ يُولَدْ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>مطابق تمامًا لمرجع عثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٤</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'>وَلَ<mark class="d-conv">مْ</mark> يَكُ<mark class="d-conv">نْ لَهُ</mark> كُفُوًا أَحَ<mark class="d-conv">دٌ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَلَ<mark class="d-conv">مۡ</mark> يَكُ<mark class="d-conv">ن لَّهُۥ</mark> كُفُوًا أَحَ<mark class="d-conv">دُۢ</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَلَمْ يَكُ<mark class="d-conv">ن لَّهُۥ</mark> كُفُوًا أَحَ<mark class="d-conv">دٌۢ</mark></div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٢</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٤</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١، ٢، ٣، ٤</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١٣ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p013.png' alt='صفحة ١٣ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٨. سورة الفلق</h2>
+<div class='meta'>u1 / u1l8 / c1 · سورة الفلق · الكتاب ص ١٣</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>قُ<mark class="d-conv">لْ</mark> أَعُوذُ بِرَبِّ <mark class="d-conv">الْ</mark>فَلَقِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>قُ<mark class="d-conv">لۡ</mark> أَعُوذُ بِرَبِّ <mark class="d-conv">ٱلۡ</mark>فَلَقِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>قُلْ أَعُوذُ بِرَبِّ <mark class="d-conv">ٱ</mark>لْفَلَقِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'>مِ<mark class="d-conv">نْ</mark> شَرِّ مَا خَلَقَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>مِ<mark class="d-conv">ن</mark> شَرِّ مَا خَلَقَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>مِ<mark class="d-conv">ن</mark> شَرِّ مَا خَلَقَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'>وَمِ<mark class="d-conv">نْ</mark> شَرِّ غَاسِقٍ إِذَا وَقَبَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ غَاسِقٍ إِذَا وَقَبَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ غَاسِقٍ إِذَا وَقَبَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'>وَمِ<mark class="d-conv">نْ</mark> شَرِّ <mark class="d-conv">ا</mark>لنَّفَّ<mark class="d-conv">اثَا</mark>تِ فِي <mark class="d-conv">الْ</mark>عُقَدِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ <mark class="d-conv">ٱ</mark>لنَّفَّ<mark class="d-conv">ـٰثَٰ</mark>تِ فِي <mark class="d-conv">ٱلۡ</mark>عُقَدِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ <mark class="d-conv">ٱ</mark>لنَّفَّ<mark class="d-conv">ـٰثَـٰ</mark>تِ فِ<mark class="d-conv">ى ٱ</mark>لْعُقَدِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٤</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥</div><div class='q'>وَمِ<mark class="d-conv">نْ</mark> شَرِّ حَاسِدٍ إِذَا حَسَدَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ حَاسِدٍ إِذَا حَسَدَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَمِ<mark class="d-conv">ن</mark> شَرِّ حَاسِدٍ إِذَا حَسَدَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١، ٢، ٣، ٤، ٥</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١٣ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p013.png' alt='صفحة ١٣ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٩. سورة الناس</h2>
+<div class='meta'>u1 / u1l9 / c1 · سورة الناس · الكتاب ص ١٤</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١</div><div class='q'>قُ<mark class="d-conv">لْ</mark> أَعُوذُ بِرَبِّ <mark class="d-conv">ا</mark>لنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>قُ<mark class="d-conv">لۡ</mark> أَعُوذُ بِرَبِّ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>قُلْ أَعُوذُ بِرَبِّ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'>مَلِكِ <mark class="d-conv">ا</mark>لنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>مَلِكِ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>مَلِكِ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'><mark class="d-conv">إِ</mark>لَٰهِ <mark class="d-conv">ا</mark>لنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>إِ</span>لَٰهِ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">لَـٰهِ ٱ</mark>لنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'>مِ<mark class="d-conv">نْ</mark> شَرِّ <mark class="d-conv">الْوَسْ</mark>وَاسِ <mark class="d-conv">الْ</mark>خَنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>مِ<mark class="d-conv">ن</mark> شَرِّ <mark class="d-conv">ٱلۡوَسۡ</mark>وَاسِ <mark class="d-conv">ٱلۡ</mark>خَنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>مِ<mark class="d-conv">ن</mark> شَرِّ <mark class="d-conv">ٱ</mark>لْوَسْوَاسِ <mark class="d-conv">ٱ</mark>لْخَنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٤</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥</div><div class='q'><mark class="d-conv">ا</mark>لَّذِي يُوَ<mark class="d-conv">سْ</mark>وِسُ فِي صُدُورِ <mark class="d-conv">ا</mark>لنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱ</mark>لَّذِي يُوَ<mark class="d-conv">سۡ</mark>وِسُ فِي صُدُورِ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱلَّذِى</mark> يُوَسْوِسُ فِ<mark class="d-conv">ى</mark> صُدُورِ <mark class="d-conv">ٱ</mark>لنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٦</div><div class='q'>مِنَ <mark class="d-conv">الْ</mark>جِنَّةِ وَ<mark class="d-conv">ا</mark>لنَّاسِ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>مِنَ <mark class="d-conv">ٱلۡ</mark>جِنَّةِ وَ<mark class="d-conv">ٱ</mark>لنَّاسِ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>مِنَ <mark class="d-conv">ٱ</mark>لْجِنَّةِ وَ<mark class="d-conv">ٱ</mark>لنَّاسِ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١، ٢، ٣، ٤، ٥، ٦</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ١٤ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p014.png' alt='صفحة ١٤ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٠. التوبة: ١١٩</h2>
+<div class='meta'>u6 / u6l1 / c1 · الصدق · الكتاب ص ٥٩</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١١٩</div><div class='q'>يَ<mark class="d-conv">ا </mark>أَيُّهَا <mark class="d-conv">ا</mark>لَّذِينَ <mark class="d-conv">آ</mark>مَنُو<mark class="d-conv">ا ا</mark>تَّقُو<mark class="d-conv">ا ا</mark>للَّهَ وَكُونُو<mark class="d-conv">ا</mark> مَعَ <mark class="d-conv">الصَّا</mark>دِقِينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">اْ ٱ</mark>تَّقُو<mark class="d-conv">اْ ٱ</mark>للَّهَ وَكُونُو<mark class="d-conv">اْ</mark> مَعَ <mark class="d-conv">ٱلصَّـٰ</mark>دِقِينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">ا۟ ٱ</mark>تَّقُو<mark class="d-conv">ا۟ ٱ</mark>للَّهَ وَكُونُو<mark class="d-conv">ا۟</mark> مَعَ <mark class="d-conv">ٱلصَّـٰ</mark>دِقِينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١٠</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٥٩ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p059.png' alt='صفحة ٥٩ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١١. الزمر: ١٠</h2>
+<div class='meta'>u6 / u6l2 / c1 · الصبر · الكتاب ص ٥٩</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١٠</div><div class='q'><mark class="d-conv">إِ</mark>نَّمَا يُوَفَّى <mark class="d-conv">الصَّا</mark>بِرُونَ أَ<mark class="d-conv">جْرَهُمْ</mark> بِغَ<mark class="d-conv">يْ</mark>رِ حِسَا<mark class="d-conv">بٍ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>قُلۡ يَٰعِبَادِ ٱلَّذِينَ ءَامَنُواْ ٱتَّقُواْ رَبَّكُمۡۚ لِلَّذِينَ أَحۡسَنُواْ فِي هَٰذِهِ ٱلدُّنۡيَا حَسَنَةٞۗ وَأَرۡضُ ٱللَّهِ وَٰسِعَةٌۗ إِ</span>نَّمَا يُوَفَّى <mark class="d-conv">ٱلصَّـٰ</mark>بِرُونَ أَ<mark class="d-conv">جۡرَهُم</mark> بِغَ<mark class="d-conv">يۡ</mark>رِ حِسَا<mark class="d-conv">بٖ</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>نَّمَا يُوَفَّى <mark class="d-conv">ٱلصَّـٰ</mark>بِرُونَ أَجْرَهُ<mark class="d-conv">م</mark> بِغَيْرِ حِسَابٍ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٣</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٧</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٥٩ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p059.png' alt='صفحة ٥٩ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٢. النساء: ٥٨</h2>
+<div class='meta'>u6 / u6l3 / c1 · الأمانة · الكتاب ص ٦٠</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥٨</div><div class='q'><mark class="d-conv">إِنَّ ا</mark>للَّهَ يَ<mark class="d-conv">أْ</mark>مُرُكُ<mark class="d-conv">مْ أَنْ</mark> تُؤَدُّو<mark class="d-conv">ا الْأَمَانَا</mark>تِ إِلَ<mark class="d-conv">ىٰ أَهْ</mark>لِهَا</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>۞إِ</span><mark class="d-conv">نَّ ٱ</mark>للَّهَ يَ<mark class="d-conv">أۡ</mark>مُرُكُ<mark class="d-conv">مۡ أَن</mark> تُؤَدُّو<mark class="d-conv">اْ ٱلۡأَمَٰنَٰ</mark>تِ إِلَ<mark class="d-conv">ىٰٓ أَهۡ</mark>لِهَا<span class='omit'> وَإِذَا حَكَمۡتُم بَيۡنَ ٱلنَّاسِ أَن تَحۡكُمُواْ بِٱلۡعَدۡلِۚ إِنَّ ٱللَّهَ نِعِمَّا يَعِظُكُم بِهِۦٓۗ إِنَّ ٱللَّهَ كَانَ سَمِيعَۢا بَصِيرٗا</span></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">نَّ ٱ</mark>للَّهَ يَأْمُرُكُمْ أَ<mark class="d-conv">ن</mark> تُؤَدُّو<mark class="d-conv">ا۟ ٱ</mark>لْأَمَ<mark class="d-conv">ـٰنَـٰ</mark>تِ إِلَ<mark class="d-conv">ىٰٓ</mark> أَهْلِهَا</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٥</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١٠</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٠ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p060.png' alt='صفحة ٦٠ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٣. يوسف: ٢٣</h2>
+<div class='meta'>u6 / u6l4 / c1 · العفاف · الكتاب ص ٦٠</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢٣</div><div class='q'>وَ<mark class="d-conv">رَاوَدَتْهُ ا</mark>لَّتِي هُوَ فِي بَ<mark class="d-conv">يْ</mark>تِهَا عَ<mark class="d-conv">نْ نَفْسِهِ</mark> وَغَلَّقَتِ <mark class="d-conv">الْأَبْوَا</mark>بَ وَقَالَ<mark class="d-conv">تْ هَيْ</mark>تَ لَ<mark class="d-conv">كَ ۚ</mark> قَالَ مَعَاذَ <mark class="d-conv">اللَّهِ ۖ</mark> إِنَّ<mark class="d-conv">هُ</mark> رَبِّ<mark class="d-conv">ي أَحْ</mark>سَنَ مَ<mark class="d-conv">ثْوَايَ ۖ</mark> إِنَّ<mark class="d-conv">هُ</mark> لَا يُ<mark class="d-conv">فْ</mark>لِحُ <mark class="d-conv">الظَّا</mark>لِمُونَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَ<mark class="d-conv">رَٰوَدَتۡهُ ٱ</mark>لَّتِي هُوَ فِي بَ<mark class="d-conv">يۡ</mark>تِهَا عَ<mark class="d-conv">ن نَّفۡسِهِۦ</mark> وَغَلَّقَتِ <mark class="d-conv">ٱلۡأَبۡوَٰ</mark>بَ وَقَالَ<mark class="d-conv">تۡ هَيۡ</mark>تَ لَ<mark class="d-conv">كَۚ</mark> قَالَ مَعَاذَ <mark class="d-conv">ٱللَّهِۖ</mark> إِنَّ<mark class="d-conv">هُۥ</mark> رَبِّ<mark class="d-conv">يٓ أَحۡ</mark>سَنَ مَ<mark class="d-conv">ثۡوَايَۖ</mark> إِنَّ<mark class="d-conv">هُۥ</mark> لَا يُ<mark class="d-conv">فۡ</mark>لِحُ <mark class="d-conv">ٱلظَّـٰ</mark>لِمُونَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَ<mark class="d-conv">رَٰ</mark>وَدَتْهُ <mark class="d-conv">ٱلَّتِى</mark> هُوَ فِ<mark class="d-conv">ى</mark> بَيْتِهَا عَ<mark class="d-conv">ن نَّفْسِهِۦ</mark> وَغَلَّقَتِ <mark class="d-conv">ٱ</mark>لْأَبْ<mark class="d-conv">وَٰ</mark>بَ وَقَالَتْ هَيْتَ لَكَ ۚ قَالَ مَعَاذَ <mark class="d-conv">ٱ</mark>للَّهِ ۖ إِنَّ<mark class="d-conv">هُۥ</mark> رَبِّ<mark class="d-conv">ىٓ</mark> أَحْسَنَ مَثْوَا<mark class="d-conv">ىَ</mark> ۖ إِنَّ<mark class="d-conv">هُۥ</mark> لَا يُفْلِحُ <mark class="d-conv">ٱلظَّـٰ</mark>لِمُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٣ · المرجع ٦</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢٣</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٢٣</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٠ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p060.png' alt='صفحة ٦٠ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٤. الأحزاب: ٥٣</h2>
+<div class='meta'>u6 / u6l5 / c1 · الحياء · الكتاب ص ٦١</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥٣</div><div class='q'>يَ<mark class="d-conv">ا </mark>أَيُّهَا <mark class="d-conv">ا</mark>لَّذِينَ <mark class="d-conv">آ</mark>مَنُو<mark class="d-conv">ا لَا تَدْ</mark>خُلُو<mark class="d-conv">ا</mark> بُيُوتَ <mark class="d-conv">ا</mark>لنَّبِيِّ إِلَّ<mark class="d-conv">ا أَنْ يُؤْ</mark>ذَنَ لَكُ<mark class="d-conv">مْ</mark> إِلَىٰ طَعَامٍ غَ<mark class="d-conv">يْرَ نَا</mark>ظِرِينَ إِنَ<mark class="d-conv">ا</mark>هُ وَلَٰكِ<mark class="d-conv">نْ</mark> إِذَا دُعِيتُ<mark class="d-conv">مْ فَادْ</mark>خُلُو<mark class="d-conv">ا</mark> فَإِذَا طَعِ<mark class="d-conv">مْتُمْ فَانْ</mark>تَشِرُو<mark class="d-conv">ا</mark> وَلَا مُ<mark class="d-conv">سْتَأْ</mark>نِسِينَ لِحَدِي<mark class="d-conv">ثٍ ۚ</mark> إِنَّ ذَٰلِكُ<mark class="d-conv">مْ</mark> كَانَ يُ<mark class="d-conv">ؤْ</mark>ذِي <mark class="d-conv">ا</mark>لنَّبِيَّ فَيَ<mark class="d-conv">سْتَحْيِي مِنْكُمْ ۖ وَا</mark>للَّهُ لَا يَ<mark class="d-conv">سْتَحْيِي</mark> مِنَ <mark class="d-conv">الْحَقِّ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">اْ لَا تَدۡ</mark>خُلُو<mark class="d-conv">اْ</mark> بُيُوتَ <mark class="d-conv">ٱ</mark>لنَّبِيِّ إِلَّ<mark class="d-conv">آ أَن يُؤۡ</mark>ذَنَ لَكُ<mark class="d-conv">مۡ</mark> إِلَىٰ طَعَامٍ غَ<mark class="d-conv">يۡرَ نَٰ</mark>ظِرِينَ إِنَ<mark class="d-conv">ىٰ</mark>هُ وَلَٰكِ<mark class="d-conv">نۡ</mark> إِذَا دُعِيتُ<mark class="d-conv">مۡ فَٱدۡ</mark>خُلُو<mark class="d-conv">اْ</mark> فَإِذَا طَعِ<mark class="d-conv">مۡتُمۡ فَٱن</mark>تَشِرُو<mark class="d-conv">اْ</mark> وَلَا مُ<mark class="d-conv">سۡتَـٔۡ</mark>نِسِينَ لِحَدِي<mark class="d-conv">ثٍۚ</mark> إِنَّ ذَٰلِكُ<mark class="d-conv">مۡ</mark> كَانَ يُ<mark class="d-conv">ؤۡ</mark>ذِي <mark class="d-conv">ٱ</mark>لنَّبِيَّ فَيَ<mark class="d-conv">سۡتَحۡيِۦ مِنكُمۡۖ وَٱ</mark>للَّهُ لَا يَ<mark class="d-conv">سۡتَحۡيِۦ</mark> مِنَ <mark class="d-conv">ٱلۡحَقِّۚ</mark><span class='omit'> وَإِذَا سَأَلۡتُمُوهُنَّ مَتَٰعٗا فَسۡـَٔلُوهُنَّ مِن وَرَآءِ حِجَابٖۚ ذَٰلِكُمۡ أَطۡهَرُ لِقُلُوبِكُمۡ وَقُلُوبِهِنَّۚ وَمَا كَانَ لَكُمۡ أَن تُؤۡذُواْ رَسُولَ ٱللَّهِ وَلَآ أَن تَنكِحُوٓاْ أَزۡوَٰجَهُۥ مِنۢ بَعۡدِهِۦٓ أَبَدًاۚ إِنَّ ذَٰلِكُمۡ كَانَ عِندَ ٱللَّهِ عَظِيمًا</span></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">ا۟</mark> لَا تَدْخُلُو<mark class="d-conv">ا۟</mark> بُيُوتَ <mark class="d-conv">ٱ</mark>لنَّبِ<mark class="d-conv">ىِّ</mark> إِلَّ<mark class="d-conv">آ أَن</mark> يُؤْذَنَ لَكُمْ إِلَىٰ طَعَامٍ غَيْرَ نَ<mark class="d-conv">ـٰ</mark>ظِرِينَ إِنَ<mark class="d-conv">ىٰ</mark>هُ وَ<mark class="d-conv">لَـٰ</mark>كِنْ إِذَا دُعِيتُمْ فَ<mark class="d-conv">ٱ</mark>دْخُلُو<mark class="d-conv">ا۟</mark> فَإِذَا طَعِمْتُمْ فَ<mark class="d-conv">ٱن</mark>تَشِرُو<mark class="d-conv">ا۟</mark> وَلَا مُسْتَ<mark class="d-conv">ـْٔ</mark>نِسِينَ لِحَدِيثٍ ۚ إِنَّ ذَٰلِكُمْ كَانَ يُؤْذِ<mark class="d-conv">ى ٱ</mark>لنَّبِ<mark class="d-conv">ىَّ</mark> فَيَسْتَحْ<mark class="d-conv">ىِۦ مِن</mark>كُمْ ۖ وَ<mark class="d-conv">ٱ</mark>للَّهُ لَا يَسْتَحْ<mark class="d-conv">ىِۦ</mark> مِنَ <mark class="d-conv">ٱ</mark>لْحَقِّ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٢ · المرجع ١١</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣١</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦١ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p061.png' alt='صفحة ٦١ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٥. آل عمران: ١٣٩</h2>
+<div class='meta'>u6 / u6l6 / c1 · الشجاعة · الكتاب ص ٦١</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١٣٩</div><div class='q'>وَلَا تَهِنُو<mark class="d-conv">ا</mark> وَلَا تَ<mark class="d-conv">حْ</mark>زَنُو<mark class="d-conv">ا</mark> وَأَ<mark class="d-conv">نْ</mark>تُمُ <mark class="d-conv">الْأَعْلَوْ</mark>نَ إِ<mark class="d-conv">نْ كُنْتُمْ مُؤْ</mark>مِنِينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَلَا تَهِنُو<mark class="d-conv">اْ</mark> وَلَا تَ<mark class="d-conv">حۡ</mark>زَنُو<mark class="d-conv">اْ</mark> وَأَ<mark class="d-conv">ن</mark>تُمُ <mark class="d-conv">ٱلۡأَعۡلَوۡ</mark>نَ إِ<mark class="d-conv">ن كُنتُم مُّؤۡ</mark>مِنِينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَلَا تَهِنُو<mark class="d-conv">ا۟</mark> وَلَا تَحْزَنُو<mark class="d-conv">ا۟</mark> وَأَ<mark class="d-conv">ن</mark>تُمُ <mark class="d-conv">ٱ</mark>لْأَعْلَوْنَ إِ<mark class="d-conv">ن كُنتُم مُّ</mark>ؤْمِنِينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١١</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ١٣٩</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦١ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p061.png' alt='صفحة ٦١ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٦. الأنفال: ٢-٤</h2>
+<div class='meta'>u6 / u6l7 / c1 · الكرم · الكتاب ص ٦٢</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٢</div><div class='q'><mark class="d-conv">إِ</mark>نَّمَا <mark class="d-conv">الْمُؤْ</mark>مِنُونَ <mark class="d-conv">ا</mark>لَّذِينَ إِذَا ذُكِرَ <mark class="d-conv">ا</mark>للَّهُ وَجِلَ<mark class="d-conv">تْ</mark> قُلُوبُهُ<mark class="d-conv">مْ</mark> وَإِذَا تُلِيَ<mark class="d-conv">تْ</mark> عَلَ<mark class="d-conv">يْهِمْ آيَاتُهُ</mark> زَادَ<mark class="d-conv">تْهُمْ</mark> إِي<mark class="d-conv">مَانً</mark>ا وَعَلَىٰ رَبِّهِ<mark class="d-conv">مْ</mark> يَتَوَكَّلُونَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>إِ</span>نَّمَا <mark class="d-conv">ٱلۡمُؤۡ</mark>مِنُونَ <mark class="d-conv">ٱ</mark>لَّذِينَ إِذَا ذُكِرَ <mark class="d-conv">ٱ</mark>للَّهُ وَجِلَ<mark class="d-conv">تۡ</mark> قُلُوبُهُ<mark class="d-conv">مۡ</mark> وَإِذَا تُلِيَ<mark class="d-conv">تۡ</mark> عَلَ<mark class="d-conv">يۡهِمۡ ءَايَٰتُهُۥ</mark> زَادَ<mark class="d-conv">تۡهُمۡ</mark> إِي<mark class="d-conv">مَٰنٗ</mark>ا وَعَلَىٰ رَبِّهِ<mark class="d-conv">مۡ</mark> يَتَوَكَّلُونَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>نَّمَا <mark class="d-conv">ٱ</mark>لْمُؤْمِنُونَ <mark class="d-conv">ٱ</mark>لَّذِينَ إِذَا ذُكِرَ <mark class="d-conv">ٱ</mark>للَّهُ وَجِلَتْ قُلُوبُهُمْ وَإِذَا تُلِيَتْ عَلَيْهِمْ <mark class="d-conv">ءَايَـٰتُهُۥ</mark> زَادَتْهُمْ إِيمَ<mark class="d-conv">ـٰ</mark>نًا وَعَلَىٰ رَبِّهِمْ يَتَوَكَّلُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ١</td></tr>
+<tr><th>الفروق الحرفية</th><td>⚠️ فروق غير مفسَّرة (٢): replace: «آيَ» ← «ءَ» | insert: «∅» ← «يَٰ» · فروق رسم وتشكيل معروفة: ١٥</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣</div><div class='q'><mark class="d-conv">ا</mark>لَّذِينَ يُقِيمُونَ <mark class="d-conv">ا</mark>لصَّلَ<mark class="d-conv">ا</mark>ةَ وَمِمَّا رَزَ<mark class="d-conv">قْنَاهُمْ يُنْ</mark>فِقُونَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'><mark class="d-conv">ٱ</mark>لَّذِينَ يُقِيمُونَ <mark class="d-conv">ٱ</mark>لصَّلَ<mark class="d-conv">وٰ</mark>ةَ وَمِمَّا رَزَ<mark class="d-conv">قۡنَٰهُمۡ يُن</mark>فِقُونَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">ٱ</mark>لَّذِينَ يُقِيمُونَ <mark class="d-conv">ٱ</mark>لصَّلَ<mark class="d-conv">وٰ</mark>ةَ وَمِمَّا رَزَقْنَ<mark class="d-conv">ـٰ</mark>هُمْ يُ<mark class="d-conv">ن</mark>فِقُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٦</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤</div><div class='q'><mark class="d-conv">أُولَٰ</mark>ئِكَ هُمُ <mark class="d-conv">الْمُؤْ</mark>مِنُونَ حَ<mark class="d-conv">قًّا ۚ لَهُمْ</mark> دَرَ<mark class="d-conv">جَا</mark>تٌ عِ<mark class="d-conv">نْ</mark>دَ رَبِّهِ<mark class="d-conv">مْ</mark> وَمَ<mark class="d-conv">غْفِرَةٌ</mark> وَرِ<mark class="d-conv">زْقٌ</mark> كَرِي<mark class="d-conv">مٌ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>أُ</span><mark class="d-conv">وْلَـٰٓ</mark>ئِكَ هُمُ <mark class="d-conv">ٱلۡمُؤۡ</mark>مِنُونَ حَ<mark class="d-conv">قّٗاۚ لَّهُمۡ</mark> دَرَ<mark class="d-conv">جَٰ</mark>تٌ عِ<mark class="d-conv">ن</mark>دَ رَبِّهِ<mark class="d-conv">مۡ</mark> وَمَ<mark class="d-conv">غۡفِرَةٞ</mark> وَرِ<mark class="d-conv">زۡقٞ</mark> كَرِي<mark class="d-conv">مٞ</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'><mark class="d-conv">و۟لَـٰٓ</mark>ئِكَ هُمُ <mark class="d-conv">ٱ</mark>لْمُؤْمِنُونَ حَقًّا ۚ <mark class="d-conv">لَّ</mark>هُمْ دَرَجَ<mark class="d-conv">ـٰ</mark>تٌ عِ<mark class="d-conv">ن</mark>دَ رَبِّهِمْ وَمَغْفِرَةٌ وَرِزْقٌ كَرِيمٌ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (١)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١٣</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٢، ٣، ٤</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٢ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p062.png' alt='صفحة ٦٢ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٧. الإسراء: ٣٤</h2>
+<div class='meta'>u6 / u6l8 / c1 · الوفاء · الكتاب ص ٦٢</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣٤</div><div class='q'>وَأَ<mark class="d-conv">وْفُوا بِالْعَهْدِ ۖ</mark> إِنَّ <mark class="d-conv">الْعَهْ</mark>دَ كَانَ مَ<mark class="d-conv">سْئُولً</mark>ا</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>وَلَا تَقۡرَبُواْ مَالَ ٱلۡيَتِيمِ إِلَّا بِٱلَّتِي هِيَ أَحۡسَنُ حَتَّىٰ يَبۡلُغَ أَشُدَّهُۥۚ </span>وَأَ<mark class="d-conv">وۡفُواْ بِٱلۡعَهۡدِۖ</mark> إِنَّ <mark class="d-conv">ٱلۡعَهۡ</mark>دَ كَانَ مَ<mark class="d-conv">سۡـُٔولٗ</mark>ا</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَأَوْفُو<mark class="d-conv">ا۟ بِٱ</mark>لْعَهْدِ ۖ إِنَّ <mark class="d-conv">ٱ</mark>لْعَهْدَ كَانَ مَسْ<mark class="d-conv">ـُٔ</mark>ولًا</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ١ · المرجع ٣</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٨</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٣٤</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٢ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p062.png' alt='صفحة ٦٢ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٨. النساء: ٣٦</h2>
+<div class='meta'>u6 / u6l9 / c1 · حسن الجوار · الكتاب ص ٦٣</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣٦</div><div class='q'>وَ<mark class="d-conv">اعْ</mark>بُدُو<mark class="d-conv">ا ا</mark>للَّهَ وَلَا تُ<mark class="d-conv">شْ</mark>رِكُو<mark class="d-conv">ا بِهِ شَيْئًا ۖ</mark> وَبِ<mark class="d-conv">الْوَالِدَيْ</mark>نِ إِ<mark class="d-conv">حْسَانً</mark>ا وَبِذِي <mark class="d-conv">الْقُرْ</mark>بَىٰ وَ<mark class="d-conv">الْيَتَا</mark>مَىٰ وَ<mark class="d-conv">الْمَسَا</mark>كِينِ وَ<mark class="d-conv">الْ</mark>جَارِ ذِي <mark class="d-conv">الْقُرْ</mark>بَىٰ وَ<mark class="d-conv">الْ</mark>جَارِ <mark class="d-conv">الْ</mark>جُنُبِ وَ<mark class="d-conv">ا</mark>لصَّاحِبِ بِ<mark class="d-conv">الْجَنْ</mark>بِ وَ<mark class="d-conv">ابْنِ ا</mark>لسَّبِيلِ وَمَا مَلَكَ<mark class="d-conv">تْ أَيْمَانُكُمْ ۗ</mark> إِنَّ <mark class="d-conv">ا</mark>للَّهَ لَا يُحِبُّ مَ<mark class="d-conv">نْ</mark> كَانَ مُ<mark class="d-conv">خْتَالً</mark>ا فَخُورًا</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>۞</span>وَ<mark class="d-conv">ٱعۡ</mark>بُدُو<mark class="d-conv">اْ ٱ</mark>للَّهَ وَلَا تُ<mark class="d-conv">شۡ</mark>رِكُو<mark class="d-conv">اْ بِهِۦ شَيۡـٔٗاۖ</mark> وَبِ<mark class="d-conv">ٱلۡوَٰلِدَيۡ</mark>نِ إِ<mark class="d-conv">حۡسَٰنٗ</mark>ا وَبِذِي <mark class="d-conv">ٱلۡقُرۡ</mark>بَىٰ وَ<mark class="d-conv">ٱلۡيَتَٰ</mark>مَىٰ وَ<mark class="d-conv">ٱلۡمَسَٰ</mark>كِينِ وَ<mark class="d-conv">ٱلۡ</mark>جَارِ ذِي <mark class="d-conv">ٱلۡقُرۡ</mark>بَىٰ وَ<mark class="d-conv">ٱلۡ</mark>جَارِ <mark class="d-conv">ٱلۡ</mark>جُنُبِ وَ<mark class="d-conv">ٱ</mark>لصَّاحِبِ بِ<mark class="d-conv">ٱلۡجَنۢ</mark>بِ وَ<mark class="d-conv">ٱبۡنِ ٱ</mark>لسَّبِيلِ وَمَا مَلَكَ<mark class="d-conv">تۡ أَيۡمَٰنُكُمۡۗ</mark> إِنَّ <mark class="d-conv">ٱ</mark>للَّهَ لَا يُحِبُّ مَ<mark class="d-conv">ن</mark> كَانَ مُ<mark class="d-conv">خۡتَالٗ</mark>ا فَخُورًا</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَ<mark class="d-conv">ٱ</mark>عْبُدُو<mark class="d-conv">ا۟ ٱ</mark>للَّهَ وَلَا تُشْرِكُو<mark class="d-conv">ا۟ بِهِۦ</mark> شَيْ<mark class="d-conv">ـًٔ</mark>ا ۖ وَبِ<mark class="d-conv">ٱلْوَٰ</mark>لِدَيْنِ إِحْسَ<mark class="d-conv">ـٰ</mark>نًا وَبِذِ<mark class="d-conv">ى ٱ</mark>لْقُرْبَىٰ وَ<mark class="d-conv">ٱ</mark>لْيَتَ<mark class="d-conv">ـٰ</mark>مَىٰ وَ<mark class="d-conv">ٱ</mark>لْمَسَ<mark class="d-conv">ـٰ</mark>كِينِ وَ<mark class="d-conv">ٱ</mark>لْجَارِ ذِ<mark class="d-conv">ى ٱ</mark>لْقُرْبَىٰ وَ<mark class="d-conv">ٱ</mark>لْجَارِ <mark class="d-conv">ٱ</mark>لْجُنُبِ وَ<mark class="d-conv">ٱ</mark>لصَّاحِبِ بِ<mark class="d-conv">ٱلْجَنۢ</mark>بِ وَ<mark class="d-conv">ٱ</mark>بْنِ <mark class="d-conv">ٱ</mark>لسَّبِيلِ وَمَا مَلَكَتْ أَيْمَ<mark class="d-conv">ـٰ</mark>نُكُمْ ۗ إِنَّ <mark class="d-conv">ٱ</mark>للَّهَ لَا يُحِبُّ مَ<mark class="d-conv">ن</mark> كَانَ مُخْتَالًا فَخُورًا</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٢ · المرجع ٥</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣٣</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٣ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p063.png' alt='صفحة ٦٣ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>١٩. الحج: ٧٧</h2>
+<div class='meta'>u6 / u6l10 / c1 · مساعدة ذي الحاجة · الكتاب ص ٦٣</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٧٧</div><div class='q'>يَ<mark class="d-conv">ا </mark>أَيُّهَا <mark class="d-conv">ا</mark>لَّذِينَ <mark class="d-conv">آ</mark>مَنُو<mark class="d-conv">ا ارْ</mark>كَعُو<mark class="d-conv">ا وَاسْ</mark>جُدُو<mark class="d-conv">ا وَاعْ</mark>بُدُو<mark class="d-conv">ا</mark> رَبَّكُ<mark class="d-conv">مْ وَافْ</mark>عَلُو<mark class="d-conv">ا الْخَيْ</mark>رَ لَعَلَّكُ<mark class="d-conv">مْ تُفْ</mark>لِحُو<mark class="d-conv">نَ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">اْ ٱرۡ</mark>كَعُو<mark class="d-conv">اْ وَٱسۡ</mark>جُدُو<mark class="d-conv">اْۤ وَٱعۡ</mark>بُدُو<mark class="d-conv">اْ</mark> رَبَّكُ<mark class="d-conv">مۡ وَٱفۡ</mark>عَلُو<mark class="d-conv">اْ ٱلۡخَيۡ</mark>رَ لَعَلَّكُ<mark class="d-conv">مۡ تُفۡ</mark>لِحُو<mark class="d-conv">نَ۩</mark></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>يَ<mark class="d-conv">ـٰٓ</mark>أَيُّهَا <mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">ءَا</mark>مَنُو<mark class="d-conv">ا۟ ٱ</mark>رْكَعُو<mark class="d-conv">ا۟ وَٱ</mark>سْجُدُو<mark class="d-conv">ا۟ وَٱ</mark>عْبُدُو<mark class="d-conv">ا۟</mark> رَبَّكُمْ وَ<mark class="d-conv">ٱ</mark>فْعَلُو<mark class="d-conv">ا۟ ٱ</mark>لْخَيْرَ لَعَلَّكُمْ تُفْلِحُونَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٢</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ١٨</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٧٧</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٣ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p063.png' alt='صفحة ٦٣ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢٠. الحجر: ٤٩-٥٠</h2>
+<div class='meta'>u7 / u7l1 / c1 · الخوف والرجاء · الكتاب ص ٦٧</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٤٩</div><div class='q'>نَبِّ<mark class="d-conv">ئْ</mark> عِبَادِ<mark class="d-conv">ي</mark> أَنِّ<mark class="d-conv">ي</mark> أَنَا <mark class="d-conv">الْ</mark>غَفُورُ <mark class="d-conv">ا</mark>لرَّحِيمُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>۞</span>نَبِّ<mark class="d-conv">ئۡ</mark> عِبَادِ<mark class="d-conv">يٓ</mark> أَنِّ<mark class="d-conv">يٓ</mark> أَنَا <mark class="d-conv">ٱلۡ</mark>غَفُورُ <mark class="d-conv">ٱ</mark>لرَّحِيمُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>نَبِّئْ عِبَادِ<mark class="d-conv">ىٓ</mark> أَنِّ<mark class="d-conv">ىٓ</mark> أَنَا <mark class="d-conv">ٱ</mark>لْغَفُورُ <mark class="d-conv">ٱ</mark>لرَّحِيمُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ١</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٥</td></tr>
+</table>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥٠</div><div class='q'>وَأَنَّ عَذَابِي هُوَ <mark class="d-conv">الْ</mark>عَذَابُ <mark class="d-conv">الْ</mark>أَلِيمُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَأَنَّ عَذَابِي هُوَ <mark class="d-conv">ٱلۡ</mark>عَذَابُ <mark class="d-conv">ٱلۡ</mark>أَلِيمُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَأَنَّ عَذَابِ<mark class="d-conv">ى</mark> هُوَ <mark class="d-conv">ٱ</mark>لْعَذَابُ <mark class="d-conv">ٱ</mark>لْأَلِيمُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (لا علامات)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٤٩، ٥٠</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٧ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p067.png' alt='صفحة ٦٧ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢١. إبراهيم: ٣٤</h2>
+<div class='meta'>u7 / u7l2 / c1 · الصحة والفراغ · الكتاب ص ٦٧</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٣٤</div><div class='q'>وَإِ<mark class="d-conv">نْ</mark> تَعُدُّو<mark class="d-conv">ا نِعْ</mark>مَتَ <mark class="d-conv">ا</mark>للَّهِ لَا تُ<mark class="d-conv">حْ</mark>صُوهَ<mark class="d-conv">ا</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>وَءَاتَىٰكُم مِّن كُلِّ مَا سَأَلۡتُمُوهُۚ </span>وَإِ<mark class="d-conv">ن</mark> تَعُدُّو<mark class="d-conv">اْ نِعۡ</mark>مَتَ <mark class="d-conv">ٱ</mark>للَّهِ لَا تُ<mark class="d-conv">حۡ</mark>صُوهَ<mark class="d-conv">آۗ</mark><span class='omit'> إِنَّ ٱلۡإِنسَٰنَ لَظَلُومٞ كَفَّارٞ</span></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَإِ<mark class="d-conv">ن</mark> تَعُدُّو<mark class="d-conv">ا۟</mark> نِعْمَتَ <mark class="d-conv">ٱ</mark>للَّهِ لَا تُحْصُوهَ<mark class="d-conv">آ</mark></div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٢</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٦</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٧ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p067.png' alt='صفحة ٦٧ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢٢. الأعراف: ١٥٦</h2>
+<div class='meta'>u7 / u7l8 / c1 · رحمة الله · الكتاب ص ٦٩</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ١٥٦</div><div class='q'>وَرَ<mark class="d-conv">حْ</mark>مَتِي وَسِعَ<mark class="d-conv">تْ</mark> كُلَّ شَ<mark class="d-conv">يْءٍ</mark></div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>۞وَٱكۡتُبۡ لَنَا فِي هَٰذِهِ ٱلدُّنۡيَا حَسَنَةٗ وَفِي ٱلۡأٓخِرَةِ إِنَّا هُدۡنَآ إِلَيۡكَۚ قَالَ عَذَابِيٓ أُصِيبُ بِهِۦ مَنۡ أَشَآءُۖ </span>وَرَ<mark class="d-conv">حۡ</mark>مَتِي وَسِعَ<mark class="d-conv">تۡ</mark> كُلَّ شَ<mark class="d-conv">يۡ</mark><span class='omit'>ءٖۚ فَسَأَكۡتُبُهَا لِلَّذِينَ يَتَّقُونَ وَيُؤۡتُونَ ٱلزَّكَوٰةَ وَٱلَّذِينَ هُم بِـَٔايَٰتِنَا يُؤۡمِنُونَ</span></div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَرَحْمَتِ<mark class="d-conv">ى</mark> وَسِعَتْ كُلَّ شَ<mark class="d-conv">ىْ</mark></div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>مقطع من الآية · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>الحروف تطابق، والتشكيل يختلف عن المرجع العثماني</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٠ · المرجع ٥</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٣</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>لا أرقام آيات في البطاقة (نصّ آية واحدة)</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، واختلاف في التشكيل، والنصّ مقطعٌ من الآية لا الآية كاملة</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٩ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p069.png' alt='صفحة ٦٩ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢٣. الزمر: ٥٣</h2>
+<div class='meta'>u7 / u7l8 / c2 · رحمة الله · الكتاب ص ٦٩</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٥٣</div><div class='q'>قُ<mark class="d-conv">لْ يَا </mark>عِبَادِيَ <mark class="d-conv">ا</mark>لَّذِينَ أَ<mark class="d-conv">سْ</mark>رَفُو<mark class="d-conv">ا</mark> عَلَ<mark class="d-conv">ىٰ أَنْ</mark>فُسِهِ<mark class="d-conv">مْ</mark> لَا تَ<mark class="d-conv">قْ</mark>نَطُو<mark class="d-conv">ا مِنْ رَحْ</mark>مَةِ <mark class="d-conv">اللَّهِ ۚ</mark> إِنَّ <mark class="d-conv">ا</mark>للَّهَ يَ<mark class="d-conv">غْ</mark>فِرُ <mark class="d-conv">ا</mark>لذُّنُوبَ جَمِيعً<mark class="d-conv">ا ۚ</mark> إِنَّ<mark class="d-conv">هُ</mark> هُوَ <mark class="d-conv">الْ</mark>غَفُورُ <mark class="d-conv">ا</mark>لرَّحِيمُ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم · <span class='omit-key'>الباهت: لم يقتبسه الكتاب</span></div><div class='q'><span class='omit'>۞</span>قُ<mark class="d-conv">لۡ يَٰ</mark>عِبَادِيَ <mark class="d-conv">ٱ</mark>لَّذِينَ أَ<mark class="d-conv">سۡ</mark>رَفُو<mark class="d-conv">اْ</mark> عَلَ<mark class="d-conv">ىٰٓ أَن</mark>فُسِهِ<mark class="d-conv">مۡ</mark> لَا تَ<mark class="d-conv">قۡ</mark>نَطُو<mark class="d-conv">اْ مِن رَّحۡ</mark>مَةِ <mark class="d-conv">ٱللَّهِۚ</mark> إِنَّ <mark class="d-conv">ٱ</mark>للَّهَ يَ<mark class="d-conv">غۡ</mark>فِرُ <mark class="d-conv">ٱ</mark>لذُّنُوبَ جَمِيعً<mark class="d-conv">اۚ</mark> إِنَّ<mark class="d-conv">هُۥ</mark> هُوَ <mark class="d-conv">ٱلۡ</mark>غَفُورُ <mark class="d-conv">ٱ</mark>لرَّحِيمُ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>قُلْ يَ<mark class="d-conv">ـٰ</mark>عِبَادِ<mark class="d-conv">ىَ ٱ</mark>لَّذِينَ أَسْرَفُو<mark class="d-conv">ا۟</mark> عَلَ<mark class="d-conv">ىٰٓ أَن</mark>فُسِهِمْ لَا تَقْنَطُو<mark class="d-conv">ا۟ مِن رَّ</mark>حْمَةِ <mark class="d-conv">ٱ</mark>للَّهِ ۚ إِنَّ <mark class="d-conv">ٱ</mark>للَّهَ يَغْفِرُ <mark class="d-conv">ٱ</mark>لذُّنُوبَ جَمِيعًا ۚ إِنَّ<mark class="d-conv">هُۥ</mark> هُوَ <mark class="d-conv">ٱ</mark>لْغَفُورُ <mark class="d-conv">ٱ</mark>لرَّحِيمُ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>البرنامج ٢ · المرجع ٤</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٢١</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٥٣</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل، واختلاف في علامات الوقف</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٦٩ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p069.png' alt='صفحة ٦٩ من الكتاب'></details>
+</div>
+<div class='card'><div class='head'><div>
+<h2>٢٤. العنكبوت: ٦٩</h2>
+<div class='meta'>u7 / u7l11 / c1 · المجاهدة · الكتاب ص ٧٠</div>
+</div><span class='pill p-warn'>تحتاج تحققًا بشريًا</span></div>
+<div class='row'>
+<div class='box'><div class='lbl'>نصّ البرنامج — آية ٦٩</div><div class='q'>وَ<mark class="d-conv">ا</mark>لَّذِينَ <mark class="d-conv">جَا</mark>هَدُو<mark class="d-conv">ا</mark> فِينَا لَنَ<mark class="d-conv">هْ</mark>دِيَنَّهُ<mark class="d-conv">مْ</mark> سُبُلَنَ<mark class="d-conv">ا ۚ</mark> وَإِنَّ <mark class="d-conv">ا</mark>للَّهَ لَمَعَ <mark class="d-conv">الْمُحْ</mark>سِنِينَ</div></div>
+<div class='box'><div class='lbl'>المرجع العثماني — موسوعة القرآن الكريم</div><div class='q'>وَ<mark class="d-conv">ٱ</mark>لَّذِينَ <mark class="d-conv">جَٰ</mark>هَدُو<mark class="d-conv">اْ</mark> فِينَا لَنَ<mark class="d-conv">هۡ</mark>دِيَنَّهُ<mark class="d-conv">مۡ</mark> سُبُلَنَ<mark class="d-conv">اۚ</mark> وَإِنَّ <mark class="d-conv">ٱ</mark>للَّهَ لَمَعَ <mark class="d-conv">ٱلۡمُحۡ</mark>سِنِينَ</div></div>
+</div>
+<details><summary>مرجع عثماني ثانٍ (QUL / Tarteel)</summary><div class='box' style='margin-top:8px'><div class='q'>وَ<mark class="d-conv">ٱ</mark>لَّذِينَ جَ<mark class="d-conv">ـٰ</mark>هَدُو<mark class="d-conv">ا۟</mark> فِينَا لَنَهْدِيَنَّهُمْ سُبُلَنَا ۚ وَإِنَّ <mark class="d-conv">ٱ</mark>للَّهَ لَمَعَ <mark class="d-conv">ٱ</mark>لْمُحْسِنِينَ</div></div></details>
+<table>
+<tr><th>نتيجة المطابقة</th><td>الآية كاملة · الحروف سليمة · <b>فروق غير مفسَّرة باختلاف الرسم: ٠</b></td></tr>
+<tr><th>حالة التشكيل</th><td>يختلف عن المرجع العثماني (تبعًا لاختلاف الرسم)</td></tr>
+<tr><th>علامات الوقف</th><td>مطابقة (١)</td></tr>
+<tr><th>الفروق الحرفية</th><td>فروق رسم وتشكيل معروفة: ٩</td></tr>
+</table>
+<table><tr><th>رقم الآية</th><td>مذكورة ومطابقة للنطاق: ٦٩</td></tr>
+<tr><th>مصدر المرجع</th><td>موسوعة القرآن الكريم (quranenc.com) — رسم عثماني · عبر حزمة quran-json@3.1.2<br>المكتبة القرآنية الشاملة QUL من Tarteel AI — رسم عثماني · عبر حزمة quran-validator@1.3.0</td></tr>
+<tr><th>الملاحظات</th><td>الحروف سليمة، والرسم إملائيّ لا عثماني، واختلاف في التشكيل</td></tr>
+<tr><th>التوصية</th><td><b>تحتاج تحققًا بشريًا</b></td></tr></table>
+<details><summary>صفحة الكتاب ص ٧٠ — للمقابلة البصرية</summary><img loading='lazy' src='pages/book-p070.png' alt='صفحة ٧٠ من الكتاب'></details>
+</div>
+<div class='card'><h2>اتساق مواضع الظهور</h2>
+<p>فُحص كل موضع يظهر فيه نصّ قرآني في البرنامج: بطاقات الدروس، والشروح، والأنشطة، وأسئلة المطابقة والتصنيف، والتفسيرات، والخلاصات، وبيانات البحث والمفضلة وصفحة المراجعة ولوحة الإدارة (وكلّها تقرأ من ملفات المحتوى نفسها).</p>
+<table><tr><th>مواضع الظهور</th><td>١٦٧</td></tr>
+<tr><th>مقاطع مميّزة</th><td>٩١</td></tr>
+<tr><th>نسخة مختلفة للنصّ نفسه بين موضعين</th><td><b>٠</b></td></tr></table>
+<script>document.getElementById('hc').addEventListener('change',e=>document.body.classList.toggle('hide-conv',e.target.checked));</script>
+</div></div></body></html>

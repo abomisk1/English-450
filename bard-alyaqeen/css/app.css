@@ -597,3 +597,11 @@ details.more[open] > summary::before { content: "－"; }
 }
 .review-mode-bar__txt { flex: 1 1 14rem; min-width: 0; }
 .review-mode-bar__ttl { font-weight: 700; }
+
+/* النصّ القرآني يبقى بخطّ المصحف المعتمد ولونه أينما عُرض، لا بخطّ النصّ العام. */
+.qtext {
+  font-family: var(--font-quran);
+  color: var(--quran-fg);
+  font-size: var(--fs-xl);
+  line-height: 2.3;
+}
