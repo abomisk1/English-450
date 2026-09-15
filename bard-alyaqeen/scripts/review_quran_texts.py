@@ -616,7 +616,17 @@ def write_outputs(rows, occ, out_dir):
             "مصدر المرجع", "نتيجة المطابقة", "المقارنة الخام (أساسي)",
             "المقارنة الخام (شاهد)", "الفروق الحرفية", "حالة التشكيل",
             "حالة علامات الوقف", "حالة رقم الآية", "مواضع الظهور",
-            "الملاحظات", "التوصية"]
+            "الملاحظات", "التوصية", "حالة الاعتماد", "وقت الاعتماد"]
+    # حالة الاعتماد تُقرأ من ناتج البناء، لا تُكتب هنا يدويًّا.
+    approval_state = {}
+    nrp = os.path.join(ROOT, "content/needs-review.json")
+    if os.path.exists(nrp):
+        for it in json.load(open(nrp, encoding="utf-8"))["items"]:
+            if it["kind"] == "card:quran":
+                approval_state["%s/%s" % (it["lessonId"], it["path"].rsplit("/", 1)[-1])] = (
+                    "معتمَد" if it.get("approved") else "بانتظار المراجعة",
+                    it.get("approvedAt") or "")
+
     csv_path = os.path.join(out_dir, "quran-review.csv")
     with open(csv_path, "w", encoding="utf-8-sig", newline="") as f:
         w = csv.writer(f)
@@ -658,6 +668,10 @@ def write_outputs(rows, occ, out_dir):
                     " · ".join(allplaces) or "بطاقة الدرس فقط",
                     r.get("reason", ""),
                     r["verdict"],
+                    approval_state.get("%s/%s" % (r["lesson"], r["card"]),
+                                       ("بانتظار المراجعة", ""))[0],
+                    approval_state.get("%s/%s" % (r["lesson"], r["card"]),
+                                       ("بانتظار المراجعة", ""))[1],
                 ])
     print("→", csv_path)
     return csv_path
