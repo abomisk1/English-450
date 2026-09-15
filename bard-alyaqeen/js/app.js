@@ -15,6 +15,9 @@ import { settingsScreen, applyPrefs } from './ui/settings.js';
 import {
   quranReviewScreen, quranReviewHiddenScreen, quranReviewVisible, loadReviewData,
 } from './ui/quran-review.js';
+import {
+  contextReviewScreen, contextReviewHiddenScreen, contextReviewVisible, loadContextData,
+} from './ui/context-review.js';
 
 const view = document.getElementById('view');
 const tabbarHost = document.getElementById('tabbar');
@@ -73,7 +76,7 @@ function renderReviewModeBar() {
       // يُعاد رسم الشريط ليظهر رابط مراجعة النصوص أو يختفي معه، ثم يُعاد
       // توجيه المسار الحالي حتى لا تبقى الصفحة معروضة بعد إطفاء الوضع.
       renderReviewModeBar();
-      if (currentPath() === '/quran-review') dispatch();
+      if (['/quran-review', '/context-review'].includes(currentPath())) dispatch();
     },
   });
   host.replaceChildren(
@@ -82,9 +85,13 @@ function renderReviewModeBar() {
       h('span', { class: 'small muted', style: { display: 'block' } },
         'يُظهر لصيقة «صياغة تعليمية مساعدة» على ما ليس من نصّ الكتاب. '
         + 'خاصٌّ بالمعاينة، ولا يظهر للمستخدم العام.'),
-      on() && h('a', {
-        class: 'review-mode-bar__link', href: '#/quran-review', id: 'quran-review-link',
-      }, 'مراجعة النصوص القرآنية')),
+      on() && h('span', { class: 'review-mode-bar__links' },
+        h('a', {
+          class: 'review-mode-bar__link', href: '#/quran-review', id: 'quran-review-link',
+        }, 'مراجعة النصوص القرآنية'),
+        h('a', {
+          class: 'review-mode-bar__link', href: '#/context-review', id: 'context-review-link',
+        }, 'مراجعة السياقات القرآنية'))),
     input);
   host.hidden = false;
 }
@@ -179,6 +186,13 @@ function defineRoutes() {
     if (!quranReviewVisible(getState().prefs)) { show(quranReviewHiddenScreen()); return; }
     show(loading());
     try { show(quranReviewScreen(await loadReviewData())); }
+    catch (e) { show(errorScreen(e.message || String(e))); }
+  });
+  /* الدفعة الثانية: العناصر التي تحوي نصًّا قرآنيًّا ولم تُعتمد. */
+  route('/context-review', async () => {
+    if (!contextReviewVisible(getState().prefs)) { show(contextReviewHiddenScreen()); return; }
+    show(loading());
+    try { show(contextReviewScreen(await loadContextData())); }
     catch (e) { show(errorScreen(e.message || String(e))); }
   });
   route('/more', () => show(moreScreen()));

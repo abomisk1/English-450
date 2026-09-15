@@ -1064,6 +1064,194 @@ for (const [label, opts] of [
   await ctx.close();
 }
 
+
+/* ------------- مراجعة السياقات القرآنية — الدفعة الثانية (٢١ عنصرًا) ------ */
+{
+  const ctx = await browser.newContext({ viewport: { width: 390, height: 844 }, locale: 'ar' });
+  const page = await ctx.newPage();
+
+  // (٨) لا تظهر الصفحة في الوضع العام
+  await page.goto(BASE + '/index.html#/context-review', { waitUntil: 'networkidle' });
+  await check('الوضع العام: صفحة السياقات القرآنية لا تظهر', async () => {
+    await page.waitForTimeout(700);
+    assert((await page.locator('.ctx-card').count()) === 0, 'عُرضت بطاقات الدفعة للعامّة');
+    assert(!(await page.$('#context-review-link')), 'ظهر رابط السياقات في الواجهة العامّة');
+    assert((await page.textContent('h1')).includes('غير متاحة'), 'لم تُمنع الصفحة');
+  });
+
+  await page.goto(BASE + '/preview.html#/home', { waitUntil: 'networkidle' });
+  await page.click('#review-mode-toggle');
+  await page.waitForTimeout(300);
+  await check('المعاينة الخاصة: يظهر رابط «مراجعة السياقات القرآنية»', async () => {
+    const a = await page.$('#context-review-link');
+    assert(a, 'لم يظهر الرابط');
+    assert((await a.textContent()).trim() === 'مراجعة السياقات القرآنية', 'اسم الرابط مختلف');
+  });
+
+  await page.goto(BASE + '/preview.html#/context-review', { waitUntil: 'networkidle' });
+  await page.waitForSelector('.ctx-card', { timeout: 10000 });
+
+  // (١) (٢) (٣) (٤) نطاق الدفعة
+  await check('الدفعة ٢١ عنصرًا، معرّفاتها فريدة، كلّها فيها نصّ قرآني ومنتظرة', async () => {
+    const d = await page.evaluate(async () => {
+      const r = await fetch('/docs/quran-review/context-review-data.json', { cache: 'no-cache' });
+      const j = await r.json();
+      const ORN = ['﴾', '﴿'];
+      const nr = await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json();
+      const by = Object.fromEntries(nr.items.map((i) => [i.path, i]));
+      return {
+        count: j.items.length,
+        unique: new Set(j.items.map((i) => i.id)).size,
+        withQuran: j.items.filter((i) => ORN.some((c) => (by[i.id]?.text || '').includes(c))).length,
+        pending: j.items.filter((i) => !by[i.id]?.approved && i.status === 'بانتظار المراجعة').length,
+        anyCardQuran: j.items.filter((i) => i.kind === 'card:quran').length,
+      };
+    });
+    assert(d.count === 21, `عدد الدفعة ${d.count} لا ٢١`);
+    assert(d.unique === 21, `المعرّفات الفريدة ${d.unique} لا ٢١`);
+    assert(d.withQuran === 21, `الذي فيه نصّ قرآني ${d.withQuran} لا ٢١`);
+    assert(d.pending === 21, `المنتظر ${d.pending} لا ٢١`);
+    assert(d.anyCardQuran === 0, 'دخل عنصر card:quran في الدفعة');
+    assert((await page.locator('.ctx-card').count()) === 21, 'بطاقات الصفحة ليست ٢١');
+  });
+
+  // (٥) (٦) الأعداد الأخرى لم تتزحزح
+  await check('الـ٢٤ المعتمدة باقية، والـ٢٥٩ الأخرى منتظرة وخارج الدفعة', async () => {
+    const d = await page.evaluate(async () => {
+      const nr = await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json();
+      const j = await (await fetch('/docs/quran-review/context-review-data.json', { cache: 'no-cache' })).json();
+      const ids = new Set(j.items.map((i) => i.id));
+      const ORN = ['﴾', '﴿'];
+      const outside = nr.items.filter((i) => !i.approved && !ids.has(i.path));
+      return {
+        count: nr.count, approved: nr.approved, pending: nr.pending,
+        quranApproved: nr.items.filter((i) => i.approved && i.kind === 'card:quran').length,
+        otherApproved: nr.items.filter((i) => i.approved && i.kind !== 'card:quran').length,
+        outside: outside.length,
+        outsideWithQuran: outside.filter((i) => ORN.some((c) => (i.text || '').includes(c))).length,
+        batchApproved: nr.items.filter((i) => i.approved && ids.has(i.path)).length,
+      };
+    });
+    assert(d.count === 304, `المجموع ${d.count} لا ٣٠٤`);
+    assert(d.approved === 24 && d.quranApproved === 24, `المعتمَد ${d.approved} لا ٢٤`);
+    assert(d.otherApproved === 0, 'اعتُمد عنصر خارج النصّ القرآني');
+    assert(d.pending === 280, `المنتظر ${d.pending} لا ٢٨٠`);
+    assert(d.outside === 259, `خارج الدفعة ${d.outside} لا ٢٥٩`);
+    assert(d.outsideWithQuran === 0, 'عنصر فيه نصّ قرآني بقي خارج الدفعة');
+    assert(d.batchApproved === 0, 'اعتُمد عنصر من الدفعة');
+  });
+
+  await check('كل عنصر يُعرض كاملًا، ونصّه القرآني بخطّ المصحف', async () => {
+    const first = page.locator('.ctx-card').first();
+    for (const k of ['المعرّف', 'الوحدة والدرس', 'نوع العنصر', 'السورة والآية',
+      'صفحة الكتاب', 'مصدر الصياغة', 'العنصر كاملًا كما يراه المتعلّم',
+      'الجانب الأول', 'الجانب الثاني']) {
+      assert((await first.textContent()).includes(k), `حقل ناقص: ${k}`);
+    }
+    assert((await page.locator('.ctx-open').count()) === 21, 'زرّ فتح الدرس ناقص');
+    const fonts = await page.$$eval('.ctx-card .qtext',
+      (ns) => [...new Set(ns.slice(0, 20).map((n) => getComputedStyle(n).fontFamily))]);
+    assert(fonts.every((f) => /Amiri Quran/.test(f)), `خطّ غير المصحف: ${fonts.join(' | ')}`);
+    assert((await page.locator('.ctx-card .qrv-img').count()) >= 1, 'لا صورة صفحة');
+  });
+
+  await check('الفحصان مستقلّان، ونتيجتاهما معروضتان لكل عنصر', async () => {
+    assert((await page.locator('.ctx-check').count()) === 42, 'ليس لكل عنصر فحصان');
+    const txt = await page.locator('.ctx-card').first().textContent();
+    assert(txt.includes('نجاح التدقيق القرآني ليس دليلًا'), 'لم يُصرَّح باستقلال الفحصين');
+  });
+
+  // (٧) القرار لا يتحوّل إلى اعتماد
+  await check('قرار المراجعة لا يتحوّل إلى اعتماد ولا يعدّل المحتوى', async () => {
+    const card = page.locator('.ctx-card').first();
+    const before = await card.locator('.ctx-learner').textContent();
+    const beforeApproved = await page.evaluate(async () =>
+      (await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json()).approved);
+    await card.locator('input[value="ok"]').check();
+    await page.waitForTimeout(200);
+    assert((await card.locator('.qrv-status').first().textContent()).trim() === 'بانتظار المراجعة',
+      'تغيّرت حالة العنصر بعد القرار');
+    assert((await card.locator('.ctx-learner').textContent()) === before,
+      'تغيّر نصّ العنصر بعد القرار');
+    const after = await page.evaluate(async () =>
+      (await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json()).approved);
+    assert(after === beforeApproved && after === 24, `عدد المعتمَد صار ${after}`);
+    const stores = await page.evaluate(() => ({
+      ctx: localStorage.getItem('bay.quran.contextcheck.v1'),
+      app: localStorage.getItem('bay.state.v1') || '',
+    }));
+    assert(stores.ctx && stores.ctx.includes('"ok"'), 'لم يُحفظ القرار');
+    assert(!stores.app.includes('contextcheck'), 'تسرّب القرار إلى حالة البرنامج');
+  });
+
+  await check('المؤشّر «تمت مراجعة كذا من ٢١» والانتقال إلى غير المراجَع', async () => {
+    assert((await page.textContent('.qrv-count')).includes('١ من ٢١'), 'المؤشّر لم يتقدّم');
+    await page.locator('.qrv-top button').click();
+    await page.waitForTimeout(700);
+    const id = await page.evaluate(() => {
+      const e = document.elementFromPoint(innerWidth / 2, innerHeight / 2);
+      return e && e.closest('.ctx-card') ? e.closest('.ctx-card').dataset.itemId : null;
+    });
+    assert(id && id !== 'u1/u1l2/summary', `لم ينتقل إلى عنصر غير مراجَع (${id})`);
+  });
+
+  await check('التصدير يحمل الحقول السبعة عشر وحالة الاعتماد الحقيقية', async () => {
+    const card = page.locator('.ctx-card').nth(1);
+    await card.locator('input[value="note"]').check();
+    await page.waitForTimeout(200);
+    assert(await card.locator('.qrv-notewrap').isVisible(), 'لم يظهر حقل الملاحظة');
+    await card.locator('textarea.qrv-note').fill('ملاحظة اختبار');
+    await page.waitForTimeout(200);
+    await page.locator('button:has-text("تصدير CSV")').click();
+    await page.waitForTimeout(300);
+    const csv = await page.locator('.qrv-export').inputValue();
+    for (const col of ['المعرّف', 'الوحدة', 'الدرس', 'نوع العنصر', 'السورة والآية',
+      'صفحة الكتاب', 'النصّ القرآني', 'النصّ الكامل للعنصر', 'الإجابة الصحيحة',
+      'تفسير الإجابة', 'مصدر الصياغة', 'نتيجة التدقيق القرآني', 'نتيجة فحص السياق',
+      'حالة الاعتماد الحالية', 'قرار المقابلة البشرية', 'الملاحظة', 'وقت القرار']) {
+      assert(csv.includes(col), `عمود ناقص في التصدير: ${col}`);
+    }
+    // لا يصحّ العدّ بفواصل الأسطر: نصوص العناصر نفسها فيها أسطر، وحقل
+    // النصّ في المتصفّح يوحّد CRLF إلى LF. فيُعدّ بالمعرّفات نفسها.
+    const ids = await page.$$eval('.ctx-card', (ns) => ns.map((n) => n.dataset.itemId));
+    assert(ids.length === 21, `بطاقات الصفحة ${ids.length} لا ٢١`);
+    for (const id of ids) {
+      assert(csv.includes(`"${id}"`), `سجلّ ناقص في التصدير: ${id}`);
+    }
+    assert(csv.includes('ملاحظة اختبار'), 'الملاحظة لم تُصدَّر');
+    assert(!csv.includes('"معتمد"'), 'التصدير يصف عنصرًا من الدفعة بأنه معتمد');
+  });
+
+  // (٩) لا تغيّر في المحتوى بسبب الصفحة
+  await check('إنشاء الصفحة لم يغيّر نصًّا ولا سؤالًا ولا إجابة', async () => {
+    const drift = await page.evaluate(async () => {
+      const j = await (await fetch('/docs/quran-review/context-review-data.json', { cache: 'no-cache' })).json();
+      const m = await (await fetch('/content/manifest.json', { cache: 'no-cache' })).json();
+      const units = {};
+      for (const u of m.units) units[u.id] = await (await fetch(`/content/${u.file}`, { cache: 'no-cache' })).json();
+      const bad = [];
+      for (const it of j.items) {
+        const [uid, lid, grp, qid] = it.id.split('/');
+        const lesson = units[uid].lessons.find((l) => l.id === lid);
+        if (grp === 'summary') {
+          if (JSON.stringify(lesson.summary.points) !== JSON.stringify(it.view.points)) bad.push(it.id);
+          continue;
+        }
+        const list = grp === 'interaction' ? lesson.interactions : lesson.quiz;
+        const o = list.find((q) => q.id === qid);
+        if (o.prompt !== it.view.prompt
+          || JSON.stringify(o.options || []) !== JSON.stringify(it.view.options || [])
+          || o.answer !== it.view.answer
+          || (o.why || null) !== (it.view.why || null)) bad.push(it.id);
+      }
+      return bad;
+    });
+    assert(drift.length === 0, `عناصر تخالف المحتوى: ${drift.join('، ')}`);
+  });
+
+  await ctx.close();
+}
+
 await browser.close();
 
 console.log(log.join('\n'));

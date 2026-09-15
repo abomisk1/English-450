@@ -663,3 +663,40 @@ details.more[open] > summary::before { content: "－"; }
 .qrv-export { width: 100%; font-family: ui-monospace, monospace;
   font-size: 12px; direction: ltr; text-align: left; }
 .qrv-exportbox { margin-top: var(--sp-3); }
+
+/* ------------------------------------------ مراجعة السياقات القرآنية (الدفعة ٢) */
+.review-mode-bar__links { display: flex; flex-wrap: wrap; gap: var(--sp-4); }
+.ctx-sub { font-size: var(--fs-sm); margin: 0 0 var(--sp-2); color: var(--fg-muted); }
+.ctx-learner { margin-top: var(--sp-4); padding: var(--sp-3);
+  background: var(--bg-sunken); border-radius: var(--r-md); }
+.ctx-points { padding-inline-start: 1.1rem; margin: 0; }
+.ctx-points li { margin-top: var(--sp-2); }
+.ctx-opts { padding-inline-start: 1.3rem; margin: 0; }
+.ctx-opts li { margin-top: var(--sp-2); }
+.ctx-opts li.is-answer { font-weight: 600; }
+.ctx-mark { display: inline-block; min-width: 1.4em; }
+.ctx-tag { margin-inline-start: var(--sp-2); }
+.ctx-pairs { padding-inline-start: 1.1rem; margin: 0; }
+.ctx-pairs li { margin-top: var(--sp-2); }
+.ctx-prompt { font-weight: 600; }
+.ctx-open { margin-top: var(--sp-3); }
+.ctx-anchors { padding-inline-start: 1.1rem; }
+.ctx-anchors li { margin-top: var(--sp-3); }
+.ctx-anchor { overflow-wrap: anywhere; }
+.ctx-check { margin-top: var(--sp-4); padding-top: var(--sp-3);
+  border-top: 1px solid var(--border); }
+.ctx-check__h { font-size: var(--fs-sm); margin: 0 0 var(--sp-2);
+  display: flex; flex-wrap: wrap; gap: var(--sp-2); align-items: center; }
+.ctx-check__list { list-style: none; padding: 0; margin: 0; }
+.ctx-check__list li { display: flex; flex-wrap: wrap; gap: var(--sp-2);
+  justify-content: space-between; padding: var(--sp-2) 0;
+  border-bottom: 1px dashed var(--border); font-size: var(--fs-sm); }
+.ctx-check__k { color: var(--fg-muted); }
+.ctx-check__v { font-weight: 600; text-align: end; }
+.ctx-check__list li.is-bad .ctx-check__v { color: var(--c-err); }
+.ctx-check__list li.is-warn .ctx-check__v { color: var(--c-warn); }
+.ctx-check__list li.is-ok .ctx-check__v { color: var(--c-ok); }
+.ctx-warns { margin: var(--sp-3) 0 0; padding-inline-start: 1.1rem;
+  font-size: var(--fs-sm); color: var(--fg-muted); }
+.ctx-warns li { margin-top: var(--sp-2); }
+.ctx-indep { margin-top: var(--sp-3); font-style: italic; }

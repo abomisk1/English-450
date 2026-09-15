@@ -11,7 +11,7 @@ import { h, icon, ICONS, ar, toast, announce } from '../lib/dom.js';
 import { qtext } from './widgets.js';
 
 const DATA = new URL('../../docs/quran-review/review-data.json', import.meta.url);
-const IMG_BASE = new URL('../../docs/quran-review/', import.meta.url);
+export const IMG_BASE = new URL('../../docs/quran-review/', import.meta.url);
 
 /* مفتاح مستقلّ تمامًا عن bay.state.v1، فلا يختلط قرار المقابلة بحالة المحتوى. */
 export const CHECK_KEY = 'bay.quran.visualcheck.v1';
@@ -53,7 +53,7 @@ export async function loadReviewData() {
  * عارض الصورة: الصفحة كاملة، ويُكبَّر موضع الآية بلا فقد وضوح (PNG بلا ضغط
  * فاقد، ٣٠٠ نقطة/بوصة). والتمرير داخل الإطار وحده، فلا يُزاح جسم الصفحة.
  */
-function zoomer(src, alt) {
+export function zoomer(src, alt) {
   const img = h('img', {
     src, alt, class: 'qrv-img', loading: 'lazy', decoding: 'async',
   });
@@ -119,7 +119,7 @@ function toJSON(data, checks) {
  * التصدير: تنزيلٌ حيث يسمح المتصفّح، ونصٌّ قابل للنسخ دائمًا — لأنّ إطار
  * المعاينة قد يمنع التنزيل، فلا يصحّ أن يضيع القرار بصمت.
  */
-function exportPanel(name, text) {
+export function exportPanel(name, text) {
   const box = h('textarea', {
     class: 'qrv-export', readonly: true, rows: 8, 'aria-label': `محتوى ${name}`,
   });
@@ -141,7 +141,7 @@ function exportPanel(name, text) {
 }
 
 /* ----------------------------------------------------------------- البطاقة */
-function field(label, ...body) {
+export function field(label, ...body) {
   return h('div', { class: 'qrv-field' },
     h('dt', { class: 'qrv-field__k small muted' }, label),
     h('dd', { class: 'qrv-field__v' }, ...body));

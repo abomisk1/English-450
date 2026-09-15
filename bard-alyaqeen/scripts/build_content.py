@@ -495,6 +495,10 @@ def main():
 
     # البناء يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه (بند سادس).
     import subprocess
+    # بيانات دفعة السياقات تُبنى قبل التدقيق، فتُدقَّق على الحالة الجارية.
+    subprocess.run([sys.executable,
+                    os.path.join(ROOT, "scripts", "make_context_review_data.py")],
+                   check=True)
     r = subprocess.run([sys.executable,
                         os.path.join(ROOT, "scripts", "audit_quran.py"), "--check"])
     if r.returncode != 0:

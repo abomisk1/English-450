@@ -142,6 +142,17 @@ def walk_strings(obj, path=""):
             yield from walk_strings(v, "%s[%d]" % (path, i))
 
 
+def _resolve_item(units, path):
+    """كائن العنصر كما هو في المحتوى، من مساره في قائمة المراجعة."""
+    parts = path.split("/")
+    unit = next(u for u in units if u["id"] == parts[0])
+    lesson = next(l for l in unit["lessons"] if l["id"] == parts[1])
+    if parts[2] in ("hook", "objective", "summary", "family"):
+        return unit, lesson, lesson[parts[2]], parts[2]
+    group = "interactions" if parts[2] == "interaction" else "quiz"
+    return unit, lesson, next(q for q in lesson[group] if q["id"] == parts[3]), parts[2]
+
+
 def main():
     units = load_units()
     refdoc = load_reference()
@@ -415,6 +426,72 @@ def main():
             if got != digest:
                 bad("ق-١٥", found[0], "بصمة ملفّ القرارات المحفوظ لا تطابق السجلّ")
 
+    # ------------------ ق-١٦ · ق-١٧ — دفعة مراجعة السياقات القرآنية
+    # دفعةُ إعدادٍ ومقابلة. هذه القواعد تحرس نطاقها وتمنع تسرّب الاعتماد إليها،
+    # وتثبت أنّ إنشاء صفحة المراجعة لم يغيّر نصًّا ولا سؤالًا ولا إجابة.
+    cpath = os.path.join(ROOT, "docs/quran-review/context-review-data.json")
+    if os.path.exists(cpath):
+        cd = json.load(open(cpath, encoding="utf-8"))
+        items = cd["items"]
+        by_path = {it["path"]: it for it in nr["items"]}
+
+        checks["ق-١٦"] += 1
+        if len(items) != 21:
+            bad("ق-١٦", "context-review-data.json",
+                "عدد عناصر الدفعة %d لا ٢١" % len(items))
+        checks["ق-١٦"] += 1
+        if len({i["id"] for i in items}) != len(items):
+            bad("ق-١٦", "context-review-data.json", "معرّفات مكرّرة في الدفعة")
+
+        for it in items:
+            src = by_path.get(it["id"])
+            checks["ق-١٦"] += 1
+            if not src:
+                bad("ق-١٦", it["id"], "عنصر في الدفعة بلا مقابل في قائمة المراجعة")
+                continue
+            # (أ) فيه نصّ قرآني
+            if not any(ch in (src.get("text") or "") for ch in ("\uFD3E", "\uFD3F")):
+                bad("ق-١٦", it["id"], "عنصر في الدفعة بلا نصّ قرآني")
+            # (ب) ليس من الـ٢٤ المعتمدة، وما يزال منتظرًا
+            if src["kind"] == "card:quran":
+                bad("ق-١٦", it["id"], "عنصر card:quran داخل الدفعة الثانية")
+            if src.get("approved"):
+                bad("ق-١٦", it["id"], "عنصر معتمَد داخل دفعة الانتظار")
+            if it["status"] != "بانتظار المراجعة":
+                bad("ق-١٦", it["id"], "حالة معلَنة ليست «بانتظار المراجعة»")
+
+        # (ج) ما خرج عن الدفعة: لا نصّ قرآني فيه، وما يزال منتظرًا
+        ids = {i["id"] for i in items}
+        outside = [it for it in nr["items"]
+                   if not it.get("approved") and it["path"] not in ids]
+        checks["ق-١٦"] += 1
+        if len(outside) != 259:
+            bad("ق-١٦", "needs-review.json",
+                "العناصر خارج الدفعة %d لا ٢٥٩" % len(outside))
+        for it in outside:
+            checks["ق-١٦"] += 1
+            if any(ch in (it.get("text") or "") for ch in ("\uFD3E", "\uFD3F")):
+                bad("ق-١٦", it["path"], "عنصر فيه نصّ قرآني بقي خارج الدفعة")
+
+        # ق-١٧ — إنشاء الصفحة لم يغيّر نصًّا ولا سؤالًا ولا إجابة:
+        # ما تعرضه الصفحة مطابقٌ حرفًا بحرف لما في ملفّات المحتوى.
+        for it in items:
+            checks["ق-١٧"] += 1
+            u, l, obj, kind = _resolve_item(units, it["id"])
+            v = it["view"]
+            if kind == "summary":
+                if list(obj.get("points") or []) != list(v.get("points") or []):
+                    bad("ق-١٧", it["id"], "خلاصة الصفحة تخالف نصّ المحتوى")
+                continue
+            if obj.get("prompt") != v.get("prompt"):
+                bad("ق-١٧", it["id"], "نصّ السؤال في الصفحة يخالف المحتوى")
+            if list(obj.get("options") or []) != list(v.get("options") or []):
+                bad("ق-١٧", it["id"], "الخيارات في الصفحة تخالف المحتوى")
+            if obj.get("answer") != v.get("answer"):
+                bad("ق-١٧", it["id"], "الإجابة الصحيحة في الصفحة تخالف المحتوى")
+            if obj.get("why") != v.get("why"):
+                bad("ق-١٧", it["id"], "تفسير الإجابة في الصفحة يخالف المحتوى")
+
     # ------------------------------------------------------------------ التقرير
     out = []
     w = out.append
@@ -441,6 +518,8 @@ def main():
         "ق-١٣": "اعتماد بلا سجلّ، أو اعتماد عنصر ليس نصًّا قرآنيًّا، أو أعداد معلَنة لا تطابق الواقع",
         "ق-١٤": "اعتماد خارج المعرّفات المسجَّلة، أو معرّف مسجَّل لم يُعتمد",
         "ق-١٥": "تغيّر نصّ معتمَد أو مرجعه أو صفحته، أو ضياع ملفّ القرارات أو بصمته",
+        "ق-١٦": "خلل في نطاق دفعة السياقات: عددها، أو تفرّد معرّفاتها، أو تسرّب معتمَد أو عنصر بلا نصّ قرآني",
+        "ق-١٧": "ما تعرضه صفحة المراجعة يخالف نصّ المحتوى أو سؤاله أو إجابته",
     }
     nviol = collections.Counter(v[0] for v in violations)
     for r, d in RULES.items():
