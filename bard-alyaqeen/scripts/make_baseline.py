@@ -53,7 +53,8 @@ KEY_FILES = [
     "scripts/content/quran_uthmani.py",
     "scripts/build_content.py", "scripts/audit_quran.py",
     "scripts/review_quran_texts.py", "scripts/convert_quran_rasm.py",
-    "scripts/make_review_page_data.py",
+    "scripts/make_review_page_data.py", "scripts/import_visual_check.py",
+    "content/approvals.json",
     "docs/quran-review/review-data.json",
     "js/ui/quran-review.js", "preview.html", "sw.js",
     "tests/run.mjs", "tests/e2e.mjs", "tests/visual-audit.mjs",
@@ -85,16 +86,18 @@ def content_counts():
 
 TESTS = [
     ("اختبارات المنطق", "node tests/run.mjs", "٦١ ناجحًا · ٠ فاشلًا"),
-    ("اختبارات الواجهة", "node tests/e2e.mjs", "٧٧ ناجحًا · ٠ فاشلًا"),
+    ("اختبارات الواجهة", "node tests/e2e.mjs", "٧٨ ناجحًا · ٠ فاشلًا"),
     ("الفحص البصري", "node tests/visual-audit.mjs", "٧٠٢ فحصًا · ٠ خطأ · ٠ تنبيه"),
     ("تدقيق سلامة النصّ القرآني", "python3 scripts/audit_quran.py --check",
-     "٣٣٥٢ فحصًا · ٠ مخالفة (ثلاث عشرة قاعدة)"),
+     "٣٣٥٤ فحصًا · ٠ مخالفة (خمس عشرة قاعدة)"),
     ("مراجعة النصوص القرآنية الـ٢٤", "python3 scripts/review_quran_texts.py",
      "٢٤ نصًّا شريحةً حرفية من المرجع الأساسي · ٠ تعارض بين المواضع"),
     ("إسناد المقاطع القرآنية", "python3 scripts/convert_quran_rasm.py",
      "١٤٠ مقطعًا بإسناد صريح · ٠ حالة غير محسومة"),
     ("بيانات صفحة المراجعة", "python3 scripts/make_review_page_data.py",
      "٢٤ نصًّا · ١٥ صورة · ١٤٦ موضعًا"),
+    ("استيراد قرارات المقابلة", "python3 scripts/import_visual_check.py <الملفّ>",
+     "بوّابة مغلقة: تُرفض عند نقص أو زيادة أو تكرار أو قرار ليس «مطابق»"),
     ("البناء", "python3 scripts/build_content.py",
      "يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه"),
 ]
@@ -156,9 +159,35 @@ def main():
     for k, v in counts.items():
         w("| %s | %s |" % (k, ar(v) if v is not None else "—"))
     w("")
-    w("> **عناصر المراجعة: %s، المعتمَد منها: %s.** "
-      "لم تُغيَّر حالة أيّ عنصر.\n"
+    w("> **عناصر المراجعة: %s، المعتمَد منها: %s.**\n"
       % (ar(counts["عناصر تحتاج مراجعة"]), ar(counts["منها معتمَدة"])))
+
+    # سجلّ الاعتماد — إن صدر: بصمة ملفّ القرارات، والمعرّفات، ووقت الاعتماد.
+    apath = os.path.join(ROOT, "content/approvals.json")
+    if os.path.exists(apath):
+        a = json.load(open(apath, encoding="utf-8"))
+        w("## ٣-ب) سجلّ الاعتماد\n")
+        w("| البند | القيمة |")
+        w("|---|---|")
+        w("| نطاق الاعتماد | %s |" % a["policy"])
+        w("| وقت الاعتماد | `%s` |" % a["approvedAt"])
+        w("| مصدره | %s |" % a["approvedBy"])
+        w("| ملفّ القرارات | `%s` (%s · %s بايت) |"
+          % (a["decisionsFile"]["name"], a["decisionsFile"]["format"],
+             ar(a["decisionsFile"]["bytes"])))
+        w("| **بصمة ملفّ القرارات (SHA-256)** | `%s` |" % a["decisionsFile"]["sha256"])
+        w("| عدد المعتمَد | %s |" % ar(a["count"]))
+        w("")
+        w("**المعرّفات المعتمَدة (%s):**\n" % ar(a["count"]))
+        w("| # | المعرّف | السورة والآية | ص | وقت القرار | بصمة النصّ |")
+        w("|---:|---|---|---:|---|---|")
+        for i, k in enumerate(a["ids"], 1):
+            v = a["items"][k]
+            w("| %s | `%s` | %s | %s | `%s` | `%s…` |"
+              % (ar(i), k, v["ref"], ar(v["page"]), v["decidedAt"], v["textSha256"][:16]))
+        w("")
+        w("> النصوص لم يتغيّر فيها حرف في أثناء الاستيراد: بصمة كل نصّ مسجَّلة "
+          "أعلاه، ويقابلها البناء في كل مرّة (قاعدة ق-١٥).\n")
     w("## ٤) نتائج الاختبارات\n")
     w("| الطبقة | الأمر | النتيجة |")
     w("|---|---|---|")
@@ -168,10 +197,15 @@ def main():
     w("## ٥) ما لم يُفعل\n")
     w("| | |")
     w("|---|---|")
-    for k in ["إصدار رسمي أو علامة نشر (tag/release)", "طلب دمج (PR)",
-              "دمج الفرع أو نقله إلى مستودع آخر", "نشر عامّ",
-              "ربط سحابي أو ربط بـSupabase", "اعتماد أيّ عنصر من عناصر المراجعة",
-              "تعديل أيّ نصّ قرآني"]:
+    never = ["إصدار رسمي أو علامة نشر (tag/release)", "طلب دمج (PR)",
+             "دمج الفرع أو نقله إلى مستودع آخر", "نشر عامّ",
+             "ربط سحابي أو ربط بـSupabase", "تعديل أيّ نصّ قرآني",
+             "مراجعة الأحاديث أو الأذكار أو الصياغات التعليمية"]
+    if not os.path.exists(os.path.join(ROOT, "content/approvals.json")):
+        never.insert(5, "اعتماد أيّ عنصر من عناصر المراجعة")
+    else:
+        never.insert(5, "اعتماد أيّ عنصر خارج النصوص القرآنية الأربعة والعشرين")
+    for k in never:
         w("| %s | **لم يحدث** |" % k)
     w("")
     # سجلّ جديد لا يستبدل السابق ولا يمحو بصماته

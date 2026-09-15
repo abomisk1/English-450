@@ -285,12 +285,17 @@ const browser = await chromium.launch(fs.existsSync(EXEC) ? { executablePath: EX
         .map((e) => e.className || e.tagName));
       assert(vis.length === 0, `${r}: اللصيقة ظاهرة — ${vis.join('، ')}`);
     }
-    // وحالة العنصر في البيانات لم تتغيّر
+    // وإخفاء اللصيقة لا يعتمد شيئًا: ما اعتُمد — إن اعتُمد — نصٌّ قرآني فقط
     const still = await page.evaluate(async () => {
       const r = await (await fetch('/content/needs-review.json')).json();
-      return r.items.every((i) => !i.approved) && r.count;
+      return {
+        count: r.count,
+        otherApproved: r.items.filter((i) => i.approved && i.kind !== 'card:quran').length,
+      };
     });
-    assert(still > 0, 'عناصر المراجعة تغيّرت حالتها');
+    assert(still.count > 0, 'قائمة المراجعة فارغة');
+    assert(still.otherApproved === 0,
+      `إخفاء اللصيقة صاحبه اعتماد ${still.otherApproved} عنصرًا ليس نصًّا قرآنيًّا`);
   });
 
   await check('«وضع مراجعة المحتوى» يُظهر اللصيقة وشرحها — في المعاينة وحدها', async () => {
@@ -946,13 +951,21 @@ for (const [label, opts] of [
   // (٦) قرار المقابلة البصرية لا يتحوّل إلى اعتماد للمحتوى.
   await check('قرار المقابلة البصرية لا يُعدّ اعتمادًا ولا يغيّر النصّ', async () => {
     const card = page.locator('.qrv-card').first();
-    const before = await card.locator('.qrv-t').first().textContent();
+    const beforeText = await card.locator('.qrv-t').first().textContent();
+    const beforeChip = (await card.locator('.qrv-status').first().textContent()).trim();
+    const beforeCount = await page.evaluate(async () =>
+      (await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json()).approved);
     await card.locator('input[value="matched"]').check();
     await page.waitForTimeout(200);
-    assert((await card.locator('.chip').first().textContent()).trim() === 'بانتظار المراجعة',
-      'تغيّرت حالة العنصر بعد قرار المقابلة');
-    assert((await card.locator('.qrv-t').first().textContent()) === before,
+    // الحالة لا تتغيّر بالقرار — أيًّا كانت قبله
+    assert((await card.locator('.qrv-status').first().textContent()).trim() === beforeChip,
+      `تغيّرت حالة العنصر بعد قرار المقابلة: ${beforeChip} ← ${await card.locator('.qrv-status').first().textContent()}`);
+    assert((await card.locator('.qrv-t').first().textContent()) === beforeText,
       'تغيّر النصّ القرآني بعد قرار المقابلة');
+    const afterCount = await page.evaluate(async () =>
+      (await (await fetch('/content/needs-review.json', { cache: 'no-cache' })).json()).approved);
+    assert(afterCount === beforeCount,
+      `عدد المعتمَد تغيّر بقرار المقابلة: ${beforeCount} ← ${afterCount}`);
     const stores = await page.evaluate(() => ({
       check: localStorage.getItem('bay.quran.visualcheck.v1'),
       app: localStorage.getItem('bay.state.v1') || '',
@@ -964,9 +977,14 @@ for (const [label, opts] of [
     const nr = await page.evaluate(async () => {
       const r = await fetch('/content/needs-review.json', { cache: 'no-cache' });
       const d = await r.json();
-      return { count: d.count, approved: d.items.filter((i) => i.approved).length };
+      return {
+        count: d.count,
+        approved: d.items.filter((i) => i.approved).length,
+        quranApproved: d.items.filter((i) => i.approved && i.kind === 'card:quran').length,
+      };
     });
-    assert(nr.approved === 0, `اعتُمد ${nr.approved} عنصرًا`);
+    assert(nr.approved === nr.quranApproved,
+      `اعتُمد ${nr.approved - nr.quranApproved} عنصرًا خارج النصّ القرآني`);
     assert(nr.count === 304, `عدد عناصر المراجعة ${nr.count} لا ٣٠٤`);
   });
 
@@ -993,8 +1011,45 @@ for (const [label, opts] of [
     const csv = await page.locator('.qrv-export').inputValue();
     assert(csv.trim().split('\n').length === 25, 'صفوف CSV ليست ٢٤ وعنوانًا');
     assert(csv.includes('ملاحظة اختبار'), 'الملاحظة لم تُصدَّر');
-    assert(csv.includes('بانتظار المراجعة'), 'حالة العنصر غير مذكورة في التصدير');
-    assert(!csv.includes('معتمد'), 'التصدير يصف عنصرًا بأنه معتمد');
+    // التصدير ينقل حالة العنصر كما هي — لا يخترعها ولا يرقّيها
+    const chips = await page.$$eval('.qrv-card .qrv-status',
+      (ns) => ns.map((n) => n.textContent.trim()));
+    for (const st of new Set(chips)) {
+      assert(csv.includes(st), `حالة «${st}» غير مذكورة في التصدير`);
+    }
+    const csvApproved = (csv.match(/,"معتمد"/g) || []).length;
+    assert(csvApproved === chips.filter((c) => c === 'معتمد').length,
+      'التصدير يصف عناصر بأنها معتمدة خلافًا للبيانات');
+  });
+
+  await check('حالة كل نصّ مقروءة من ناتج البناء، لا من قرار الصفحة', async () => {
+    const nr = await page.evaluate(async () => {
+      const r = await fetch('/content/needs-review.json', { cache: 'no-cache' });
+      const d = await r.json();
+      const q = d.items.filter((i) => i.kind === 'card:quran');
+      return {
+        count: d.count, approved: d.approved, pending: d.pending,
+        quran: q.length,
+        quranApproved: q.filter((i) => i.approved).length,
+        otherApproved: d.items.filter((i) => i.approved && i.kind !== 'card:quran').length,
+      };
+    });
+    // الأعداد متّسقة دائمًا، سواء صدر الاعتماد أو لم يصدر بعد.
+    assert(nr.count === 304, `عدد عناصر المراجعة ${nr.count} لا ٣٠٤`);
+    assert(nr.quran === 24, `النصوص القرآنية ${nr.quran} لا ٢٤`);
+    assert(nr.approved + nr.pending === nr.count, 'المعتمَد والمنتظر لا يساويان المجموع');
+    assert(nr.otherApproved === 0, `اعتُمد ${nr.otherApproved} عنصرًا خارج النصّ القرآني`);
+    // الاعتماد — إن صدر — محصور في النصوص القرآنية الأربعة والعشرين
+    assert(nr.approved === nr.quranApproved,
+      'المعتمَد لا يساوي المعتمَد من النصوص القرآنية');
+    assert(nr.approved === 0 || nr.approved === 24,
+      `الاعتماد جزئيّ: ${nr.approved} — يجب أن يكون ٠ أو ٢٤`);
+    // والصفحة تعرض الحالة نفسها، لا حالةً تخصّها
+    const shown = await page.$$eval('.qrv-card .qrv-status',
+      (ns) => ns.map((n) => n.textContent.trim()));
+    const approvedShown = shown.filter((t) => t === 'معتمد').length;
+    assert(approvedShown === nr.quranApproved,
+      `الصفحة تعرض ${approvedShown} معتمَدًا والبيانات ${nr.quranApproved}`);
   });
 
   await check('القرارات تبقى بعد إعادة التحميل، ولا تظهر خارج المعاينة', async () => {

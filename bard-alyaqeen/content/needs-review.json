@@ -2,6 +2,9 @@
  "generatedFrom": "scripts/build_content.py",
  "policy": "كل نصّ قرآني (src=quran) وكل صياغة تعليمية مساعدة (src=authored) يحتاج إلى مراجعة واعتماد قبل النشر.",
  "count": 304,
+ "approved": 0,
+ "pending": 304,
+ "approval": null,
  "byPriority": {
   "low": 144,
   "medium": 136,

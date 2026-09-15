@@ -19,6 +19,7 @@
 التشغيل:  python3 scripts/audit_quran.py        (يُخرِج docs/QURAN_AUDIT.md)
           python3 scripts/audit_quran.py --check  (يرجع ١ عند أي مخالفة)
 """
+import hashlib
 import json
 import os
 import re
@@ -332,15 +333,87 @@ def main():
         if n:
             bad("ق-١٢", key, "%s: %d حالة غير محسومة" % (name, n))
 
-    # ق-١٣ — كل عناصر المراجعة باقية «بانتظار المراجعة»، لم يُعتمد منها شيء
+    # -------------------------------- ق-١٣ · ق-١٤ · ق-١٥ — حدود الاعتماد
+    # الاعتماد مدخلٌ مستقلّ من مراجعة بشرية، لا شيء يعتمد نفسه. وهذه القواعد
+    # تحرس حدوده: لا يتعدّى المعرّفات المسجَّلة، ولا يحمل نصًّا تغيّر بعده.
     nr = json.load(open(os.path.join(ROOT, "content/needs-review.json"), encoding="utf-8"))
+    apath = os.path.join(ROOT, "content/approvals.json")
+    arec = json.load(open(apath, encoding="utf-8")) if os.path.exists(apath) else None
+    allowed = set((arec or {}).get("ids") or [])
+    allowed_paths = {v["path"] for v in ((arec or {}).get("items") or {}).values()}
+
+    approved = [it for it in nr["items"] if it.get("approved")]
     for it in nr["items"]:
         checks["ق-١٣"] += 1
         if it.get("approved"):
-            bad("ق-١٣", it.get("path", "?"), "عنصر مُعتمَد قبل صدور الاعتماد")
+            # ق-١٣ — لا اعتماد بلا سجلّ، ولا اعتماد لغير النصّ القرآني
+            if not arec:
+                bad("ق-١٣", it["path"], "عنصر مُعتمَد بلا سجلّ اعتماد")
+            elif it["kind"] != "card:quran":
+                bad("ق-١٣", it["path"],
+                    "اعتُمد عنصر نوعه %s — الاعتماد محصور في النصّ القرآني" % it["kind"])
+            # ق-١٤ — لا اعتماد خارج المعرّفات المسجَّلة
+            checks["ق-١٤"] += 1
+            if it["path"] not in allowed_paths:
+                bad("ق-١٤", it["path"], "اعتماد خارج المعرّفات المسجَّلة")
+        elif it["path"] in allowed_paths:
+            checks["ق-١٤"] += 1
+            bad("ق-١٤", it["path"], "معرّف مسجَّل في الاعتماد ولم يُعتمد")
+
     checks["ق-١٣"] += 1
     if nr["count"] != len(nr["items"]):
         bad("ق-١٣", "needs-review.json", "عدد العناصر لا يطابق قائمتها")
+
+    # الأعداد المعلَنة تطابق الواقع، ومجموعها كلّ العناصر
+    checks["ق-١٣"] += 1
+    if nr.get("approved", 0) != len(approved):
+        bad("ق-١٣", "needs-review.json",
+            "العدد المعلَن للمعتمَد %s لا يطابق الواقع %d"
+            % (nr.get("approved"), len(approved)))
+    checks["ق-١٣"] += 1
+    if nr.get("pending", nr["count"]) != nr["count"] - len(approved):
+        bad("ق-١٣", "needs-review.json", "عدد المنتظر لا يطابق الفرق")
+
+    if arec:
+        # كل نصّ قرآني إمّا معتمَد وإمّا منتظر، ولا ثالث
+        quran_items = [it for it in nr["items"] if it["kind"] == "card:quran"]
+        checks["ق-١٤"] += 1
+        if len(allowed) != 24 or len(quran_items) != 24:
+            bad("ق-١٤", "approvals.json",
+                "المعرّفات %d والنصوص القرآنية %d — وكلاهما يجب أن يكون ٢٤"
+                % (len(allowed), len(quran_items)))
+        checks["ق-١٤"] += 1
+        pending_quran = [it for it in quran_items if not it.get("approved")]
+        if pending_quran:
+            bad("ق-١٤", "needs-review.json",
+                "نصوص قرآنية ما تزال منتظرة: %d" % len(pending_quran))
+
+        # ق-١٥ — لم يتغيّر نصّ معتمَد ولا معرّفه ولا صفحته منذ اعتماده
+        by_path = {v["path"]: v for v in arec["items"].values()}
+        for it in approved:
+            checks["ق-١٥"] += 1
+            v = by_path.get(it["path"])
+            if not v:
+                continue
+            got = hashlib.sha256(it["text"].encode("utf-8")).hexdigest()
+            if got != v["textSha256"]:
+                bad("ق-١٥", it["path"], "تغيّر النصّ بعد اعتماده")
+            if it.get("page") != v.get("page"):
+                bad("ق-١٥", it["path"], "تغيّرت صفحة الكتاب بعد الاعتماد")
+            if it.get("ref") != v.get("ref"):
+                bad("ق-١٥", it["path"], "تغيّر مرجع الآية بعد الاعتماد")
+        # وملفّ القرارات محفوظ ببصمته
+        checks["ق-١٥"] += 1
+        kept = os.path.join(ROOT, "docs/quran-review/decisions")
+        digest = arec["decisionsFile"]["sha256"]
+        found = [f for f in (os.listdir(kept) if os.path.isdir(kept) else [])
+                 if digest[:12] in f]
+        if not found:
+            bad("ق-١٥", "decisions/", "ملفّ القرارات غير محفوظ في سجلّ المراجعة")
+        else:
+            got = hashlib.sha256(open(os.path.join(kept, found[0]), "rb").read()).hexdigest()
+            if got != digest:
+                bad("ق-١٥", found[0], "بصمة ملفّ القرارات المحفوظ لا تطابق السجلّ")
 
     # ------------------------------------------------------------------ التقرير
     out = []
@@ -365,7 +438,9 @@ def main():
         "ق-١٠": "حسم آيةِ لفظٍ متكرّر بمطابقة نصّية مطلقة بلا إسناد مصرَّح",
         "ق-١١": "﴿أَحَدٌ﴾ منفردًا من غير الإخلاص ١، أو ﴿…كُفُوًا أَحَدٌۢ﴾ من غير ٤",
         "ق-١٢": "بقاء حالة غير محسومة في النصوص الأربعة والعشرين",
-        "ق-١٣": "اعتماد عنصر من عناصر المراجعة قبل صدور الاعتماد",
+        "ق-١٣": "اعتماد بلا سجلّ، أو اعتماد عنصر ليس نصًّا قرآنيًّا، أو أعداد معلَنة لا تطابق الواقع",
+        "ق-١٤": "اعتماد خارج المعرّفات المسجَّلة، أو معرّف مسجَّل لم يُعتمد",
+        "ق-١٥": "تغيّر نصّ معتمَد أو مرجعه أو صفحته، أو ضياع ملفّ القرارات أو بصمته",
     }
     nviol = collections.Counter(v[0] for v in violations)
     for r, d in RULES.items():

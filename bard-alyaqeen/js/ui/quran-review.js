@@ -203,7 +203,11 @@ function textCard(t, checks, onChange) {
   },
   h('header', { class: 'qrv-card__h' },
     h('h2', { class: 'qrv-card__ttl' }, t.surah),
-    h('span', { class: 'chip' }, t.status)),
+    h('span', {
+      class: t.status === 'معتمد' ? 'chip chip--ok qrv-status' : 'chip qrv-status',
+    }, t.status),
+    t.approvedAt && h('span', { class: 'small muted' },
+      `اعتُمد في ${t.approvedAt.slice(0, 10)}`)),
   h('dl', { class: 'qrv-fields' },
     field('الوحدة والدرس والبطاقة',
       `${t.unit} — ${t.unitTitle} · ${t.lesson} — ${t.lessonTitle} · ${t.card}`),
@@ -260,10 +264,15 @@ export function quranReviewScreen(data) {
   wrap.append(
     h('h1', {}, 'مراجعة النصوص القرآنية'),
     h('div', { class: 'card qrv-notice' },
-      h('p', {},
-        h('strong', {}, 'هذه صفحة مقابلة بصرية، لا اعتماد. '),
-        'كل النصوص باقية «بانتظار المراجعة»، ولا يغيّر أيّ قرار هنا حالتها، '
-        + 'ولا يعدّل نصًّا قرآنيًّا، ولا ينتقل إلى ملفات المحتوى.'),
+      h('p', {}, data.approved
+        ? [h('strong', {}, `اعتُمدت ${ar(data.approved)} من النصوص القرآنية. `),
+          `والاعتماد محصور فيها وحدها: بقيّة عناصر المراجعة — `
+          + `${ar(data.pendingTotal)} عنصرًا — ما تزال «بانتظار المراجعة». `
+          + 'وقرارات هذه الصفحة مقابلةٌ بصرية لا اعتماد؛ الاعتماد يصدر '
+          + 'باستيراد مستقلّ بعد مراجعتك.']
+        : [h('strong', {}, 'هذه صفحة مقابلة بصرية، لا اعتماد. '),
+          'كل النصوص باقية «بانتظار المراجعة»، ولا يغيّر أيّ قرار هنا حالتها، '
+          + 'ولا يعدّل نصًّا قرآنيًّا، ولا ينتقل إلى ملفات المحتوى.']),
       h('p', { class: 'small muted' },
         `المرجع الأساسي: ${data.primary} · الشاهد المستقلّ: ${data.witness} · `
         + `الحالات غير المحسومة: ${ar(data.unresolved)}`)),

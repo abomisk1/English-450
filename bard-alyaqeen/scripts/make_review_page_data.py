@@ -56,6 +56,10 @@ def place_label(path):
 
 def main():
     coll = json.load(open(os.path.join(REVIEW_DIR, "collation.json"), encoding="utf-8"))
+    # حالة كل نصّ تُقرأ من ناتج البناء، لا تُكتب هنا يدويًّا.
+    nr = json.load(open(os.path.join(ROOT, "content/needs-review.json"), encoding="utf-8"))
+    state = {"%s/%s" % (i["lessonId"], i["path"].rsplit("/", 1)[-1]): i
+             for i in nr["items"] if i["kind"] == "card:quran"}
     change = json.load(open(os.path.join(REVIEW_DIR, "rasm-change.json"), encoding="utf-8"))
     ns = {}
     exec(compile(open(os.path.join(ROOT, "scripts/content/quran_uthmani.py"),
@@ -130,8 +134,11 @@ def main():
             "places": uniq,
             # ٩) الفروق بين المصدرين
             "sourceDiff": [v["sourcesAgree"] for v in verses if v["sourcesAgree"]],
-            # ١٠) حالة المراجعة الحالية — لا تتغيّر من هذه الصفحة
-            "status": "بانتظار المراجعة",
+            # ١٠) حالة المراجعة الحالية — مقروءة من ناتج البناء، لا تتغيّر من هذه الصفحة
+            "status": "معتمد" if state.get(key, {}).get("approved")
+                      else "بانتظار المراجعة",
+            "approvedAt": state.get(key, {}).get("approvedAt"),
+            "visualCheck": state.get(key, {}).get("visualCheck"),
             "textBefore": ch.get("old"),
         })
 
@@ -144,6 +151,9 @@ def main():
                 "ولا تُعدّل نصًّا، ولا تُعدّ اعتمادًا.",
         "primary": change["primary"], "witness": change["witness"],
         "count": len(texts),
+        "approved": sum(1 for t in texts if t["status"] == "معتمد"),
+        "pendingTotal": nr.get("pending", nr["count"]),
+        "approvedTotal": nr.get("approved", 0),
         "unresolved": len(change.get("blocked", [])) + len(change.get("fragmentsBlocked", [])),
         "texts": texts,
     }

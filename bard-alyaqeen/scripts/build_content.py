@@ -10,6 +10,7 @@
 
 التشغيل:  python3 scripts/build_content.py
 """
+import hashlib
 import json
 import os
 import re
@@ -359,6 +360,51 @@ def tag_quran_content():
     return n
 
 
+def apply_approvals(review):
+    """يضع الاعتماد على عناصر المراجعة المذكورة في سجلّ الاعتماد وحدها.
+
+    الاعتماد **مدخلٌ مستقلّ** لا يُولّده البناء: مصدره سجلّ `content/approvals.json`
+    الذي يكتبه الاستيراد بعد مراجعة بشرية. فلا يُعتمد عنصر من تلقاء نفسه،
+    ولا يضيع الاعتماد عند إعادة البناء.
+
+    ولا يُعتمد عنصرٌ لمجرّد احتوائه نصًّا قرآنيًّا: الاعتماد محصور في المعرّفات
+    المذكورة، وكلّها من نوع `card:quran`.
+    """
+    path = os.path.join(CONTENT, "approvals.json")
+    if not os.path.exists(path):
+        return 0, None
+    rec = json.load(open(path, encoding="utf-8"))
+    items = rec.get("items") or {}
+    by_path = {v["path"]: (k, v) for k, v in items.items()}
+    seen, n = set(), 0
+    for it in review:
+        hit = by_path.get(it["path"])
+        if not hit:
+            continue
+        key, v = hit
+        if it["kind"] != v["kind"] or it["kind"] != "card:quran":
+            raise SystemExit("اعتمادٌ على عنصر ليس نصًّا قرآنيًّا: %s" % it["path"])
+        # النصّ لم يتغيّر منذ المراجعة البصرية، وإلا سقط الاعتماد ولم يُطبَّق.
+        got = hashlib.sha256(it["text"].encode("utf-8")).hexdigest()
+        if got != v["textSha256"]:
+            raise SystemExit(
+                "النصّ تغيّر بعد اعتماده، فلا يصحّ حمل الاعتماد عليه: %s" % it["path"])
+        if it.get("page") != v.get("page") or it.get("ref") != v.get("ref"):
+            raise SystemExit("مرجع العنصر أو صفحته تغيّرا بعد الاعتماد: %s" % it["path"])
+        it["approved"] = True
+        it["approvedAt"] = rec["approvedAt"]
+        it["visualCheck"] = v["decision"]
+        it["decidedAt"] = v["decidedAt"]
+        it["decisionsFileSha256"] = rec["decisionsFile"]["sha256"]
+        seen.add(key)
+        n += 1
+    missing = set(items) - seen
+    if missing:
+        raise SystemExit("معرّفات في سجلّ الاعتماد بلا عنصر مراجعة: %s"
+                         % ", ".join(sorted(missing)))
+    return n, rec
+
+
 def strip_nulls(obj):
     if isinstance(obj, dict):
         return {k: strip_nulls(v) for k, v in obj.items() if v is not None}
@@ -416,6 +462,7 @@ def main():
     # ترقيم تسلسلي عامّ عبر كل الوحدات
     for i, it in enumerate(review, 1):
         it["seq"] = i
+    n_approved, approval_rec = apply_approvals(review)
     by_priority = {}
     for it in review:
         by_priority[it["priority"]] = by_priority.get(it["priority"], 0) + 1
@@ -425,6 +472,14 @@ def main():
             "policy": "كل نصّ قرآني (src=quran) وكل صياغة تعليمية مساعدة (src=authored) "
                       "يحتاج إلى مراجعة واعتماد قبل النشر.",
             "count": len(review),
+            "approved": n_approved,
+            "pending": len(review) - n_approved,
+            "approval": {
+                "approvedAt": approval_rec["approvedAt"],
+                "scope": "النصوص القرآنية وحدها",
+                "ids": approval_rec["ids"],
+                "decisionsFileSha256": approval_rec["decisionsFile"]["sha256"],
+            } if approval_rec else None,
             "byPriority": by_priority,
             "items": review,
         }, f, ensure_ascii=False, indent=1)
@@ -435,6 +490,8 @@ def main():
              total_quiz, total_tasks, len(review)))
     print("رسم عثماني: %d بطاقة · %d مقطعًا مقتبسًا · وسم قرآني: %d عنصرًا"
           % (n_uthmani, n_frag, n_tagged))
+    print("الاعتماد: %d معتمَدًا · %d بانتظار المراجعة"
+          % (n_approved, len(review) - n_approved))
 
     # البناء يفشل عند أي مخالفة شرعية، ولا يكتفي بالتنبيه (بند سادس).
     import subprocess
