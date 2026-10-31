@@ -1,0 +1,68 @@
+<title>تقرير مطابقة النص المحوّل</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout concept: an audit report — verdict first, evidence tables after, one column with wide tables scrolling inside their own boxes. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-soft:#D3EAE5;--night:#14304A;--night-ink:#EAF2F7;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--ok-soft:#D9EFE3;--redo:#BE4F3A;--redo-soft:#F5DBD4;--font-ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--font-display:"Amiri","Traditional Arabic",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:15.5px;line-height:1.8;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;font-variant-numeric:tabular-nums}
+.wrap{max-width:900px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2,h3,p,ul,ol{margin:0}
+a{color:var(--brand);font-weight:600}
+.hero{background:var(--night);color:var(--night-ink);border-radius:22px;padding:24px 22px;display:flex;flex-direction:column;gap:10px}
+.hero small{color:#9FC0CF}
+.hero h1{font-size:30px;line-height:1.4;text-wrap:balance}
+.verdict{border:2px solid var(--gold);background:var(--gold-soft);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.verdict h2{font-size:21px}
+section{display:flex;flex-direction:column;gap:12px}
+h2{font-size:23px;line-height:1.4;text-wrap:balance}
+h3{font-size:17px;margin-top:4px}
+.lead{color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.grid4{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-size:26px;line-height:1.2}
+.stat span{font-size:12.5px;color:var(--ink-2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px;line-height:1.65}
+th,td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;white-space:nowrap}
+td.bad{background:var(--redo-soft);color:var(--redo);font-weight:700}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:12px;white-space:nowrap}
+.tiny{font-size:12px;color:var(--ink-2)}
+.pill{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--gold-soft);color:var(--gold)}.pill.redo{background:var(--redo-soft);color:var(--redo)}
+td.aya{font-family:var(--font-display);font-size:18px;line-height:2}
+.callout{border-inline-start:4px solid var(--brand);background:var(--brand-soft);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.callout.warn{border-color:var(--gold);background:var(--gold-soft)}
+.callout.stop{border-color:var(--redo);background:var(--redo-soft)}
+ul.tight,ol.tight{padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}
+</style>
+</head><body><div class="wrap">
+<header class="hero"><small>بَرْد اليقين · قارئ الملخص النصي · ص٤–٨ من «زاد العباد»</small><h1>تقرير مطابقة النص المحوّل مع ملف PDF الأصلي</h1><p>إصدار الملخص zad-sum-1 · بصمة SHA-256: dfc56c79976d5994…</p></header>
+<div class="verdict"><h2>الخلاصة</h2><p>حُوّلت الصفحات ٤–٨ (٦٨ كتلة نصية، نحو ١٥٠٣ كلمة، ٩ مباحث، ١٤ آية). طابق النص ملف PDF على مستوى الحروف في كل صفحة، والفروق المتبقية تفسّرها قائمة الفروق أدناه. لا أعدّه معتمدًا علميًا: تشكيل الآيات معلّق، وأطلب اعتمادك طريقة العرض قبل تحويل بقية الصفحات.</p></div>
+<section><h2>١. كيف طُوبق النص</h2><ol><li><b>الاستخراج:</b> من طبقة النص في الـPDF (pdfplumber) بترتيب منطقي لكل سطر، مع بقاء الخط العريض ومواضع الفقرات (من رموز النقاط) والصناديق (الدليل، التنبيه، الخلاصة).</li>
+<li><b>مطابقة مستقلة:</b> استخراج ثانٍ بأداة أخرى (pdftotext)، وقارنتُ الهيكل الحرفي لكل صفحة (بلا تشكيل ولا مسافات ولا ترقيم)، دون الآيات.</li>
+<li><b>مطابقة بصورة الصفحة:</b> قارنتُ كل صفحة من الخمس بالنظر مع النص المحوّل، وراجعتُ بها المواضع المشكولة والخط العريض. واستعنتُ بها لتحديد المواضع التي ضاعت فيها حروف من طبقة النص.</li>
+<li><b>الآيات:</b> قارنتُ كل مقطع بنص مجمع الملك فهد (الحقل الإملائي)، وطابق حرفيًا (١٤ من ١٤).</li></ol></section>
+<section><h2>٢. نتيجة المطابقة لكل صفحة</h2><div class="tw"><table><thead><tr><th class="num">الصفحة</th><th class="num">حروف pdftotext</th><th class="num">حروف النص المحوّل</th><th class="num">مواضع الفرق</th><th>تفسير الفروق</th><th class="num">كلمات</th></tr></thead><tbody><tr><td class="num">٤</td><td class="num">١٣٨٧</td><td class="num">١٣٨٤</td><td class="num">١</td><td>وسوم صفحات الكتاب المطبوع («ص11»)، وترتيب أرقام استشهاد الآيات</td><td class="num">٣١٠</td></tr><tr><td class="num">٥</td><td class="num">١٣٢٥</td><td class="num">١٣١٨</td><td class="num">٤</td><td>وسوم صفحات الكتاب المطبوع («ص15ص19»)، وترتيب أرقام استشهاد الآيات</td><td class="num">٣٢٠</td></tr><tr><td class="num">٦</td><td class="num">١٣٣٣</td><td class="num">١٣٢٧</td><td class="num">٢</td><td>وسوم صفحات الكتاب المطبوع («ص21ص22»)، وترتيب أرقام استشهاد الآيات</td><td class="num">٣٠٦</td></tr><tr><td class="num">٧</td><td class="num">١١٥٧</td><td class="num">١١٥١</td><td class="num">٤</td><td>وسوم صفحات الكتاب المطبوع («ص25ص26»)، وترتيب أرقام استشهاد الآيات</td><td class="num">٢٧٣</td></tr><tr><td class="num">٨</td><td class="num">١٠٨٣</td><td class="num">١٠٧٧</td><td class="num">٢</td><td>وسوم صفحات الكتاب المطبوع («ص27ص28»)، وترتيب أرقام استشهاد الآيات</td><td class="num">٢٩٤</td></tr></tbody></table></div>
+<p class="lead">حروف النص المحوّل أقل بعدد حروف وسوم صفحات الكتاب («ص١١») لأنها حُفظت حقلًا مستقلًا. فالمتن متطابق حرفًا بحرف بعد استبعاد الآيات.</p></section>
+<section><h2>٣. الفروق بين النص المحوّل وملف PDF</h2><div class="tw"><table><thead><tr><th>الفرق</th><th>التفصيل</th></tr></thead><tbody>
+<tr><td>الآيات بلا تشكيل</td><td>تشكيل الآيات الأربع عشرة موجود في الـPDF، ولم يُنقل لتعذر استخراجه بوثوق (علامات مبعثرة وحروف مفقودة في طبقة النص) وعدم التحقق منه. عُرضت الآيات بنص المجمع الإملائي. وتشكيلها معلّق للمراجعة العلمية.</td></tr>
+<tr><td>رسم بعض الكلمات في الآيات</td><td>الآية ٦/١٠١: «السموات» في نص المجمع الإملائي، و«السماوات» في صورة الـPDF. والأمر خلاف رسم لا حرف.</td></tr>
+<tr><td>تصحيحات النقل (٣ مواضع)</td><td>جدولها بعد هذا الجدول. فُقد فيها حرف أو علامة من طبقة النص وثبتت صحة التصحيح بصورة الصفحة.</td></tr>
+<tr><td>التطويل (ـ)</td><td>أُزيلت علامة التطويل التي تظهر في طبقة النص داخل «الكتب» و«الكمال» و«أدلكم» و«لكمال» لأنها أثر خط لا حرف في الأصل.</td></tr>
+<tr><td>فقرات الأقسام</td><td>مستويات إزاحة النقاط في الـPDF (فقرات متداخلة بصريًا) لم تُنقل؛ كل نقطة فقرة مستقلة بترتيبها.</td></tr>
+<tr><td>تذييل الصفحة</td><td>استُبدل «٤ / ٢١٨» بفاصل «ص٤ من الملخص».</td></tr>
+<tr><td>أرقام صفحات الكتاب المطبوع</td><td>«ص 11» وأخواتها محفوظة في البيانات، ولا تُعرض للطالب لأنها غير متحقق منها (تظهر للمراجع).</td></tr>
+<tr><td>التنسيق</td><td>ألوان الصفحة وخطها وإطارها من التصميم الجديد، والخط العريض مأخوذ من خط كل حرف في الـPDF.</td></tr>
+</tbody></table></div>
+<h3>تصحيحات النقل</h3><div class="tw"><table><thead><tr><th class="num">ص</th><th>قبل</th><th>بعد</th><th>السبب</th></tr></thead><tbody><tr><td class="num">٥</td><td>إيماًا</td><td>إيمانًا</td><td>فُقد حرف النون والتنوين في طبقة النص؛ صورة الصفحة ٥ وpdftotext تثبتان «إيمانًا»</td></tr><tr><td class="num">٦</td><td>ربّا</td><td>ربًّا</td><td>فُقد التنوين المقترن بالشدة؛ صورة الصفحة ٦ تثبت «ربًّا» في موضعين</td></tr><tr><td class="num">٥</td><td>لما أعطي</td><td>لما أُعطي</td><td>فُقدت الضمة على الهمزة؛ صورة الصفحة ٥ وpdftotext تثبتانها</td></tr></tbody></table></div></section>
+<section><h2>٤. الآيات</h2><div class="tw"><table><thead><tr><th class="num">ص</th><th class="num">سورة/آية</th><th>المقطع كما يُعرض</th><th>مطابقة الحروف لنص المجمع</th></tr></thead><tbody><tr><td class="num">٤</td><td class="num">2/285</td><td>آمن الرسول بما أنزل إليه من ربه والمؤمنون كل آمن بالله وملائكته وكتبه ورسله لا نفرق بين أحد من رسله</td><td>مطابق</td></tr><tr><td class="num">٥</td><td class="num">2/143</td><td>وما كان الله ليضيع إيمانكم</td><td>مطابق</td></tr><tr><td class="num">٥</td><td class="num">9/124</td><td>فأما الذين آمنوا فزادتهم إيمانا</td><td>مطابق</td></tr><tr><td class="num">٥</td><td class="num">8/2</td><td>وإذا تليت عليهم آياته زادتهم إيمانا</td><td>مطابق</td></tr><tr><td class="num">٥</td><td class="num">3/103</td><td>فألف بين قلوبكم فأصبحتم بنعمته إخوانا</td><td>مطابق</td></tr><tr><td class="num">٥</td><td class="num">59/9</td><td>ويؤثرون على أنفسهم ولو كان بهم خصاصة</td><td>مطابق</td></tr><tr><td class="num">٦</td><td class="num">3/110</td><td>كنتم خير أمة أخرجت للناس تأمرون بالمعروف وتنهون عن المنكر وتؤمنون بالله</td><td>مطابق</td></tr><tr><td class="num">٦</td><td class="num">9/71</td><td>والمؤمنون والمؤمنات بعضهم أولياء بعض</td><td>مطابق</td></tr><tr><td class="num">٧</td><td class="num">6/101</td><td>بديع السموات والأرض أنى يكون له ولد ولم تكن له صاحبة</td><td>مطابق</td></tr><tr><td class="num">٧</td><td class="num">6/102</td><td>ذلكم الله ربكم لا إله إلا هو خالق كل شيء فاعبدوه</td><td>مطابق</td></tr><tr><td class="num">٨</td><td class="num">10/56</td><td>هو يحيي ويميت وإليه ترجعون</td><td>مطابق</td></tr><tr><td class="num">٨</td><td class="num">6/2</td><td>هو الذي خلقكم من طين ثم قضى أجلا</td><td>مطابق</td></tr><tr><td class="num">٨</td><td class="num">11/6</td><td>وما من دابة في الأرض إلا على الله رزقها</td><td>مطابق</td></tr><tr><td class="num">٨</td><td class="num">30/40</td><td>الله الذي خلقكم ثم رزقكم ثم يميتكم ثم يحييكم</td><td>مطابق</td></tr></tbody></table></div></section>
+<section><h2>٥. ما لم يُتحقق منه</h2><ul><li>تشكيل الآيات (معلّق).</li><li>الخط العريض موضعًا موضعًا: قورن بالنظر في عينة، لا آليًا.</li><li>الأحاديث: نُقلت كما في الملخص. وتحققي السابق من ألفاظها بمجموعات الحديث المفتوحة لا يزال في تقرير المراجعة، لا هنا.</li><li>أحرف بالغة الدقة مثل الهمزة وعلامات الترقيم: قورنت بالنظر، وصُحّح ما وُجد.</li></ul></section>
+</div></body></html>
