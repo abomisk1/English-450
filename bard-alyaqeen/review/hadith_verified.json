@@ -1,0 +1,105 @@
+{
+ "H-SHUAB": {
+  "book": "muslim",
+  "matches": [
+   {
+    "n": 153,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-SALAM": {
+  "book": "muslim",
+  "matches": [
+   {
+    "n": 194,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-MUNKAR": {
+  "book": "muslim",
+  "matches": [
+   {
+    "n": 177,
+    "narrator_mentioned": false
+   }
+  ]
+ },
+ "H-ANAS": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 16,
+    "narrator_mentioned": true
+   },
+   {
+    "n": 6941,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-ABBAS": {
+  "book": "muslim",
+  "matches": [
+   {
+    "n": 151,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-QUDSI": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 4482,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-AZL": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 7409,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-AZL2": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 7409,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-RAJUL": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 7506,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-JIBRIL-B": {
+  "book": "bukhari",
+  "matches": [
+   {
+    "n": 50,
+    "narrator_mentioned": true
+   }
+  ]
+ },
+ "H-JIBRIL-M": {
+  "book": "muslim",
+  "matches": [
+   {
+    "n": 99,
+    "narrator_mentioned": true
+   }
+  ]
+ }
+}
