@@ -1,0 +1,52 @@
+{
+ "s1q2": {
+  "official_contains_segment": true,
+  "page": 49,
+  "ref": "2:285"
+ },
+ "s3q2": {
+  "official_contains_segment": true,
+  "page": 22,
+  "ref": "2:143"
+ },
+ "s4q4a": {
+  "official_contains_segment": true,
+  "page": 207,
+  "ref": "9:124"
+ },
+ "s4q4b": {
+  "official_contains_segment": true,
+  "page": 177,
+  "ref": "8:2"
+ },
+ "s5q3": {
+  "official_contains_segment": true,
+  "page": 63,
+  "ref": "3:103"
+ },
+ "s5q4": {
+  "official_contains_segment": true,
+  "page": 546,
+  "ref": "59:9"
+ },
+ "s6q3": {
+  "official_contains_segment": true,
+  "page": 64,
+  "ref": "3:110"
+ },
+ "s8q1": {
+  "official_contains_segment": true,
+  "page": 140,
+  "ref": "6:101"
+ },
+ "s9q1": {
+  "official_contains_segment": true,
+  "page": 141,
+  "ref": "6:102"
+ },
+ "s10q1": {
+  "official_contains_segment": true,
+  "page": 215,
+  "ref": "10:56"
+ }
+}
