@@ -1,0 +1,328 @@
+<title>وثيقة تصميم بَرْد اليقين</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout concept: a calm single-column review document; the numbered sections follow the order of the deliverables requested. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-soft:#D3EAE5;--night:#14304A;--night-ink:#EAF2F7;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--ok-soft:#D9EFE3;--learn:#B98210;--consol:#2D7BA3;--redo:#BE4F3A;--none:#93A9A5;--redo-soft:#F5DBD4;
+--font-ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--font-display:"Amiri","Traditional Arabic",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--learn:#E0AE3E;--consol:#6AB6DB;--redo:#EE8B74;--none:#5F7C78;--redo-soft:#43221B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--learn:#E0AE3E;--consol:#6AB6DB;--redo:#EE8B74;--none:#5F7C78;--redo-soft:#43221B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:16px;line-height:1.85;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 64px;font-variant-numeric:tabular-nums}
+.wrap{max-width:780px;margin-inline:auto;display:flex;flex-direction:column;gap:28px}
+h1,h2,h3,h4,p,ul,ol{margin:0}
+a{color:var(--brand);font-weight:600}
+.hero{background:var(--night);color:var(--night-ink);border-radius:24px;padding:26px 22px;display:flex;flex-direction:column;gap:10px}
+.hero .eyebrow{font-size:12.5px;color:#9FC0CF;letter-spacing:.04em}
+.hero h1{font-family:var(--font-display);font-size:46px;line-height:1.25}
+.hero p{color:#C9DCE6;max-width:60ch}
+.btnrow{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+.btn{display:inline-block;border-radius:12px;padding:10px 18px;background:#8FD3C8;color:#0A2A27;text-decoration:none;font-weight:700}
+.btn.alt{background:transparent;color:var(--night-ink);border:1px solid #3b5a73}
+.toc{display:flex;flex-wrap:wrap;gap:8px}
+.toc a{background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:3px 12px;font-size:13.5px;text-decoration:none;color:var(--ink);font-weight:500}
+.toc a b{color:var(--brand);margin-inline-end:6px}
+section{display:flex;flex-direction:column;gap:14px;scroll-margin-top:12px}
+h2{font-size:25px;line-height:1.4;display:flex;gap:12px;align-items:baseline;text-wrap:balance}
+h2 .n{font-family:var(--font-display);color:var(--brand);font-size:32px;line-height:1}
+h3{font-size:18px;margin-top:6px}
+h4{font-size:16px}
+.lead{color:var(--ink-2);max-width:62ch}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media (max-width:640px){.grid2{grid-template-columns:1fr}}
+.callout{border-inline-start:4px solid var(--brand);background:var(--brand-soft);border-radius:12px;padding:12px 16px;font-size:15px}
+.callout.warn{border-color:var(--gold);background:var(--gold-soft)}
+.callout.stop{border-color:var(--redo);background:var(--redo-soft)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:14px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:14.5px;line-height:1.7}
+th,td{padding:9px 12px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:13.5px;position:sticky;top:0}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;white-space:nowrap}
+ul.tight,ol.tight{padding-inline-start:22px;display:flex;flex-direction:column;gap:5px}
+.pill{display:inline-block;border-radius:999px;padding:0 10px;font-size:12.5px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}
+.pill.warn{background:var(--gold-soft);color:var(--gold)}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;vertical-align:-1px;margin-inline-end:6px}
+.dot.none{border:2px dashed var(--none)}
+.dot.learning{background:linear-gradient(90deg,var(--learn) 50%,transparent 50%);border:2px solid var(--learn)}
+.dot.consolidate{background:var(--consol);outline:2px dashed var(--consol);outline-offset:1px}
+.dot.mastered{background:var(--ok)}
+.dot.redo{background:var(--redo)}
+code,.f{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:13px;background:var(--surface-2);border-radius:6px;padding:1px 6px}
+.formula{background:var(--surface-2);border-radius:12px;padding:10px 14px;font-size:15px}
+.q{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.qh{display:flex;gap:10px;align-items:flex-start}
+.qn{flex:none;width:28px;height:28px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700}
+.q h4{font-size:16.5px;line-height:1.6}
+.qo{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:4px}
+.qo li{display:flex;gap:10px;align-items:baseline}
+.qo .lt{flex:none;width:22px;height:22px;border-radius:50%;background:var(--surface-2);color:var(--ink-2);display:grid;place-items:center;font-size:12px}
+.qo li.ok{color:var(--ok);font-weight:600}
+.qo li.ok .lt{background:var(--ok);color:#fff}
+.qo li.ok::after{content:'✓'}
+blockquote{margin:0;background:var(--surface-2);border-inline-start:3px solid var(--brand);border-radius:10px;padding:8px 12px;font-size:14.5px;line-height:1.9}
+.ref{font-size:12.5px;color:var(--ink-2)}
+.layers{display:flex;flex-direction:column;gap:8px}
+.layer{display:grid;grid-template-columns:130px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.layer b{font-size:14px;color:var(--brand)}
+.layer span{font-size:14.5px}
+@media (max-width:560px){.layer{grid-template-columns:1fr;gap:2px}}
+.chain{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.chain .b{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:6px 12px;font-size:14px}
+.chain .b small{display:block;color:var(--ink-2);font-size:12px}
+.chain .a{color:var(--ink-2)}
+.swatches{display:flex;gap:8px;flex-wrap:wrap}
+.sw{display:flex;gap:8px;align-items:center;font-size:13px}
+.sw i{width:26px;height:26px;border-radius:8px;border:1px solid var(--line);display:block}
+.step{display:grid;grid-template-columns:34px 1fr;gap:12px}
+.step .k{width:34px;height:34px;border-radius:50%;background:var(--brand);color:#fff;display:grid;place-items:center;font-weight:700;font-size:14px}
+.step .t{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.step h4{margin-bottom:2px}
+.step p{font-size:14.5px;color:var(--ink-2)}
+.steps{display:flex;flex-direction:column;gap:10px}
+.dec{display:grid;grid-template-columns:34px 1fr;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+.dec .k{font-family:var(--font-display);font-size:26px;color:var(--brand);line-height:1.2;text-align:center}
+.dec h4{margin-bottom:2px}
+.dec p{font-size:14.5px;color:var(--ink-2)}
+.dec .rec{margin-top:4px;color:var(--ink);font-size:14.5px}
+.dec .rec b{color:var(--ok)}
+footer{color:var(--ink-2);font-size:13px}
+</style>
+<div class="wrap">
+<header class="hero">
+  <span class="eyebrow">وثيقة التصور والتصميم · المرحلة الأولى · للمراجعة والاعتماد قبل التطوير</span>
+  <h1>بَرْد اليقين</h1>
+  <p>تطبيق تعليمي إسلامي من برنامجين متتابعين: «التأصيلي» من ملخص زاد العباد، ثم «التحصيني» من ملخص مراقي الوعي. جلسات لا تتجاوز ثلاث دقائق، وتصحيح فوري، وتكرار حتى الإتقان، ومراجعة بعد كل عشر جلسات.</p>
+  <div class="btnrow"><a class="btn" href="https://claude.ai/artifact/CXtf9CQvPEuYHwZJPCrExP">افتح النموذج التفاعلي</a></div>
+</header>
+
+<nav class="toc" aria-label="فهرس الوثيقة">
+  <a href="#s1"><b>١</b>تحليل الملفين</a><a href="#s2"><b>٢</b>هيكل التطبيق</a><a href="#s3"><b>٣</b>رحلة الطالب</a><a href="#s4"><b>٤</b>تصميم الواجهات</a><a href="#s5"><b>٥</b>النموذج التفاعلي</a><a href="#s6"><b>٦</b>المؤشرات</a><a href="#s7"><b>٧</b>جلسة حقيقية</a><a href="#s8"><b>٨</b>مراجعة العشر</a><a href="#s9"><b>٩</b>التصور التقني</a><a href="#s10"><b>١٠</b>قرارات للاعتماد</a>
+</nav>
+
+<div class="callout warn"><b>حالة هذه المرحلة.</b> أُنجز التصور والنموذج التفاعلي و<b>١٥ سؤالًا موثقًا</b> في ثلاث جلسات من أول موضوعين في زاد العباد. لم يُبنَ بنك الأسئلة الكامل (نحو ٢٬٢٤٠ سؤالًا للبرنامج التأصيلي بحسب التقدير الحالي)، ولم يعتمد مشرف علمي أي سؤال بعد. تحققتُ آليًا أن كل اقتباس موجود في نص الملخص، وقابلت الصفحتين ٤ و٥ على صورتهما الأصلية. ما سوى ذلك ينتظر اعتمادك.</div>
+
+<section id="s1">
+<h2><span class="n">١</span>تحليل موجز للملفين وهيكلهما العلمي</h2>
+<div class="grid2">
+ <div class="card"><h3>ملخص «زاد العباد»</h3><p>٢١٨ صفحة، من كتاب الدرر السنية (ط١ ١٤٤١هـ، ٨٣٢ صفحة). مقدمة وسبعة أقسام، وتحت كل قسم عناوين رئيسة ثم موضوعات فرعية. يبدأ كل موضوع بـ«الدليل» (الآية أو الحديث مع تخريجه) ثم الفوائد، ويُختم كل عنوان رئيس بـ«خلاصة للمراجعة». رقم صفحة الكتاب مذكور عند عنوان كل موضوع فقط.</p><p><b>٥٦</b> عنوانًا رئيسًا · <b>٤٢٩</b> موضوعًا فرعيًا</p></div>
+ <div class="card"><h3>ملخص «مراقي الوعي»</h3><p>١٥١ صفحة، من كتاب صالح بن عبد العزيز سندي (٥٩١ صفحة). أصله حلقات إذاعية جُعلت فصولًا مستقلة. لكل فصل «فكرة مركزية» ثم الأفكار والحجج بترتيب المؤلف ثم خلاصة. الملخص مصحح بعد مراجعة علمية (٨٠ ملاحظة).</p><p><b>٣٦</b> فصلًا · مقدمة المؤلف ووصية خاتمة خارج الفصول</p></div>
+</div>
+<h3>أقسام زاد العباد (البرنامج التأصيلي)</h3>
+<div class="tw"><table><thead><tr><th>القسم</th><th class="num">صفحات الكتاب</th><th class="num">عناوين رئيسة</th><th class="num">مواضيع</th><th class="num">جلسات مخططة</th></tr></thead><tbody>
+<tr><td>العقائد</td><td class="num">١١–٢٢٥</td><td class="num">١٨</td><td class="num">١٠٧</td><td class="num">١١٦</td></tr>
+<tr><td>الأحكام</td><td class="num">٢٢٩–٤٧٩</td><td class="num">١٨</td><td class="num">١٧٦</td><td class="num">١٧٨</td></tr>
+<tr><td>الأخلاق</td><td class="num">٤٨٣–٥٢٣</td><td class="num">٣</td><td class="num">٢٢</td><td class="num">٢٣</td></tr>
+<tr><td>الرقائق</td><td class="num">٥٢٧–٥٧٢</td><td class="num">٤</td><td class="num">٢٨</td><td class="num">٣٠</td></tr>
+<tr><td>الآداب</td><td class="num">٥٧٥–٦٧٩</td><td class="num">٧</td><td class="num">٥٩</td><td class="num">٦٤</td></tr>
+<tr><td>الأذكار</td><td class="num">٦٨٣–٧٢٧</td><td class="num">٥</td><td class="num">٢٨</td><td class="num">٢٨</td></tr>
+<tr><td>الأدعية</td><td class="num">٧٣١–٧٤٨</td><td class="num">١</td><td class="num">٩</td><td class="num">٩</td></tr>
+<tr><th>المجموع</th><th class="num"></th><th class="num">٥٦</th><th class="num">٤٢٩</th><th class="num">٤٤٨</th></tr></tbody></table></div>
+<p class="lead">عدد الجلسات تقدير تخطيطي: جلسة لكل ثلاث صفحات من الكتاب، بحد أدنى جلسة للموضوع وحد أعلى أربع. يُضبط حين يُعدّ بنك الأسئلة (القرار ١).</p>
+<h3>محاور مراقي الوعي (البرنامج التحصيني)</h3>
+<div class="tw"><table><thead><tr><th>المحور (تجميع من الملخص)</th><th class="num">الفصول</th></tr></thead><tbody>
+<tr><td>التأسيس المنهجي: العقل والنقل والغيب</td><td class="num">١–٤</td></tr>
+<tr><td>براهين النبوة</td><td class="num">٥–٨</td></tr>
+<tr><td>القدر والحكمة والشر</td><td class="num">٩–١٢</td></tr>
+<tr><td>مزالق المعرفة والتلقي</td><td class="num">١٣–١٩</td></tr>
+<tr><td>الحاجة إلى الدين ومكانة السنة</td><td class="num">٢٠–٢٤</td></tr>
+<tr><td>العلم التجريبي والإلحاد</td><td class="num">٢٥–٢٨</td></tr>
+<tr><td>الإيمان والعبادة والتحصين</td><td class="num">٢٩–٣١</td></tr>
+<tr><td>مزالق معاصرة ومنهج الفهم والتفكير</td><td class="num">٣٢–٣٦</td></tr></tbody></table></div>
+<h3>ما لاحظته وأثره في التصميم</h3>
+<ul class="tight">
+<li><b>الوحدة الطبيعية هي الموضوع الفرعي.</b> عليها تُبنى الجلسات والإتقان وحالة «الوحدة».</li>
+<li><b>أرقام الصفحات.</b> الملخص يعطي صفحة الكتاب عند بداية كل موضوع لا عند كل فقرة. لذلك يُوثَّق السؤال برقم صفحة الملخص وموضع الفقرة، وبصفحة الكتاب بوصفها بداية الموضوع (القرار ١١).</li>
+<li><b>الأوسمة.</b> الملخصان يميزان «من الكتاب» (شاهد أورده الكتاب) عن «افتراضي» و«إضافة للتوضيح» و«تنبيه». لا يُؤخذ سؤال من موضع موسوم بالثلاثة الأخيرة، ولا من «خلاصة للمراجعة» لأنها صياغة الملخص. رصدتُ <b>١٨ موضعًا</b> موسومًا في زاد العباد و<b>٨ مواضع</b> في مراقي الوعي، وجمعتها في قائمة «تحتاج إلى مراجعة علمية» (تظهر في تبويب «المصدر» داخل النموذج). منها مثلًا تنبيه في ص٥ من الملخص («أمرهم بأربع» وذكر خمسًا)، وخطأ عزو آية في ص٢٠٠ منه (الأنعام ١٦ والصواب ١٦٠).</li>
+<li><b>الآيات.</b> نص الآيات المشكولة يتشوه عند استخراجه من الـPDF، فلا تُستعمل نصوص الآيات في الأسئلة قبل اعتماد مصدر نصي رقمي مدقق (القرار ١٠).</li>
+<li><b>عناوين جامعة من عمل الملخص.</b> «الرقائق» و«الأدعية» بلا عناوين رئيسة في الكتاب، فجمعها الملخص في مجموعات. أبقيتها كما هي في العرض.</li>
+<li><b>مراقي الوعي</b> فصول مستقلة بلا أبواب. المحاور الثمانية تجميع للتيسير وليست من المؤلف، ولذلك تُعرض بهذا الوصف.</li>
+</ul>
+</section>
+
+<section id="s2">
+<h2><span class="n">٢</span>تصور هيكل التطبيق والمسارين</h2>
+<div class="chain" aria-label="التسلسل الهرمي للمحتوى">
+ <div class="b">برنامج<small>٢</small></div><span class="a">‹</span>
+ <div class="b">قسم / محور<small>٧ في التأصيلي · ٨ في التحصيني</small></div><span class="a">‹</span>
+ <div class="b">عنوان رئيس<small>٥٦</small></div><span class="a">‹</span>
+ <div class="b">موضوع (وحدة)<small>٤٢٩ · وفي التحصيني: فصل ×٣٦</small></div><span class="a">‹</span>
+ <div class="b">جلسة<small>٥ أسئلة · ≤ ٣ دقائق</small></div>
+</div>
+<div class="chain"><div class="b">مجموعة<small>١٠ جلسات</small></div><span class="a">+</span><div class="b">مراجعة عشرية<small>٢٠ سؤالًا في جلسات مصغّرة</small></div><span class="a">=</span><div class="b">شرط الانتقال إلى المجموعة التالية</div></div>
+<div class="layers">
+ <div class="layer"><b>البرنامج الأول</b><span>التأصيلي: ٧ أقسام · ٤٢٩ موضوعًا · ٤٤٨ جلسة · ٤٥ مراجعة. مفتوح من البداية، ويظهر تحت عنوانه: «استُفيدت مادة هذا البرنامج من كتاب زاد العباد».</span></div>
+ <div class="layer"><b>البرنامج الثاني</b><span>التحصيني: ٣٦ فصلًا بترتيب الكتاب. مقفل حتى تبلغ نقاط التأصيلي ١٠٠٪ (كل جلساته ومراجعاته). يظهر تحت عنوانه: «استُفيدت مادة هذا البرنامج من كتاب مراقي الوعي». يمكن تصفح فصوله وهو مقفل لمعرفة ما ينتظر الطالب.</span></div>
+ <div class="layer"><b>التنقل</b><span>خمس تبويبات: الرئيسية، البرامج، المراجعة، إنجازاتي، المصدر. وتُخفى الأشرطة داخل الجلسة ليبقى التركيز على السؤال.</span></div>
+ <div class="layer"><b>الشاشات الاثنتا عشرة</b><span>الافتتاحية · الرئيسية · البرنامجان · الأقسام والوحدات · الجلسة والعداد · السؤال · الإجابة الخاطئة · إكمال الجلسة · مراجعة العشر · الإنجازات · إتمام القسم · إتمام البرنامج. وتُضاف شاشات مساندة: انتهاء الوقت، وفصول التحصيني، وتوثيق المصدر.</span></div>
+</div>
+<p class="lead">قاعدة الفتح: لا تُفتح جلسة قبل إكمال التي قبلها، ولا تُفتح الجلسة الحادية عشرة (ومضاعفاتها) قبل اجتياز المراجعة. هذا مطبق في النموذج.</p>
+</section>
+
+<section id="s3">
+<h2><span class="n">٣</span>رحلة الطالب من الدخول حتى إكمال البرنامجين</h2>
+<p class="lead">في كل مرحلة يجيب التطبيق عن أربعة أسئلة: أين وصلت؟ ماذا أنجزت؟ ماذا بقي؟ ما الخطوة التالية؟ تجيب بطاقة «خطوتك التالية» عن الأول والأخير، وتجيب بطاقات المؤشرات الأربع عن الثاني والثالث.</p>
+<div class="steps">
+<div class="step"><div class="k">١</div><div class="t"><h4>الدخول</h4><p>شاشة افتتاحية ثم الرئيسية. الطالب الجديد يرى المؤشرات صادقة: التقدم ٠٪، الإتقان «لم يُقَس بعد»، وبطاقة «ابدأ الجلسة ١».</p></div></div>
+<div class="step"><div class="k">٢</div><div class="t"><h4>الجلسة (حتى ٣ دقائق)</h4><p>مقدمة تعرض الموضوع والمصدر والقواعد، ثم خمسة أسئلة، سؤال في كل شاشة، والعداد ظاهر. الخطأ يعرض الصواب وشرحه من المصدر ويعيد السؤال بعد سؤال أو أكثر.</p></div></div>
+<div class="step"><div class="k">٣</div><div class="t"><h4>بعد الجلسة</h4><p>شاشة النتيجة: كم سؤالًا من المحاولة الأولى، وكم إعادة، والوقت، وجدول «ما الذي تغيّر؟» (الإنجاز، الجلسات، المحاولة الأولى، المراجعة بعد كم جلسة). ثم زر الجلسة التالية.</p></div></div>
+<div class="step"><div class="k">٤</div><div class="t"><h4>توقف الوقت أو الخروج</h4><p>يُحفظ التقدم، وتُستأنف الأسئلة غير المتقنة في جلسة لاحقة بعداد جديد. لا تُحتسب الجلسة مكتملة.</p></div></div>
+<div class="step"><div class="k">٥</div><div class="t"><h4>المراجعة العشرية</h4><p>بعد الجلسة العاشرة تظهر «المراجعة جاهزة» وتُقفل الجلسة التالية حتى تُجتاز. تُنجز في جلسات مصغّرة من ٥ أسئلة، وتُحدّد حالة كل وحدة.</p></div></div>
+<div class="step"><div class="k">٦</div><div class="t"><h4>إتمام الموضوع ثم العنوان ثم القسم</h4><p>تتبدل حالة الوحدة على الخريطة. وعند إتمام قسم تظهر شاشة تهنئة بأرقامه وتُفتح الأقسام التي بعده.</p></div></div>
+<div class="step"><div class="k">٧</div><div class="t"><h4>إتمام البرنامج التأصيلي</h4><p>شاشة الإتمام تفتح البرنامج التحصيني وتعرض ملخص الأداء.</p></div></div>
+<div class="step"><div class="k">٨</div><div class="t"><h4>البرنامج التحصيني</h4><p>ستة وثلاثون فصلًا بالنظام نفسه: جلسات ومراجعات وإتقان. وعند آخر فصل يُختم الكتاب بشاشة الإكمال النهائية.</p></div></div>
+</div>
+</section>
+
+<section id="s4">
+<h2><span class="n">٤</span>تصميم الواجهات</h2>
+<p class="lead">الاتجاه: قاعة قراءة هادئة. أرضية ضبابية خضراء مزرقة، وبطاقة الخطوة التالية بلون ليلي، والنحاسي الخافت للإنجازات والقفل فقط. عربية بالكامل من اليمين إلى اليسار، وأرقام عربية هندية، وتصميم معاصر بلا زخرفة مفرطة.</p>
+<div class="card"><h3>الألوان والخطوط</h3>
+<div class="swatches"><span class="sw"><i style="background:#E9EFEC"></i>أرضية</span><span class="sw"><i style="background:#0C6A62"></i>أساسي</span><span class="sw"><i style="background:#14304A"></i>ليلي</span><span class="sw"><i style="background:#A9781F"></i>نحاسي</span><span class="sw"><i style="background:#2A7B58"></i>متقن</span><span class="sw"><i style="background:#2D7BA3"></i>تثبيت</span><span class="sw"><i style="background:#B98210"></i>قيد التعلم</span><span class="sw"><i style="background:#BE4F3A"></i>إعادة</span></div>
+<p>للعناوين والعلامة «Amiri» (نسخ كلاسيكي)، وللواجهة والنصوص «IBM Plex Sans Arabic» لوضوحها على الهاتف. كلاهما مرخّص بترخيص حر. ويوجد وضع داكن كامل.</p></div>
+<div class="card"><h3>مبادئ</h3><ul class="tight">
+<li><b>الوضوح قبل الجمال.</b> السؤال بخط كبير، والخيارات أزرار بارتفاع لا يقل عن ٥٦ بكسل، والتغذية الراجعة تظهر فورًا.</li>
+<li><b>الحالة لا تعتمد على اللون وحده.</b> لكل حالة إتقان شكل مختلف (دائرة منقطة، نصف ممتلئة، ممتلئة بحلقة منقطة، علامة صح، سهم إعادة) واسم مكتوب.</li>
+<li><b>الصدق في الأرقام.</b> حين لا تكفي البيانات تظهر «لم يُقَس بعد» بدل نسبة مضللة.</li>
+<li><b>كل رقم يشرح نفسه.</b> زر «؟» بجانب كل مؤشر يفتح ورقة بالمعادلة والمدخلات الفعلية.</li>
+<li><b>التوثيق ظاهر.</b> الشرح عند الخطأ يعرض نص المصدر ورقم الصفحتين، وتبويب «المصدر» يجمع كل ذلك.</li>
+</ul></div>
+<h3>الشاشات الاثنتا عشرة ووظيفة كل منها</h3>
+<div class="tw"><table><thead><tr><th class="num">#</th><th>الشاشة</th><th>وظيفتها وأبرز عناصرها</th></tr></thead><tbody>
+<tr><td class="num">١</td><td>الافتتاحية</td><td>اسم «بَرْد اليقين»، شعار، زر البدء.</td></tr>
+<tr><td class="num">٢</td><td>الرئيسية</td><td>بطاقة الخطوة التالية، المؤشرات الأربع البارزة، ثلاثة مؤشرات تحفيزية، شريط فتح التحصيني.</td></tr>
+<tr><td class="num">٣</td><td>البرنامجان</td><td>بطاقتان بعبارتي المصدر، وشروط فتح التحصيني وتقدمها.</td></tr>
+<tr><td class="num">٤</td><td>الأقسام والوحدات</td><td>سبعة أقسام، عناوين رئيسة تنفتح، موضوعات بحالة الإتقان وشارات الجلسات.</td></tr>
+<tr><td class="num">٥</td><td>الجلسة والعداد</td><td>٠٣:٠٠، الموضوع، المصدر، قواعد الجلسة، الاستئناف إن وُجد.</td></tr>
+<tr><td class="num">٦</td><td>السؤال والخيارات</td><td>عداد، شريط تقدم من خمس خانات، سؤال، ٢–٣ خيارات، تغذية راجعة للصواب.</td></tr>
+<tr><td class="num">٧</td><td>معالجة الخطأ</td><td>إجابتك، الصحيحة، الشرح من المصدر، موضع إعادة السؤال.</td></tr>
+<tr><td class="num">٨</td><td>إكمال الجلسة</td><td>حلقة النتيجة، المحاولة الأولى، الإعادات، الوقت، «ما الذي تغيّر؟».</td></tr>
+<tr><td class="num">٩</td><td>مراجعة العشر</td><td>الجلسات المشمولة، القواعد، البدء، نتائج المراجعات السابقة.</td></tr>
+<tr><td class="num">١٠</td><td>الإنجازات</td><td>التقدم العام، الإتقان، رسمان بيانيان (أيام/أسابيع)، تقدم الأقسام، الموضوعات المتقنة والمحتاجة إلى مراجعة، نتائج المراجعات، المتبقي.</td></tr>
+<tr><td class="num">١١</td><td>إتمام القسم</td><td>تهنئة، أرقام القسم، القسم التالي.</td></tr>
+<tr><td class="num">١٢</td><td>إتمام البرنامج</td><td>تهنئة، ملخص الأداء، فتح التحصيني.</td></tr>
+</tbody></table></div>
+</section>
+
+<section id="s5">
+<h2><span class="n">٥</span>النموذج الأولي التفاعلي</h2>
+<p><a href="https://claude.ai/artifact/CXtf9CQvPEuYHwZJPCrExP">افتح النموذج</a>. يعمل على الحاسوب بجانب لوحة أدوات، وعلى الهاتف بملء الشاشة. ملفه أيضًا في المستودع: <code>bard-alyaqeen/prototype.html</code>.</p>
+<div class="card"><h3>جرّب بهذا الترتيب</h3><ol class="tight">
+<li>اختر «طالب جديد» وابدأ الجلسة ١. أخطئ عمدًا في سؤال، وراقب الشرح ثم عودة السؤال بعد سؤالين.</li>
+<li>أكمل الجلسة، وانظر جدول «ما الذي تغيّر؟»، وسترى نسبة الإتقان ما زالت «لم يُقَس بعد».</li>
+<li>ابدأ الجلسة ٢ واضغط «انتهاء وقت الجلسة» لترى حفظ التقدم، ثم استأنفها.</li>
+<li>من «الأقسام والوحدات» تصفّح الـ٤٢٩ موضوعًا، وافتح البرنامج التحصيني المقفل من «البرامج».</li>
+<li>اختر «مراجعة مستحقة (٢٠ جلسة)» وأكمل المراجعة، وتابع ارتفاع المراجعات المكتملة وتغير الإتقان.</li>
+<li>افتح «إنجازاتي» في «منتصف الرحلة (٢٣ جلسة)»، ثم شاشتي إتمام القسم والبرنامج من اللوحة.</li>
+</ol></div>
+<div class="grid2">
+<div class="card"><h3>حقيقي</h3><ul class="tight"><li>١٥ سؤالًا بنص الملخص وأرقام صفحاته</li><li>هيكل الأقسام والموضوعات والفصول</li><li>محرك المؤشرات: كلها تُحسب من سجل الإجابات والأوقات</li><li>منطق الجلسة والإعادة والمؤقت والاستئناف والمراجعة والأقفال</li></ul></div>
+<div class="card"><h3>توضيحي ومعلَّم بذلك</h3><ul class="tight"><li>سجل الأداء في وضعي «منتصف الرحلة» و«مراجعة مستحقة» يولّده المحرك بعينة عشوائية ثابتة، ثم تُحسب منه المؤشرات بالقواعد نفسها</li><li>شاشتا إتمام القسم والبرنامج (محاكاة بالمحرك نفسه)</li><li>المراجعة تسحب من الجلسات المعتمدة الثلاث لأن العشر لم تُعدّ</li></ul></div>
+</div>
+<p class="lead">جرّبته في Chromium بحجم الحاسوب والهاتف وفي الوضع الداكن: اثنتا عشرة شاشة تُعرض بلا أخطاء، وتحققتُ آليًا من إعادة السؤال بعد سؤالين، وحفظ الجلسة عند انتهاء الوقت واستئنافها، وإكمال المراجعة، وتحديث المؤشرات بعد كل خطوة. لم أجرّبه على جهاز iOS أو Android حقيقي.</p>
+</section>
+
+<section id="s6">
+<h2><span class="n">٦</span>لوحة مؤشرات التقدم والإتقان وطريقة حساب كل مؤشر</h2>
+<div class="card"><h3>مبدأ واحد: كل شيء من سجل الأحداث</h3><p>يسجل التطبيق حدثًا لكل عرض سؤال وإجابة: <code>learner, question, session, run, context(session|review), is_first_exposure, is_correct, active_ms, at</code>. ولا يُخزَّن أي مؤشر مستقلًا. تُشتق المؤشرات من الأحداث بدوال بحتة يمكن اختبارها بمتجهات اختبار ثابتة، ويستعمل العميل والخادم المواصفات نفسها.</p></div>
+<div class="card"><h3>الأوزان الثابتة للإنجاز</h3><div class="formula">جلسة مكتملة = ١ نقطة · مراجعة عشرية مكتملة = ٤ نقاط · إجمالي التأصيلي = ٤٤٨ + ٤٥ × ٤ = <b>٦٢٨ نقطة</b></div><p>المراجعة أربع نقاط لأنها أربع جلسات مصغّرة من خمسة أسئلة. الجلسة مكتملة عندما أُجيب كل أسئلتها صحيحًا فقط، ولو بعد التصحيح.</p></div>
+<h3>المؤشرات العشرة</h3>
+<div class="tw"><table><thead><tr><th>المؤشر</th><th>التعريف الحسابي</th><th>متى يظهر «لم يُقَس بعد»</th></tr></thead><tbody>
+<tr><td><b>التقدم العام</b></td><td>(جلسات مكتملة × ١ + مراجعات مكتملة × ٤) ÷ ٦٢٨</td><td>لا يظهر؛ يبدأ ٠٪ لأنه محسوب فعلًا</td></tr>
+<tr><td><b>الجلسات المكتملة</b></td><td>عدد الجلسات المكتملة ÷ ٤٤٨</td><td>لا يظهر</td></tr>
+<tr><td><b>تقدم القسم</b></td><td>جلسات مكتملة في القسم ÷ جلسات القسم المخططة</td><td>لا يظهر</td></tr>
+<tr><td><b>إتقان الأسئلة</b></td><td>أسئلة أُجيبت صحيحًا من المحاولة الأولى في <i>آخر</i> مراجعة لها ÷ أسئلة خضعت لمراجعة واحدة على الأقل</td><td>قبل اكتمال أول مراجعة عشرية</td></tr>
+<tr><td><b>الإجابة من المحاولة الأولى</b></td><td>أسئلة صحيحة عند أول عرض لها في جلسة ÷ أسئلة عُرضت في الجلسات (التصحيح والإعادة خارج العدّ)</td><td>إذا كانت العينة أقل من ٥ أسئلة</td></tr>
+<tr><td><b>المراجعات</b></td><td>مكتملة = عدد المراجعات المجتازة، والمتبقية = ٤٥ − المكتملة</td><td>لا يظهر</td></tr>
+<tr><td><b>الاستمرارية</b></td><td>عدد الأيام المتتابعة التي بلغ فيها وقت التعلم الفعلي ١٢٠ ثانية فأكثر (تُحسب حتى أمس إن لم يبدأ اليوم)</td><td>لا يظهر</td></tr>
+<tr><td><b>الإنجاز اليومي</b></td><td>جلسات مكتملة اليوم ÷ الهدف اليومي (افتراضيًا ٢)</td><td>لا يظهر</td></tr>
+<tr><td><b>الوقت المستثمر</b></td><td>مجموع ثواني التعلم الفعلي أثناء الأسئلة ÷ ٦٠. يتوقف العداد حين تخرج من الصفحة</td><td>لا يظهر</td></tr>
+<tr><td><b>فتح التحصيني</b></td><td>نقاط منجزة ÷ ٦٢٨ ، ويُفتح عند ١٠٠٪. المتبقي = جلسات متبقية + مراجعات متبقية</td><td>لا يظهر</td></tr>
+</tbody></table></div>
+<p class="lead">والبطاقة الرابعة في الرئيسية «موعد المراجعة القادمة» = <code>١٠ × (المراجعات المكتملة + ١) − الجلسات المكتملة</code>، وتصير «جاهزة الآن» عند الصفر.</p>
+<h3>مؤشر الإتقان البصري: خمس حالات</h3>
+<div class="tw"><table><thead><tr><th>الحالة</th><th>التعريف الحسابي للوحدة (الموضوع)</th></tr></thead><tbody>
+<tr><td><span class="dot none"></span>لم يبدأ</td><td>لا سؤال من جلسات الوحدة عُرض بعد.</td></tr>
+<tr><td><span class="dot learning"></span>قيد التعلم</td><td>عُرض سؤال واحد على الأقل ولم تكتمل كل جلسات الوحدة.</td></tr>
+<tr><td><span class="dot consolidate"></span>مكتمل ويحتاج إلى تثبيت</td><td>اكتملت كل جلسات الوحدة، ولم يظهر في مراجعة عشرية سؤال صحيح من المحاولة الأولى عن كل جلسة منها.</td></tr>
+<tr><td><span class="dot mastered"></span>متقن بعد المراجعة</td><td>في كل جلسة من جلسات الوحدة سؤال واحد على الأقل أُجيب صحيحًا من المحاولة الأولى في آخر مراجعة له، ولا سؤال في الوحدة أُخطئ في آخر مراجعة.</td></tr>
+<tr><td><span class="dot redo"></span>يحتاج إلى إعادة مراجعة</td><td>أخطأ الطالب في المحاولة الأولى لسؤال من الوحدة في آخر مراجعة ظهر فيها. تتقدم هذه الحالة على غيرها، ويُقدَّم سؤالها في المراجعة التالية.</td></tr>
+</tbody></table></div>
+<h3>كيف تتحقق الضوابط الثمانية</h3>
+<div class="tw"><table><thead><tr><th class="num">#</th><th>الضابط</th><th>كيف طُبّق</th></tr></thead><tbody>
+<tr><td class="num">١</td><td>فصل الإنجاز عن الإتقان</td><td>مؤشران مستقلان بمعادلتين مختلفتين، وملاحظة صريحة في «إنجازاتي».</td></tr>
+<tr><td class="num">٢</td><td>لا اكتمال بانتهاء الوقت</td><td>انتهاء الوقت يحفظ قائمة المتبقي ولا يضع تاريخ اكتمال.</td></tr>
+<tr><td class="num">٣</td><td>التكرار داخل الجلسة لا يرفع الإتقان</td><td>الإتقان يُحسب من المراجعة فقط.</td></tr>
+<tr><td class="num">٤</td><td>المحاولة الأولى ≠ الصواب بعد التصحيح</td><td>يُسجَّل <code>first</code> عند أول عرض ولا يتغير.</td></tr>
+<tr><td class="num">٥</td><td>أوزان ثابتة للإنجاز</td><td>١ و٤ نقاط، والإجمالي ٦٢٨.</td></tr>
+<tr><td class="num">٦</td><td>الاستمرارية تحفيزية فقط</td><td>لا تدخل في أي معادلة إتقان.</td></tr>
+<tr><td class="num">٧</td><td>«لم يُقَس بعد»</td><td>الإتقان قبل أول مراجعة، والمحاولة الأولى قبل ٥ أسئلة.</td></tr>
+<tr><td class="num">٨</td><td>لا أرقام شكلية</td><td>لا يوجد رقم ثابت في الواجهة. حتى الوضع التوضيحي يولّد أحداثًا ثم يحسب منها.</td></tr>
+</tbody></table></div>
+<div class="callout warn"><b>حدّ معروف.</b> مراجعة سؤالين من كل جلسة تعني أن «نسبة الإتقان» تقيس عينة من الأسئلة لا كلها. أظهرتُ حجم العينة تحت الرقم («قيس على ٤٠ سؤالًا»). والبديل مراجعة كل الأسئلة في جلسات مصغّرة أكثر (القرار ٣).</div>
+</section>
+
+<section id="s7">
+<h2><span class="n">٧</span>نموذج جلسة حقيقية من أول موضوع في زاد العباد</h2>
+<p class="lead">الجلسة ١: «مراتب الدين وأركان الإيمان»، من موضوع «حقيقة الإيمان» (ملخص زاد العباد ص٤، الكتاب ص١١). كل سؤال مبني على جملة في متن الملخص (غير موسومة بـ«افتراضي» أو «إضافة للتوضيح»)، والخيارات الخاطئة من عناصر الملخص نفسه أو نقيض ما قرره. الصحيح هو الخيار الأول هنا، ويُخلط ترتيبه عند العرض.</p>
+<article class="q"><div class="qh"><span class="qn">١</span><h4>ما مراتب الدين الثلاث؟</h4></div><ol class="qo"><li class="ok"><span class="lt">أ</span><span>الإسلام، والإيمان، والإحسان</span></li><li class=""><span class="lt">ب</span><span>الإيمان، والتوكل، والرجاء</span></li><li class=""><span class="lt">ج</span><span>الإسلام، والإيمان، واليقين</span></li></ol><blockquote>مراتب الدين ثلاث: الإسلام، والإيمان، والإحسان، ولكل منها أركان لا يقوم إلا بها.</blockquote><p class="ref">ملخص زاد العباد ص٤ · حقيقة الإيمان — الفقرة الأولى · الكتاب ص١١ (بداية الموضوع) · نص الملخص</p></article><article class="q"><div class="qh"><span class="qn">٢</span><h4>بحسب ترتيب الآية للأركان، ما الذي يأتي بعد الإيمان بالله مباشرة؟</h4></div><ol class="qo"><li class="ok"><span class="lt">أ</span><span>الإيمان بالملائكة</span></li><li class=""><span class="lt">ب</span><span>الإيمان بالكتب</span></li><li class=""><span class="lt">ج</span><span>الإيمان بالرسل</span></li></ol><blockquote>رتّبت الآية الأركان ترتيبًا بديعًا: الإيمان بالله أولًا، ثم الملائكة (كالوسائط بين الله وعباده)، ثم الكتب (الوحي الذي يتلقاه الملك فيبلغه للرسول)، ثم الرسل.</blockquote><p class="ref">ملخص زاد العباد ص٤ · حقيقة الإيمان — ترتيب الأركان في الآية · الكتاب ص١١ (بداية الموضوع) · نص الملخص</p></article><article class="q"><div class="qh"><span class="qn">٣</span><h4>ما الذي ورد في رواية لمسلم زيادةً على أركان الإيمان في حديث جبريل؟</h4></div><ol class="qo"><li class="ok"><span class="lt">أ</span><span>«وتؤمن بالقدر كله»</span></li><li class=""><span class="lt">ب</span><span>إماطة الأذى عن الطريق</span></li><li class=""><span class="lt">ج</span><span>الحياء</span></li></ol><blockquote>وفي رواية لمسلم: «وتؤمن بالقدر كله».</blockquote><p class="ref">ملخص زاد العباد ص٤ · حقيقة الإيمان — الدليل · الكتاب ص١١ (بداية الموضوع) · نص الملخص</p></article><article class="q"><div class="qh"><span class="qn">٤</span><h4>من الملَك الموكَّل بالنفخ في الصور؟</h4></div><ol class="qo"><li class="ok"><span class="lt">أ</span><span>إسرافيل</span></li><li class=""><span class="lt">ب</span><span>ميكائيل</span></li><li class=""><span class="lt">ج</span><span>جبريل</span></li></ol><blockquote>ولهم وظائف: جبريل للوحي، وإسرافيل للنفخ في الصور، وميكائيل للمطر، وملك الموت لقبض الأرواح.</blockquote><p class="ref">ملخص زاد العباد ص٤ · حقيقة الإيمان — الإيمان بالملائكة · الكتاب ص١١ (بداية الموضوع) · نص الملخص</p></article><article class="q"><div class="qh"><span class="qn">٥</span><h4>ما المراد بـ«لقاء الله» في أركان الإيمان؟</h4></div><ol class="qo"><li class="ok"><span class="lt">أ</span><span>وقوف العباد بين يديه للحساب والجزاء بعد البعث</span></li><li class=""><span class="lt">ب</span><span>إحياء الناس بعد موتهم وإخراجهم من القبور</span></li><li class=""><span class="lt">ج</span><span>أن تعبد الله كأنك تراه</span></li></ol><blockquote>لقاء الله: وقوف العباد بين يديه للحساب والجزاء بعد البعث.</blockquote><p class="ref">ملخص زاد العباد ص٤ · حقيقة الإيمان — لقاء الله · الكتاب ص١١ (بداية الموضوع) · نص الملخص</p></article>
+<div class="callout"><b>الجلستان ٢ و٣ في النموذج أيضًا:</b> «الكتب والرسل والبعث والإحسان» (ص٤)، و«الإيمان قول وعمل يزيد وينقص» (ص٥، الكتاب ص١٥). وفي تبويب «المصدر» نص كل سؤال واقتباسه وموضعه.</div>
+<div class="callout stop"><b>ما أبقيتُه خارج الأسئلة عمدًا:</b> تنبيه ص٥ من الملخص («أمرهم بأربع» وذكر خمسًا) لأنه مسألة تحتاج إلى نظر المشرف، وكل ما وُسم «افتراضي» أو «إضافة للتوضيح»، ومربع «خلاصة للمراجعة» بما فيه من سؤال تطبيقي لأنه صياغة الملخص.</div>
+</section>
+
+<section id="s8">
+<h2><span class="n">٨</span>نموذج مراجعة بعد عشر جلسات</h2>
+<div class="callout warn"><b>تصور تجريبي.</b> الجلسات العشر الأولى لم تُعدّ علميًا بعد (المعتمد منها ثلاث فقط)، فتُسحب أسئلة المراجعة في النموذج من الجلسات ١–٣ وهي ١٥ سؤالًا. لا يُعدّ ما يظهر في النموذج مراجعة معتمدة لأي عشر جلسات.</div>
+<h3>القاعدة المقترحة للنسخة الإنتاجية</h3>
+<ul class="tight">
+<li><b>الاستحقاق:</b> تُفتح المراجعة عند اكتمال الجلسة العاشرة، وتُقفل الجلسة الحادية عشرة حتى تُجتاز.</li>
+<li><b>المحتوى:</b> سؤالان من كل جلسة من العشر، ٢٠ سؤالًا. تتقدم الأسئلة التي أُخطئت أولًا، ثم التي لم تُراجَع، ثم الباقي، مع توزيع متساوٍ على الجلسات.</li>
+<li><b>الشكل:</b> أربع جلسات مصغّرة من خمسة أسئلة، لكل منها ثلاث دقائق أو أقل، ويُحفظ التقدم بين الجلسات.</li>
+<li><b>الاجتياز:</b> الإجابة الصحيحة عن كل أسئلتها (بالإعادة عند الخطأ) كما في الجلسة.</li>
+<li><b>الأثر:</b> الصواب من المحاولة الأولى يجعل السؤال «متقنًا»، والخطأ يجعله «يحتاج إلى إعادة مراجعة» ويقدّمه في المراجعة التالية.</li>
+<li><b>المجموعة الأخيرة</b> قد تقل عن عشر جلسات، فتُراجَع بما فيها.</li>
+</ul>
+<p>في النموذج: ٣ جلسات مصغّرة من خمسة أسئلة بدل أربع (لأن المتاح ١٥ سؤالًا). وللتجربة بلا احتساب، زر «جرّب المراجعة الآن» في أي وقت.</p>
+</section>
+
+<section id="s9">
+<h2><span class="n">٩</span>التصور التقني المبدئي</h2>
+<p class="lead">هذا تصور للنقاش ولا يبدأ تنفيذه قبل اعتمادك.</p>
+<div class="layers">
+ <div class="layer"><b>التطبيق</b><span>Flutter لمنصتي iOS وAndroid بكود واحد، لدعم الاتجاه من اليمين إلى اليسار وسلاسة الرسوم. بديل: React Native (القرار ١٥).</span></div>
+ <div class="layer"><b>التخزين المحلي</b><span>SQLite عبر Drift. المحتوى (حزم البرامج) وسجل الأحداث وحالة الجلسات غير المكتملة كلها محلية، فيعمل التطبيق دون اتصال كاملًا.</span></div>
+ <div class="layer"><b>المزامنة</b><span>صندوق صادر (outbox) للأحداث بمعرّفات UUID v7 غير قابلة للتعديل. تُرسل عند توفر الاتصال بعملية idempotent، فلا تتكرر الأحداث ولا تتعارض. الخادم يعيد حساب المؤشرات من الأحداث، ويتفق العميل معه بمتجهات اختبار مشتركة.</span></div>
+ <div class="layer"><b>الخادم</b><span>PostgreSQL وواجهة REST. جداول: برامج، أقسام، وحدات، جلسات، أسئلة، أصول مصدرية، إصدارات حزم المحتوى، متعلمون، أحداث، لقطات مؤشرات.</span></div>
+ <div class="layer"><b>حزم المحتوى</b><span>كل برنامج حزمة JSON موقّعة ومرقّمة الإصدار وغير قابلة للتعديل بعد النشر. يبقى الطالب على إصدار جلسته حتى يكملها. إضافة برنامج جديد تعني إضافة حزمة وسجل برنامج بلا تعديل في الشيفرة.</span></div>
+ <div class="layer"><b>لوحة المشرف العلمي</b><span>ويب. دورة الحالة: مسودة ← موثقة بالمصدر ← مراجَعة ← معتمدة ← منشورة. لا يُحفظ سؤال بلا صفحة ملخص وفقرة ورقم صفحة الكتاب واقتباس. والمدقق الآلي يرفض اقتباسًا غير موجود في نص الملخص، أو وسمًا «افتراضي/إضافة»، أو أكثر من إجابة صحيحة. وللقائمة «تحتاج إلى مراجعة علمية» حالة حجر لا تنشر.</span></div>
+ <div class="layer"><b>حماية البيانات</b><span>جمع أدنى (بريد أو حساب أبل/جوجل، دون بيانات حساسة)، تشفير أثناء النقل والتخزين، حذف الحساب من التطبيق، بلا حزم تتبع إعلانية، وسجل الأحداث غير مرتبط بأي ملف شخصي أوسع. مراجعة نظامية قبل الإطلاق (نظام حماية البيانات الشخصية في المملكة، ومتطلبات المتاجر)، وتحديد الفئة العمرية (القرار ١٤).</span></div>
+</div>
+<h3>مراحل مقترحة بعد الاعتماد</h3>
+<ol class="tight"><li>إعداد بنك الأسئلة للأقسام بترتيب الملخص مع المشرف، ولوحة التدقيق.</li><li>التطبيق: المحرك والتخزين المحلي والجلسات والمراجعة والمؤشرات على أنظمة الاختبار نفسها.</li><li>الخادم والمزامنة وحزم المحتوى.</li><li>تجربة مغلقة مع طلاب، وقياس زمن الجلسة الفعلي لضبط عدد الأسئلة (خمسة اقتراح لا أكثر).</li><li>البرنامج التحصيني بعد التأصيلي.</li></ol>
+</section>
+
+<section id="s10">
+<h2><span class="n">١٠</span>قرارات تحتاج إلى اعتمادك قبل التطوير</h2>
+<div class="steps">
+<div class="dec"><div class="k">١</div><div><h4>من يُعدّ بنك الأسئلة وكم جلسة لكل موضوع؟</h4><p>التقدير الحالي ٤٤٨ جلسة (نحو ٢٬٢٤٠ سؤالًا).</p><p class="rec"><b>أقترح:</b> استخراج مسوّدات من نص الملخص بقوالب موثقة ثم اعتماد المشرف لكل سؤال، وإعادة ضبط عدد الجلسات حسب كثافة كل موضوع.</p></div></div>
+<div class="dec"><div class="k">٢</div><div><h4>صياغة الخيارات الخاطئة</h4><p>حاليًا من عناصر الملخص أو نقيض لما قرره، وبعضها عبارة غير واردة حرفيًا (مثل «قول باللسان فقط»).</p><p class="rec"><b>أقترح:</b> السماح بالنقيض البسيط وحده، ومراجعة المشرف لكل خيار خاطئ.</p></div></div>
+<div class="dec"><div class="k">٣</div><div><h4>حجم المراجعة وتعريف نسبة الإتقان</h4><p>٢٠ سؤالًا (٢ لكل جلسة) تقيس عينة، أو كل الأسئلة (٥٠) بجلسات مصغّرة أكثر.</p><p class="rec"><b>أقترح:</b> ٢٠ سؤالًا مع إظهار حجم العينة، وتعديلها بعد التجربة المغلقة.</p></div></div>
+<div class="dec"><div class="k">٤</div><div><h4>وزن المراجعة في نسبة الإنجاز</h4><p>٤ نقاط مقابل ١ للجلسة.</p><p class="rec"><b>أقترح:</b> الإبقاء عليه لأنه يعكس عدد الجلسات المصغّرة.</p></div></div>
+<div class="dec"><div class="k">٥</div><div><h4>الصواب بعد التصحيح</h4><p>يُكمل الجلسة ولا يُحسب من المحاولة الأولى ولا يثبّت الإتقان.</p><p class="rec"><b>أقترح:</b> اعتماده كما هو.</p></div></div>
+<div class="dec"><div class="k">٦</div><div><h4>شرط فتح البرنامج التحصيني</h4><p>١٠٠٪ من نقاط التأصيلي، أي كل الجلسات وكل المراجعات.</p><p class="rec"><b>أقترح:</b> الإبقاء عليه دون مراجعة نهائية إضافية. وهل تريد حدًا أدنى لنسبة الإتقان أيضًا؟</p></div></div>
+<div class="dec"><div class="k">٧</div><div><h4>الجلسة التي انتهى وقتها</h4><p>تُستأنف بعداد جديد ثلاث دقائق، ويُحتسب وقتها السابق في الوقت المستثمر.</p><p class="rec"><b>أقترح:</b> اعتماده.</p></div></div>
+<div class="dec"><div class="k">٨</div><div><h4>الهدف اليومي ويوم التعلم</h4><p>جلستان يوميًا، ويحسب اليوم متعلَّمًا من ١٢٠ ثانية فعلية.</p><p class="rec"><b>أقترح:</b> جعل الهدف قابلًا للتعديل من الطالب، بلا شارات مسابقة ولا ضغط.</p></div></div>
+<div class="dec"><div class="k">٩</div><div><h4>التدريب على جلسة مكتملة</h4><p>متاح في النموذج دون احتساب.</p><p class="rec"><b>أقترح:</b> إبقاؤه، وإضافة «جلسة تقوية» تلقائية للوحدات في حالة «تحتاج إعادة».</p></div></div>
+<div class="dec"><div class="k">١٠</div><div><h4>المسائل العلمية المعلقة ونصوص الآيات</h4><p>١٨ موضعًا في زاد العباد و٨ في مراقي الوعي (تبويب «المصدر»). ونصوص الآيات المشكولة تتشوه عند الاستخراج من PDF.</p><p class="rec"><b>أقترح:</b> أن يبت المشرف فيها قبل أي استعمال، وأن يُزوَّد مصدر نصي رقمي مدقق للآيات.</p></div></div>
+<div class="dec"><div class="k">١١</div><div><h4>أرقام صفحات الكتاب الأصلي</h4><p>الملخص يعطي رقم بداية الموضوع فقط.</p><p class="rec"><b>أقترح:</b> قبول ذلك مرحليًا، أو تزويدي بالكتاب الأصلي لتحديد الصفحة الدقيقة لكل سؤال.</p></div></div>
+<div class="dec"><div class="k">١٢</div><div><h4>مقدمة المؤلف والوصية الخاتمة في مراقي الوعي</h4><p>خارج الفصول الستة والثلاثين.</p><p class="rec"><b>أقترح:</b> جلسة افتتاحية وجلسة ختامية اختياريتان، أو استبعادهما.</p></div></div>
+<div class="dec"><div class="k">١٣</div><div><h4>المحاور الثمانية للتحصيني</h4><p>تجميع من الملخص وليس من المؤلف.</p><p class="rec"><b>أقترح:</b> عرضها بهذا الوصف لتسهيل التنقل.</p></div></div>
+<div class="dec"><div class="k">١٤</div><div><h4>الفئة العمرية وتسجيل الدخول</h4><p>يحدد سياسة البيانات والموافقات.</p><p class="rec"><b>أقترح:</b> بالغون ابتداءً، وحساب اختياري يُفعَّل للمزامنة فقط.</p></div></div>
+<div class="dec"><div class="k">١٥</div><div><h4>التقنية والاستضافة</h4><p>Flutter أو React Native، ومكان استضافة الخادم.</p><p class="rec"><b>أقترح:</b> Flutter، واستضافة داخل المملكة إن كانت هناك متطلبات للبيانات.</p></div></div>
+<div class="dec"><div class="k">١٦</div><div><h4>الخطوط ورسم الآيات</h4><p>النموذج يستعمل خطين حرين. والرسم العثماني يحتاج مصحفًا رقميًا مرخصًا.</p><p class="rec"><b>أقترح:</b> خط مجمع الملك فهد إن أُذن بترخيصه، وإلا أبقيت الآيات خارج الواجهة.</p></div></div>
+</div>
+</section>
+<footer>أُعدّت هذه الوثيقة من ملفي «ملخص زاد العباد» و«ملخص مراقي الوعي» وحدهما. لم يُضَف إليها محتوى علمي من خارجهما.</footer>
+</div>
