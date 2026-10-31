@@ -1,0 +1,107 @@
+<title>خطة التجربة المغلقة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout concept: an audit report — verdict first, evidence tables after, one column with wide tables scrolling inside their own boxes. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-soft:#D3EAE5;--night:#14304A;--night-ink:#EAF2F7;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--ok-soft:#D9EFE3;--redo:#BE4F3A;--redo-soft:#F5DBD4;--font-ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--font-display:"Amiri","Traditional Arabic",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:15.5px;line-height:1.8;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;font-variant-numeric:tabular-nums}
+.wrap{max-width:900px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2,h3,p,ul,ol{margin:0}
+a{color:var(--brand);font-weight:600}
+.hero{background:var(--night);color:var(--night-ink);border-radius:22px;padding:24px 22px;display:flex;flex-direction:column;gap:10px}
+.hero small{color:#9FC0CF}
+.hero h1{font-size:30px;line-height:1.4;text-wrap:balance}
+.verdict{border:2px solid var(--gold);background:var(--gold-soft);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.verdict h2{font-size:21px}
+section{display:flex;flex-direction:column;gap:12px}
+h2{font-size:23px;line-height:1.4;text-wrap:balance}
+h3{font-size:17px;margin-top:4px}
+.lead{color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.grid4{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-size:26px;line-height:1.2}
+.stat span{font-size:12.5px;color:var(--ink-2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px;line-height:1.65}
+th,td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;white-space:nowrap}
+td.bad{background:var(--redo-soft);color:var(--redo);font-weight:700}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:12px;white-space:nowrap}
+.tiny{font-size:12px;color:var(--ink-2)}
+.pill{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--gold-soft);color:var(--gold)}.pill.redo{background:var(--redo-soft);color:var(--redo)}
+td.aya{font-family:var(--font-display);font-size:18px;line-height:2}
+.callout{border-inline-start:4px solid var(--brand);background:var(--brand-soft);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.callout.warn{border-color:var(--gold);background:var(--gold-soft)}
+.callout.stop{border-color:var(--redo);background:var(--redo-soft)}
+ul.tight,ol.tight{padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}
+</style>
+<div class="wrap">
+<header class="hero"><small>بَرْد اليقين · نموذج أولي · المجموعة ١ «جاهزة للعرض على المشرف العلمي»</small><h1>خطة التجربة المغلقة ومعايير قبولها</h1><p>٥–١٠ متعلمين · بلا تغيير في المحتوى العلمي · بلا بيانات شخصية</p></header>
+
+<div class="verdict"><h2>الخلاصة</h2><p>النسخة جاهزة لتجربة مغلقة. تُقاس بها ثلاثة أسئلة: هل تتّسع الجلسة (خاصة الجلسة ٧) لثلاث دقائق؟ هل أسئلتها بصعوبة مناسبة؟ هل تكفي المراجعة بعشرين سؤالًا للأهداف الأكثف؟ ولا قرار علمي نهائي ولا إصدار عام قبل اعتماد المشرف والتحقق من الحقوق.</p></div>
+
+<section><h2>١. الترتيب المقترح</h2>
+<ul><li><b>المشاركون:</b> ٥–١٠، يُفضَّل أن يضمّوا قارئًا بطيئًا على الأقل، وهاتفًا صغيرًا، وهاتفًا كبيرًا، وحاسوبًا. لا تُجمع أسماء ولا بريد؛ يظهر لكل مشارك رمز عشوائي مثل P-4F2K.</li>
+<li><b>الجولة أ:</b> الجلسات ١–٥ (تسبقها جلسة تدريبية غير محسوبة). <b>الجولة ب:</b> الجلسات ٦–١٠ ثم المراجعة (٤ جلسات مصغّرة). الجلسة ٧ إلزامية لكل مشارك.</li>
+<li><b>الأسلوب:</b> يجيب المشارك كأنه في استعمال حقيقي، ولا يُشرح له شيء أثناء الجلسة. بعد كل جلسة يظهر استبيان من ثلاثة بنود وملاحظة اختيارية.</li>
+<li><b>الإرسال:</b> التطبيق الذي ينشر هنا خاص بحسابك، فالإرسال التلقائي يتطلب منح المشارك صلاحية «مساهم». إن تعذّر، يضغط المشارك «نسخ النتائج» ويرسل النص إليك، أو ينزّل الملف.</li></ul></section>
+
+<section><h2>٢. ما يُجمع وما لا يُجمع</h2>
+<div class="tw"><table><thead><tr><th>يُجمع</th><th>لا يُجمع</th></tr></thead><tbody>
+<tr><td>رمز عشوائي · تاريخ · نوع الجهاز العام · زمن كل جلسة · انتهاء الوقت أو الخروج أو الاستئناف · الأخطاء والمحاولة الأولى لكل سؤال · ثلاثة تقييمات وملاحظة قصيرة</td><td>الاسم · البريد · الموقع · معرّف ثابت للجهاز · فتح صفحات الملخص · محتوى ما يكتبه المشارك خارج خانة الملاحظة</td></tr></tbody></table></div>
+<p class="lead">يظهر للمشارك زر «مسح بياناتي من هذا الجهاز». وتُطلب موافقته على صفحة التعريف قبل أي تسجيل.</p></section>
+
+<section><h2>٣. معايير قبول التجربة</h2>
+<div class="tw"><table><thead><tr><th class="num">#</th><th>المعيار</th><th>العتبة</th><th>القياس</th></tr></thead><tbody>
+<tr><td class="num">C1</td><td>اكتمال المشاركة</td><td>٥ مشاركين على الأقل أنهوا الجلسات ١–١٠ والمراجعة</td><td>عدد الرموز المكتملة</td></tr>
+<tr><td class="num">C2</td><td>الجلسة داخل ١٨٠ ثانية</td><td>≥ ٨٠٪ من الجلسات تنتهي من أول مرة دون انتهاء وقت</td><td>analyze.py</td></tr>
+<tr><td class="num">C2-٧</td><td>الجلسة ٧ خاصة</td><td>انتهاء وقتها ≤ ٣٠٪ ووسيط زمنها ≤ ١٧٠ ثانية</td><td>سجلات الجلسة ٧</td></tr>
+<tr><td class="num">C3</td><td>دقة التقدير الحسابي</td><td>وسيط (الفعلي ÷ التقدير) بين ٠٫٧ و١٫٣</td><td>حقلا sec وest</td></tr>
+<tr><td class="num">C4</td><td>المراجعة المصغّرة</td><td>≥ ٨٠٪ من الجلسات المصغّرة داخل ١٨٠ ثانية</td><td>سجلات RM</td></tr>
+<tr><td class="num">C5</td><td>الصعوبة</td><td>وسيط المحاولة الأولى لكل جلسة بين ٥٥٪ و٩٠٪؛ ويُوسم للفحص أي سؤال بعد ٥ مشاهدات تقل محاولته الأولى عن ٤٠٪ أو تزيد على ٩٥٪</td><td>حقل qs</td></tr>
+<tr><td class="num">C6</td><td>سهولة الاستعمال</td><td>وسيط السهولة ≥ ٤ من ٥؛ ≥ ٨٠٪ «طول النص مناسب»؛ ≥ ٨٠٪ «الأسئلة واضحة»</td><td>الاستبيان</td></tr>
+<tr><td class="num">C7</td><td>سلامة التقدم</td><td>صفر بلاغ عن فقدان تقدم؛ والجلسة التي انتهى وقتها تُستأنف صحيحة</td><td>ملاحظات + سجل الاستئناف</td></tr>
+<tr><td class="num">C8</td><td>الخصوصية</td><td>صفر بيانات شخصية في أي سجل أو ملاحظة</td><td>مراجعة يدوية للملاحظات</td></tr>
+</tbody></table></div>
+<div class="card"><b>قاعدة القرار</b><span><b>نجاح:</b> تتحقق C1 وC2 وC4 وC6 وC7 وC8 ولا يفشل أكثر من معيار واحد من C3 وC5. <b>نجاح مشروط:</b> تفشل معايير في الزمن فقط، فتُعدَّل الجلسات المعنية دون المساس بالعلم. <b>إخفاق:</b> فشل C7 أو C8، فيُوقف حتى الإصلاح.</span></div>
+<p class="lead">العتبات اقتراح مني للنقاش، لا نتيجة قياس، فعدّلها كما تراه.</p></section>
+
+<section><h2>٤. تغطية المراجعة للأهداف الأكثف</h2>
+<p class="lead">للمراجعة سؤال واحد لكل هدف من ٢٠. فإن كان للهدف عدة أسئلة فلا يُراجَع منها إلا واحد.</p>
+<div class="tw"><table><thead><tr><th>الهدف</th><th class="num">أسئلته في الجلسات</th><th>أسئلته</th><th>سؤال المراجعة (المحوري)</th><th class="num">المغطّى</th></tr></thead><tbody>
+<tr><td>١٦ حلاوة الإيمان</td><td class="num">٤</td><td>s7m1, s7q1, s7q2, s7q3</td><td>s7m1</td><td class="num">١ من ٤</td></tr>
+<tr><td>١٩ تفرد الله بالخلق</td><td class="num">٣</td><td>s9m1, s9q1, s9m2</td><td>s9m1</td><td class="num">١ من ٣</td></tr>
+<tr><td>٢٠ الإحياء والإماتة</td><td class="num">٤</td><td>s10m1, s10q3, s10q4, s10q5</td><td>s10m1</td><td class="num">١ من ٤</td></tr>
+</tbody></table></div>
+<ul><li>هذه الأهداف الثلاثة تمثل ١١ سؤالًا من ٤٢ لكن ٣ منها فقط تُراجَع، أي نحو ٢٧٪. بقية الأهداف أقل كثافة.</li>
+<li>كان الاختيار السابق «الأقل زمنًا» فيختار أحيانًا سؤالًا جزئيًا (للهدف ١٦ كان s7q3، وللهدف ٢٠ كان s10q5). غيّرته إلى السؤال المحوري لكل هدف (أثره: يتغير سؤال المراجعة لأهداف ٧ و١٧ و٢٠ أيضًا).</li>
+<li>أثر التغيير على الزمن: الجلسات المصغّرة الأربع صارت ١٦٨–١٧٣ ثانية لقارئ متوسط (١٣٠ كلمة/دقيقة، ٢٥٪ أخطاء)، و٢٠٢–٢٠٩ لقارئ بطيء (١٠٠ كلمة/دقيقة). أي إنها تتجاوز ١٨٠ ثانية لدى البطيء، وهذا ما يقيسه C4.</li></ul>
+<div class="card"><b>خيارات القرار بعد التجربة</b><span>(أ) إبقاء ٢٠ مع الاختيار المحوري إن نجح C4 وكان أداء الأهداف الثلاثة جيدًا. (ب) رفع المراجعة إلى ٢٤ سؤالًا بإضافة سؤال ثانٍ للأهداف ١٦ و١٩ و٢٠ وسؤال لهدف رابع، مع جلسة مصغّرة سادسة أو إعادة توزيع، وهذا يزيد زمن المراجعة. (ج) تدوير السؤال المراجَع بين مرات المراجعة (مطبّق بعد المحوري)، لتغطية أوسع على مدى الزمن. أرجّح (أ) للتجربة ثم القرار بالبيانات.</span></div></section>
+
+<section><h2>٥. مواضع التحسين المحتملة</h2>
+<div class="tw"><table><thead><tr><th>الموضع</th><th>المشكلة المتوقعة</th><th>الإجراء إن ثبتت</th></tr></thead><tbody>
+<tr><td>الجلسة ٧</td><td>١٩٥ ثانية لقارئ بطيء (تقدير)</td><td>تقصير نص مشترك أو نقل سؤال إلى جلسة أخرى بعد موافقتك</td></tr>
+<tr><td>الهواتف الصغيرة</td><td>٣٩٠×٨٠٠ يتسع لـ٤ أسئلة دون تمرير؛ ٣٦٠×٦٤٠ يحتاج تمريرًا في ١٩ سؤالًا</td><td>تقليل الحشو أو طي النص المشترك افتراضيًا</td></tr>
+<tr><td>الخيارات الطويلة في الأسئلة المدموجة</td><td>تباطؤ القراءة</td><td>تقصير الخيارات دون تغيير المعنى</td></tr>
+<tr><td>النص المطوي</td><td>قد لا يلاحظ المشارك أنه يستطيع فتحه</td><td>تغيير الإشارة البصرية</td></tr>
+<tr><td>شاشة التصحيح</td><td>طولها</td><td>اختصار الشرح</td></tr>
+<tr><td>تشكيل الآيات</td><td>معروضة بلا تشكيل مؤقتًا</td><td>مصحف مرخّص وتحقق المشرف قبل الإصدار</td></tr>
+</tbody></table></div></section>
+
+<section><h2>٦. ما اختُبر وما لم يُختبر</h2>
+<ul><li><b>اختُبر آليًا في Chromium:</b> بوابة الموافقة، تسجيل الجلسات، الاستبيان، انتهاء الوقت والاستئناف، الخروج، عدم تسجيل القراءة، تصدير CSV، إرسال تجريبي بمحاكاة، المسح، وعدم تأثر نسخة المراجع. ٢٠ فحصًا ناجحًا، ومعها اختبارات الانحدار للنسخ السابقة.</li>
+<li><b>لم يُختبر:</b> أجهزة iOS وAndroid حقيقية، قارئ شاشة، مشاركون حقيقيون، وكتابة المشارك الفعلية إلى قاعدة البيانات (الأدوات لا تتيح محاكاة مشاهد بصلاحية مساهم).</li></ul></section>
+
+<section><h2>٧. ما يبقى معلقًا</h2>
+<ul><li>اعتماد المشرف العلمي، ولفظ جبريل في الملخص، وتشكيل الآيات من مصحف مرخّص.</li>
+<li>التحقق من حقوق المحتوى قبل أي إصدار عام.</li>
+<li>لن أبدأ المجموعة الثانية ولا الجلسة ١١ ولا الإنتاج قبل انتهاء التجربة وموافقتك الصريحة.</li></ul></section>
+</div>

@@ -28,7 +28,7 @@ for q in qs:
 for a in arch:
     rows.append([a['id'],oldsess[a['id']],f"ملخص زاد العباد ص{pgs(a)} — {a['src']['locus']}",'—','—','—','—','مدموج',f"دُمج في {a['mergedInto']}: لا يُحتسب ضمن المتبقي ولا المطلوب للإتقان.",OBJ[a['objective']],a['bloom']])
 for i,o in enumerate(bp,1):
-    p=byid[prim[o['id']]]; rows.append([f"R-{i:02d}",'مراجعة المجموعة ١',f"السؤال الأساسي {p['id']} (ملخص ص{pgs(p)}) · بدائل: {'، '.join(x for x in o['questions'] if x!=p['id']) or '—'}",p['review']['info'],'مناسبة','مناسبة','سليم',p['review']['decision'],f"هدف المراجعة: {o['title']}. الأساسي هو الأقل زمنًا؛ ويُقدَّم ما أُخطئ فيه.",o['title'],p['bloom']])
+    p=byid[prim[o['id']]]; rows.append([f"R-{i:02d}",'مراجعة المجموعة ١',f"السؤال الأساسي {p['id']} (ملخص ص{pgs(p)}) · بدائل: {'، '.join(x for x in o['questions'] if x!=p['id']) or '—'}",p['review']['info'],'مناسبة','مناسبة','سليم',p['review']['decision'],f"هدف المراجعة: {o['title']}. الأساسي هو السؤال المحوري للهدف؛ ويُقدَّم ما أُخطئ فيه.",o['title'],p['bloom']])
 with open('question-review.csv','w',encoding='utf-8-sig',newline='') as f:
     w=csv.writer(f); w.writerow(HDR); w.writerows(rows)
 # ---------- tables
@@ -100,9 +100,9 @@ body=f'''<div class="wrap">
 <h3>الأسئلة المدموجة (لا تُحتسب)</h3>
 <div class="tw"><table><thead><tr><th>السؤال القديم</th><th class="num">الجلسة</th><th>نصه</th><th>دُمج في</th><th>القرار</th></tr></thead><tbody>{atb}</tbody></table></div>
 <h3>أسئلة المراجعة العشرين: سؤال لكل هدف علمي</h3>
-<div class="tw"><table><thead><tr><th>الفتحة</th><th>الهدف العلمي</th><th>الأساسي (الأقل زمنًا)</th><th>البدائل</th><th class="num">أسئلة الهدف</th><th>المستوى</th></tr></thead><tbody>{rv}</tbody></table></div>
+<div class="tw"><table><thead><tr><th>الفتحة</th><th>الهدف العلمي</th><th>الأساسي (المفهوم المحوري)</th><th>البدائل</th><th class="num">أسئلة الهدف</th><th>المستوى</th></tr></thead><tbody>{rv}</tbody></table></div>
 <ul class="tight"><li>تغطي المراجعة الأهداف العشرين كلها كما كانت قبل الدمج، ولم يسقط هدف. وصار لهدفين أو أكثر سؤال واحد فقط بعد الدمج، فتقل أسئلة التناوب عليها.</li>
-<li>يُقدَّم ما أخطأ فيه الطالب أولًا، وإلا يُختار الأقل زمنًا ثم يُدار عند تكرار المراجعة. وتُوزَّع على أربع جلسات مصغّرة متوازنة الزمن.</li>
+<li>يُقدَّم ما أخطأ فيه الطالب أولًا، وإلا يُختار السؤال المحوري للهدف ثم يُدار عند تكرار المراجعة. وتُوزَّع على أربع جلسات مصغّرة متوازنة الزمن.</li>
 <li>تقدير جلسات المراجعة الأربع في الجدول التالي، وهي بين {ar(min(m['base'][1] for m in T['review_minis']))} و{ar(max(m['base'][1] for m in T['review_minis']))} ثانية للقارئ المتوسط.</li></ul></section>
 
 <section><h2>٥. ملاءمة المدة (تقدير)</h2>

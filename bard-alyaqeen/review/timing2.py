@@ -27,9 +27,7 @@ before=table(OLD,False); after=table(NEW,True)
 Q={q['id']:q for s in NEW['sessions'] for q in s['questions']}
 def cost(i): 
     seen=set(); f,r,w=secs(Q[i],130,seen,False); return f+2
-prim=[]
-for o in NEW['reviewBlueprint']['objectives']:
-    prim.append(sorted(o['questions'],key=cost)[0])
+prim=[o['primary'] for o in NEW['reviewBlueprint']['objectives']]
 minis=[[],[],[],[]];tot=[0]*4
 for i in sorted(prim,key=cost,reverse=True):
     j=min((k for k in range(4) if len(minis[k])<5),key=lambda k:tot[k]); minis[j].append(i); tot[j]+=cost(i)

@@ -20,3 +20,7 @@
 - `timing2.py` → `timing-comparison.json`: مقارنة الزمن قبل الدمج وبعده (تقدير حسابي).
 - `build_report2.py`: يولّد `../review-report.html` و`question-review.csv`.
 ترتيب إعادة البناء: `apply_edits.py` ثم `restructure.py` ثم `apply_official_verses.py`.
+
+## مرحلة التجربة المغلقة
+- `set_core.py`: يجعل «السؤال الأساسي» لكل هدف مراجعة هو السؤال المحوري للمفهوم (لا الأقل زمنًا)، ويكتب `change-log-core.json`. ترتيب إعادة البناء: `apply_edits.py` ← `restructure.py` ← `apply_official_verses.py` ← `set_core.py`.
+- `../trial.html`: نسخة التجربة (تسجيل زمن/أداء لكل جلسة برمز مشارك عشوائي، بلا بيانات شخصية). `../eval-form.html`: نموذج تقييم مختصر. `../trial/analyze.py`: يحلل ملفات CSV المصدَّرة ويحسب معايير القبول.

@@ -1,0 +1,79 @@
+<title>نموذج تقييم التجربة</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&display=swap">
+<style>
+/* Layout concept: a short observation form, one column, big tap targets; results can be sent or copied. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-ink:#fff;--brand-soft:#D3EAE5;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--font:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-ink:#06201E;--brand-soft:#133836;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-ink:#06201E;--brand-soft:#133836;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.8;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px}
+.wrap{max-width:640px;margin-inline:auto;display:flex;flex-direction:column;gap:16px}
+h1,h2,p{margin:0}h1{font-size:26px;line-height:1.4}h2{font-size:16px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:8px}
+.note{border-inline-start:4px solid var(--gold);background:var(--gold-soft);border-radius:10px;padding:10px 14px;font-size:14.5px}
+label.t{font-weight:600;font-size:14.5px}
+input[type=text],input[type=number],select,textarea{font:inherit;padding:10px 12px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);width:100%}
+.opts{display:flex;flex-wrap:wrap;gap:8px}
+.opt{border:1.5px solid var(--line);background:var(--surface);border-radius:12px;padding:8px 14px;min-height:44px;font:inherit;color:var(--ink);cursor:pointer}
+.opt[aria-pressed="true"]{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.chk{display:flex;gap:10px;align-items:center;font-size:15px}.chk input{width:22px;height:22px}
+.btn{font:inherit;font-weight:700;border-radius:14px;padding:12px 16px;min-height:48px;border:1px solid var(--line);background:var(--surface);color:var(--ink);cursor:pointer}
+.btn.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand)}
+.tiny{font-size:12.5px;color:var(--ink-2)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.status{font-size:14px;color:var(--ok);min-height:22px}
+</style>
+<div class="wrap">
+<header><h1>نموذج تقييم التجربة</h1><p class="tiny">لتسجيل نتيجة جلسة واحدة من «بَرْد اليقين» في التجربة المغلقة. يملؤه المشرف أثناء الملاحظة أو المشارك بعد الجلسة. نحو دقيقة واحدة.</p></header>
+<div class="note"><b>خصوصية:</b> لا تكتب اسمًا ولا بريدًا ولا أي معلومة شخصية، لا في الرمز ولا في الملاحظات. نسجل الرمز العشوائي ونتائج الجلسة فقط. وهذه نسخة تجريبية غير معتمدة علميًا.</div>
+<form id="f" class="card" autocomplete="off">
+ <label class="t" for="code">رمز المشارك</label><input type="text" id="code" maxlength="12" placeholder="P-XXXX" dir="ltr" required>
+ <label class="t" for="dev">الجهاز</label><select id="dev"><option value="">اختر</option><option>هاتف</option><option>لوحي</option><option>حاسوب</option></select>
+ <label class="t" for="unit">الجلسة</label><select id="unit"><option value="">اختر</option></select>
+ <label class="t" for="sec">الزمن الفعلي بالثواني (إن لاحظته)</label><input type="number" id="sec" min="0" max="900" inputmode="numeric">
+ <div class="t label">هل انتهى الوقت قبل الإتمام؟</div><div class="opts" data-k="timeout"><button type="button" class="opt" aria-pressed="false" data-v="لا">لا</button><button type="button" class="opt" aria-pressed="false" data-v="نعم">نعم</button></div>
+ <label class="t" for="wrong">عدد الأسئلة التي أخطأ فيها عند أول محاولة</label><input type="number" id="wrong" min="0" max="10" inputmode="numeric">
+ <div class="t label">سهولة الجلسة</div><div class="opts" data-k="ease"><button type="button" class="opt" aria-pressed="false" data-v="1">١ صعبة</button><button type="button" class="opt" aria-pressed="false" data-v="2">٢</button><button type="button" class="opt" aria-pressed="false" data-v="3">٣</button><button type="button" class="opt" aria-pressed="false" data-v="4">٤</button><button type="button" class="opt" aria-pressed="false" data-v="5">٥ سهلة</button></div>
+ <div class="t label">طول الآيات والأحاديث</div><div class="opts" data-k="textlen"><button type="button" class="opt" aria-pressed="false" data-v="قصيرة">قصيرة</button><button type="button" class="opt" aria-pressed="false" data-v="مناسبة">مناسبة</button><button type="button" class="opt" aria-pressed="false" data-v="طويلة">طويلة</button></div>
+ <div class="t label">وضوح الأسئلة</div><div class="opts" data-k="clarity"><button type="button" class="opt" aria-pressed="false" data-v="واضحة">واضحة</button><button type="button" class="opt" aria-pressed="false" data-v="تحتاج تحسينًا">تحتاج تحسينًا</button></div>
+ <div class="t label">ما الذي واجه صعوبة؟ (اختياري)</div>
+ <label class="chk"><input type="checkbox" value="قراءة النص الشرعي"> قراءة الآية أو الحديث</label>
+ <label class="chk"><input type="checkbox" value="فهم السؤال"> فهم السؤال</label>
+ <label class="chk"><input type="checkbox" value="خيارات متشابهة"> خيارات متشابهة أو طويلة</label>
+ <label class="chk"><input type="checkbox" value="المؤقت"> المؤقت والوقت</label>
+ <label class="chk"><input type="checkbox" value="الأزرار والتنقل"> الأزرار والتنقل</label>
+ <label class="chk"><input type="checkbox" value="شاشة الخطأ"> شاشة التصحيح والإعادة</label>
+ <label class="chk"><input type="checkbox" value="النص المرجعي"> العثور على النص المرجعي المطوي</label>
+ <label class="chk"><input type="checkbox" value="فقد التقدم"> فُقد تقدمي أو لم يُستأنف</label>
+ <label class="t" for="note">ملاحظات (حتى ٢٠٠ حرف، دون معلومات شخصية)</label><textarea id="note" rows="3" maxlength="200"></textarea>
+ <button type="submit" class="btn primary" id="send">حفظ وإرسال</button>
+ <div class="status" id="st" role="status" aria-live="polite"></div>
+</form>
+<div class="card"><h2>إن لم يعمل الإرسال التلقائي</h2><p class="tiny">يعمل الإرسال حين يُفتح الرابط من حساب مدعو بصلاحية المساهمة. وإلا فانسخ السطر وأرسله إلى المشرف.</p><button class="btn" id="copy" type="button">نسخ النتيجة (CSV)</button><textarea id="out" rows="3" readonly dir="ltr" style="font-family:ui-monospace,monospace;font-size:12px" aria-label="نتيجة جاهزة للنسخ"></textarea></div>
+</div>
+<script>
+(function(){
+  var sel=document.getElementById('unit'); var i;
+  for(i=1;i<=10;i++){var o=document.createElement('option');o.value='S'+i;o.textContent='جلسة '+i;sel.appendChild(o);}
+  for(i=1;i<=4;i++){var o2=document.createElement('option');o2.value='RM'+i;o2.textContent='مراجعة مصغّرة '+i;sel.appendChild(o2);}
+  var pick={};
+  document.querySelectorAll('.opts').forEach(function(g){g.addEventListener('click',function(e){var b=e.target.closest('.opt');if(!b)return;g.querySelectorAll('.opt').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');pick[g.dataset.k]=b.dataset.v;});});
+  function collect(){var d={code:(document.getElementById('code').value||'').trim().slice(0,12),dev:document.getElementById('dev').value,unit:document.getElementById('unit').value,sec:document.getElementById('sec').value,timeout:pick.timeout||'',wrong:document.getElementById('wrong').value,ease:pick.ease||'',textlen:pick.textlen||'',clarity:pick.clarity||'',issues:Array.prototype.map.call(document.querySelectorAll('.chk input:checked'),function(c){return c.value}).join('|'),note:(document.getElementById('note').value||'').slice(0,200),date:new Date().toISOString().slice(0,10)};return d;}
+  function csv(d){var K=['code','date','dev','unit','sec','timeout','wrong','ease','textlen','clarity','issues','note'];return K.map(function(k){var v=String(d[k]==null?'':d[k]).replace(/\r?\n/g,' ');return /[",]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v}).join(',');}
+  var HEAD='code,date,dev,unit,sec,timeout,wrong,ease,textlen,clarity,issues,note';
+  var out=document.getElementById('out');
+  function refresh(){out.value=HEAD+'\n'+csv(collect());}
+  document.getElementById('f').addEventListener('input',refresh);document.getElementById('f').addEventListener('click',function(){setTimeout(refresh,0)});refresh();
+  document.getElementById('copy').addEventListener('click',function(){refresh();var t=out.value,st=document.getElementById('st');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){st.textContent='نُسخت النتيجة.';},function(){out.select();st.textContent='حدّد النص أعلاه وانسخه.';});}else{out.select();st.textContent='حدّد النص أعلاه وانسخه.';}});
+  document.getElementById('f').addEventListener('submit',function(e){e.preventDefault();var d=collect(),st=document.getElementById('st');
+    if(!d.code||!d.unit){st.textContent='اكتب رمز المشارك واختر الجلسة.';return;}
+    st.textContent='جارٍ الإرسال...';
+    var done=false;var timer=setTimeout(function(){if(!done){st.textContent='تعذّر الإرسال التلقائي. انسخ النتيجة وأرسلها إلى المشرف.';}},10000);
+    Promise.resolve(window.claude&&window.claude.use?window.claude.use('db'):null).then(function(db){
+      if(!db){clearTimeout(timer);done=true;st.textContent='الإرسال التلقائي غير متاح هنا. انسخ النتيجة وأرسلها إلى المشرف.';return;}
+      return db.doc('eval/'+d.code+'-'+d.unit+'-'+Date.now()).set(d).then(function(){done=true;clearTimeout(timer);st.textContent='شكرًا، أُرسلت النتيجة.';});
+    }).catch(function(){done=true;clearTimeout(timer);st.textContent='تعذّر الإرسال. انسخ النتيجة وأرسلها إلى المشرف.';});
+  });
+})();
+</script>
