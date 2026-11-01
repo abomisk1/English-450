@@ -1,0 +1,59 @@
+<title>سجل المراجعة العلمية</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout concept: an audit report — verdict first, evidence tables after, one column with wide tables scrolling inside their own boxes. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-soft:#D3EAE5;--night:#14304A;--night-ink:#EAF2F7;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--ok-soft:#D9EFE3;--redo:#BE4F3A;--redo-soft:#F5DBD4;--font-ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--font-display:"Amiri","Traditional Arabic",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:15.5px;line-height:1.8;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;font-variant-numeric:tabular-nums}
+.wrap{max-width:900px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2,h3,p,ul,ol{margin:0}
+a{color:var(--brand);font-weight:600}
+.hero{background:var(--night);color:var(--night-ink);border-radius:22px;padding:24px 22px;display:flex;flex-direction:column;gap:10px}
+.hero small{color:#9FC0CF}
+.hero h1{font-size:30px;line-height:1.4;text-wrap:balance}
+.verdict{border:2px solid var(--gold);background:var(--gold-soft);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.verdict h2{font-size:21px}
+section{display:flex;flex-direction:column;gap:12px}
+h2{font-size:23px;line-height:1.4;text-wrap:balance}
+h3{font-size:17px;margin-top:4px}
+.lead{color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.grid4{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-size:26px;line-height:1.2}
+.stat span{font-size:12.5px;color:var(--ink-2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px;line-height:1.65}
+th,td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;white-space:nowrap}
+td.bad{background:var(--redo-soft);color:var(--redo);font-weight:700}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:12px;white-space:nowrap}
+.tiny{font-size:12px;color:var(--ink-2)}
+.pill{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--gold-soft);color:var(--gold)}.pill.redo{background:var(--redo-soft);color:var(--redo)}
+td.aya{font-family:var(--font-display);font-size:18px;line-height:2}
+.callout{border-inline-start:4px solid var(--brand);background:var(--brand-soft);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.callout.warn{border-color:var(--gold);background:var(--gold-soft)}
+.callout.stop{border-color:var(--redo);background:var(--redo-soft)}
+ul.tight,ol.tight{padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}
+</style><style>.btns{display:flex;flex-direction:column;gap:10px}.btnx{display:block;text-align:center;padding:14px 16px;border-radius:14px;border:1px solid var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:700;text-decoration:none;font-family:inherit;font-size:15.5px;cursor:pointer}.btnx.p{background:var(--brand);color:#fff}.fn{direction:ltr;text-align:left;color:var(--ink-2);font-size:12px}</style>
+</head><body><div class="wrap">
+<header class="hero"><small>بَرْد اليقين · المجموعة ١ · «جاهزة للعرض على المشرف العلمي»</small><h1>سجل المراجعة العلمية للأسئلة والإجابات</h1><p>الإصدار ١٫٠ · مسودة للمراجعة · ٤٢ سؤالًا و٢٠ موضعًا مراجعة · ٥١ صفحة</p></header>
+<div class="verdict"><h2>ما فيه</h2><p>بطاقة لكل سؤال: السؤال والنص الشرعي والخيارات (الصحيحة بالأحمر) والشرح وصفحة الملخص والموضع الفعلي وصفحة الكتاب الأصلي («قيد التحقق») وحالة المراجعة وخانة قرار المشرف. وقسم للبرنامج التحصيني يبيّن أنه لم تُعدّ أسئلته بعد. لا سؤال معتمد قبل قرار المشرف.</p></div>
+<section><h2>الملفات</h2><div class="btns">
+<a class="btnx p" href="scientific-review-record-v1.0.pdf" target="_blank" rel="noopener">فتح ملف PDF</a>
+<button class="btnx" data-f="scientific-review-record-v1.0.pdf" id="d1">تحميل PDF</button>
+<button class="btnx" data-f="scientific-review-record-v1.0.xlsx" id="d2">تحميل النسخة القابلة للتحرير (Excel)</button>
+<button class="btnx" data-f="record.json" id="d3">تحميل البيانات (JSON)</button>
+</div><p class="fn" id="msg"></p>
+<p class="lead">بعد تدوين قرارات المشرف في ملف Excel (أعمدة: حالة المراجعة العلمية، قرار المشرف العلمي، ملاحظات المشرف) يُعاد إصدار PDF منه بالأمر الموثّق في <code>review-record/README.md</code>.</p></section></div>
+<script>
+const msg=document.getElementById('msg');
+document.querySelectorAll('button[data-f]').forEach(b=>b.addEventListener('click',async()=>{const f=b.dataset.f;try{const d=await window.claude.use('downloads');if(!d)throw 0;const r=await fetch(f);if(!r.ok)throw 0;await d.save({filename:f,data:await r.blob()});}catch(e){if(e&&e.code==='declined')return;const a=document.createElement('a');a.href=f;a.download=f;a.target='_blank';document.body.appendChild(a);a.click();a.remove();msg.textContent='إن لم يبدأ التحميل فافتح الملف من زر «فتح ملف PDF» ثم احفظه.';}}));
+</script></body></html>

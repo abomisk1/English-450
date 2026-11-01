@@ -1,0 +1,32 @@
+const {chromium}=require('playwright'); const fs=require('fs');
+let pass=0,fail=0; const ok=(c,m)=>{ if(c){pass++;console.log('PASS',m);}else{fail++;console.log('FAIL',m);} };
+const R='/home/user/English-450/bard-alyaqeen/';
+(async()=>{
+  // 1 wording: only the intended question texts changed; meaning-bearing fields untouched
+  const A=JSON.parse(fs.readFileSync(R+'review/question-bank.before-stage8.json','utf8')), B=JSON.parse(fs.readFileSync(R+'data/question-bank.json','utf8'));
+  const qa={},qb={}; A.sessions.forEach(s=>s.questions.forEach(q=>qa[q.id]=q)); B.sessions.forEach(s=>s.questions.forEach(q=>qb[q.id]=q));
+  const diffText=Object.keys(qa).filter(i=>qa[i].text!==qb[i].text), other=Object.keys(qa).filter(i=>JSON.stringify([qa[i].options,qa[i].correct,qa[i].quote,qa[i].nass,qa[i].src,qa[i].quoteParts])!==JSON.stringify([qb[i].options,qb[i].correct,qb[i].quote,qb[i].nass,qb[i].src,qb[i].quoteParts]));
+  ok(diffText.length===10&&other.length===0,'only 10 question stems changed; options, correct answer, explanation, verse/hadith text, source pages untouched ('+diffText.join(',')+')');
+  const stems=Object.values(qb).filter(q=>q.status==='valid').map(q=>q.text);
+  ok(!stems.some(t=>/بحسب الكتاب|ذكره الكتاب|وصفه الكتاب/.test(t)),'no «بحسب الكتاب» (or «ذكره/وصفه الكتاب») left in question stems');
+  ok(stems.filter(t=>/بحسب المرجع|ذكره المرجع|وصفه المرجع/.test(t)).length===9&&stems.filter(t=>/بحسب الملخص/.test(t)).length===1,'9 stems use «المرجع», 1 uses «بحسب الملخص» where clearer');
+  ok(/أهل الكتاب/.test(qb.s6q3.quote)&&/وكتابه/.test(JSON.stringify(qb.s1q3.nass)),'«الكتاب» kept inside source text (أهل الكتاب) and hadith wording (وكتابه)');
+  const b=await chromium.launch(); const ctx=await b.newContext({viewport:{width:390,height:800},hasTouch:true,isMobile:true}); const p=await ctx.newPage(); const errs=[]; p.on('pageerror',e=>errs.push(e.message));
+  await p.route('**/*',r=>r.request().url().startsWith('file:')?r.continue():r.abort());
+  await p.goto('file://'+R+'prototype.html'); await p.waitForTimeout(250);
+  const ev=f=>p.evaluate(f);
+  await ev(()=>{resetAll();S.seen.zad=true;S.gintro={1:true};save();seedDemo(6,0);go('intro',{n:7});}); await p.waitForTimeout(150);
+  const I=await ev(()=>{const b=document.querySelector('#view .qsum'),cs=getComputedStyle(b),r=b.getBoundingClientRect(),sb=document.querySelector('[data-act="startSession"]').getBoundingClientRect();return {txt:b.textContent.trim(),bg:cs.backgroundColor,fs:cs.fontSize,br:cs.borderRadius,col:cs.color,h:Math.round(r.height),w:Math.round(r.width),vw:document.querySelector('#view').getBoundingClientRect().width,cls:b.className,tag:b.tagName,startPrimary:document.querySelector('[data-act="startSession"]').classList.contains('primary'),startBelow:sb.top>=r.bottom}});
+  await ev(()=>{RUN=null;seedDemo(6,0);go('home');A.startSession('7')}); await p.waitForTimeout(200);
+  const Qb=await ev(()=>{const b=document.querySelector('.qcard .qsum'),cs=getComputedStyle(b);return {txt:b.textContent.trim(),bg:cs.backgroundColor,fs:cs.fontSize,br:cs.borderRadius,col:cs.color,h:Math.round(b.getBoundingClientRect().height),cls:b.className,tag:b.tagName}});
+  ok(I.cls===Qb.cls&&I.tag===Qb.tag&&I.bg===Qb.bg&&I.fs===Qb.fs&&I.br===Qb.br&&I.col===Qb.col&&I.h===Qb.h,'intro button has exactly the same visual style as the in-question button (same class, colour, font size, radius, height) '+JSON.stringify([I.bg,I.fs,I.br,I.h]));
+  ok(I.txt==='📖 قراءة الملخص المرتبط بالجلسة'&&I.w>I.vw*0.8,'intro button: book icon + label, full-width '+I.txt);
+  ok(I.startPrimary&&I.startBelow,'«ابدأ الجلسة مباشرة» remains the primary button, below the reading button');
+  await ev(()=>{RUN=null;go('intro',{n:7})}); await p.waitForTimeout(100); await p.click('#view .qsum'); await p.waitForTimeout(300);
+  const R1=await ev(()=>({topic:[...document.querySelectorAll('.rd-topic')].map(e=>e.textContent),arts:!!document.querySelector('.rd-art'),links:!!document.querySelector('#sheetLayer a[href],#sheetLayer [data-dl]'),back:document.querySelector('.rd-back').textContent.trim()}));
+  ok(R1.arts&&R1.topic.length===1&&R1.topic[0]==='طعم الإيمان وحلاوته','opens the reader on the topic of the session (S7 → طعم الإيمان وحلاوته)'); ok(!R1.links,'reader shows no book/PDF link'); ok(/إغلاق/.test(R1.back),'from the intro the back button reads «إغلاق» (no question to return to)');
+  await p.click('#sheetLayer .rd-back'); ok(await ev(()=>ui.screen)==='intro'&&!await ev(()=>RUN),'closing returns to the intro; reading was not required (no session started, no progress change)');
+  await ev(()=>{RUN=null;go('intro',{n:7})}); ok(await ev(()=>!!document.querySelector('[data-act="startSession"]')&&document.querySelector('[data-act="startSession"]').disabled!==true),'start is available without reading');
+  ok(errs.length===0,'no page errors '+errs.join('|'));
+  console.log(`\nPASS=${pass} FAIL=${fail}`); await b.close();
+})().catch(e=>{console.log('CRASH',e.message);process.exit(1)});
