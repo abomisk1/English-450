@@ -647,10 +647,10 @@ const SECN={};DATA.zad.sections.forEach(s=>SECN[s.i]=s.n);
 /* ===== التنقل ===== */
 const ui={screen:'splash',params:{},stack:[],sec:'aqeeda',grp:null,ach:'days',unlocked:false,rvTrial:false};
 const TABS=[['home','الرئيسية','home'],['programs','البرامج','books'],['review','المراجعة','review'],['ach','إنجازاتي','chart'],['src','المصدر','doc']];
-const TABSCREENS=new Set(['trialres','home','programs','review','ach','src','sections','tahsini']);
+const TABSCREENS=new Set(['trialres','trialfb','trialadm','home','programs','review','ach','src','sections','tahsini']);
 const RUNSCREENS=new Set(['question','wrong','timeout']);
 function go(screen,params={},opts={}){
-  if(TRIAL&&!TS.consent&&screen!=='splash'&&screen!=='trialintro') screen='trialintro';
+  if(TRIAL&&!TS.consent&&screen!=='splash'&&screen!=='trialintro'&&screen!=='trialadm') screen='trialintro';
   if(!opts.back && ui.screen && ui.screen!==screen && !['splash','question','wrong','timeout','complete','intro'].includes(ui.screen)) ui.stack.push([ui.screen,ui.params]);
   if(ui.stack.length>20) ui.stack.shift();
   ui.screen=screen; ui.params=params;
@@ -659,12 +659,12 @@ function go(screen,params={},opts={}){
 }
 function back(){ const p=ui.stack.pop(); if(p) go(p[0],p[1],{back:true}); else go('home',{},{back:true}); }
 function paint(){
-  const R={trialintro:vTrialIntro,trialres:vTrialRes,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vAch,src:vSrc,secdone:vSecDone,progdone:vProgDone};
+  const R={trialintro:vTrialIntro,trialres:vTrialRes,trialfb:vTrialFb,trialadm:vTrialAdm,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vAch,src:vSrc,secdone:vSecDone,progdone:vProgDone};
   $('#view').innerHTML=(R[ui.screen]||vHome)();
   const showTabs=TABSCREENS.has(ui.screen);
   $('#tabs').hidden=!showTabs;
   $('#tabs').innerHTML=TABS.map(([k,t,i])=>{const on=ui.screen===k||(k==='programs'&&['sections','tahsini'].includes(ui.screen));return `<button class="tab ${on?'on':''}" data-act="tab" data-arg="${k}" aria-label="${t}"${on?' aria-current="page"':''}>${ico(i)}<span>${t}</span></button>`;}).join('');
-  $('#strip').innerHTML=`<span>${S.mode==='demo'?'بيانات توضيحية':S.mode==='sim'?'محاكاة':'نموذج أولي'}</span><span>بَرْد اليقين</span>`;
+  $('#strip').innerHTML=`<span>${S.mode==='demo'?'بيانات توضيحية':S.mode==='sim'?'محاكاة':TRIAL?'نسخة تجريبية':'نموذج أولي'}</span><span>بَرْد اليقين</span>`;
   $$('.panel [data-jump]').forEach(b=>b.classList.toggle('on',b.dataset.jump===ui.screen));
   if(RUNSCREENS.has(ui.screen)) updTimer();
 }
@@ -678,7 +678,7 @@ function vSplash(){
   else if(c.due){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.groupSize)} من أصل ${ar(c.groupSize)}. المراجعة الشاملة جاهزة.`;btn=['go','review','ابدأ المراجعة الشاملة'];}
   else if(c.inGroup>0&&n){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.inGroup)} من أصل ${ar(c.groupSize)}، ويمكنك متابعة الجلسة ${ar(n)}.`;btn=authored(n)?['intro',n,`تابع الجلسة ${ar(n)}`]:['go','home','تابع التعلم'];}
   else if(c.sessionsDone>0){msg='أهلًا بعودتك.';btn=['go','home','تابع التعلم'];}
-  return `<div class="splash"><div class="logo">${MARK}</div><h1>بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><div class="progs"><div class="pr"><h2>البرنامج التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>البرنامج التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'تجربة مغلقة · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
+  return `<div class="splash"><div class="logo">${MARK}</div><h1>بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><div class="progs"><div class="pr"><h2>البرنامج التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>البرنامج التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'نسخة تجريبية · المحتوى العلمي لم يُعتمد نهائيًا · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
 }
 
 /* ===== 2. الرئيسية ===== */
@@ -703,7 +703,7 @@ function vHome(){
   return `<div class="screen">
    <div class="row between"><div class="row"><div class="mark">${MARK}</div><div><div class="display" style="font-size:24px;line-height:1.2">بَرْد اليقين</div><div class="h-sub">السلام عليكم</div></div></div>${DEMO_PILL()}</div>
    <div class="next"><span class="lab">${st.lab}</span><h2>${st.title}</h2>${st.meta?`<p class="meta">${st.meta}</p>`:''}<button class="btn block" data-act="${st.btn[0]}" data-arg="${st.btn[1]}">${st.btn[2]}</button>${st.alt?`<button class="btn block ghost" data-act="${st.alt[0]}" data-arg="${st.alt[1]}">${st.alt[2]}</button>`:''}</div>
-   ${TRIAL?`<div class="card" style="gap:6px"><div class="row between"><b class="small">التجربة المغلقة</b><span class="pill" style="direction:ltr">${esc(TS.code||'')}</span></div><p class="tiny muted">تُسجَّل بياناتك غير الشخصية عند كل جلسة. بعد كل جلسة يمكنك إبداء رأيك باختصار.</p><button class="link" data-act="go" data-arg="trialres">نتائج التجربة وإرسالها (${ar(TS.records.length)})</button></div>`:''}
+   ${TRIAL?`<div class="card" style="gap:6px"><div class="row between"><b class="small">التجربة المغلقة</b><span class="pill" style="direction:ltr">${esc(TS.code||'')}</span></div><p class="tiny muted">تُسجَّل بياناتك غير الشخصية عند كل جلسة. بعد كل جلسة يمكنك إبداء رأيك باختصار.</p><button class="link" data-act="go" data-arg="trialres">نتائج التجربة وإرسالها (${ar(TS.records.length)})</button><button class="link" data-act="go" data-arg="trialfb">أبدِ رأيك في التجربة</button></div>`:''}
    ${groupCard(c)}
    <div class="tiles">
     ${tile('progress','نسبة إنجاز البرنامج',(PLAN_FINAL?'':'≈ ')+pct(c.progress),`${ar(c.points)} نقطة من نحو ${ar(PLAN.points)} (تقدير مبدئي)`,c.progress)}
@@ -1026,7 +1026,7 @@ function sumLink(q){return `<div class="sumread sl"><button class="qsum" data-ac
 
 /* ===== 8. إكمال الجلسة ===== */
 function delta(label,a,b){return `<div class="d"><span>${label}</span><span><span class="muted">${a}</span> <span class="arrow">←</span> <b>${b}</b></span></div>`;}
-function vComplete(){ const h=vComplete0(); if(!TRIAL||!TS.last) return h; const i=h.indexOf('<button class="btn primary block"'); return i<0?h:h.slice(0,i)+surveyCard(TS.last)+h.slice(i); }
+function vComplete(){ const h=vComplete0(); if(!TRIAL||!TS.last) return h; const fin=RUN&&RUN.kind==='R'&&RUN.finished&&!RUN.trial?'<div class="card"><h3>أكملت المراجعة الشاملة</h3><p class="small muted">يهمنا رأيك في التجربة كلها: وضوح الأسئلة وسهولة الاستخدام ومدة الجلسات.</p><button class="btn primary block" data-act="go" data-arg="trialfb">أبدِ رأيك في التجربة</button></div>':''; const i=h.indexOf('<button class="btn primary block"'); return i<0?h:h.slice(0,i)+surveyCard(TS.last)+fin+h.slice(i); }
 function vComplete0(){
   const R=RUN, b=R.before, a=R.after||calc();
   if(R.reinforce){ const ids=Object.keys(R.local), ft=ids.filter(id=>R.local[id].first).length; return `<div class="screen" style="justify-content:center;min-height:100%"><div class="celebrate"><div class="medal">${ico('review')}</div><h1 class="h-title">أعدتَ تثبيت ${C_Q(ids.length)}</h1><p class="h-sub">أجبتَ عنها كلها صحيحًا${ft<ids.length?'، بعضها بعد التصحيح':''}.</p></div><div class="note small">إعادة التثبيت اختيارية: لم تُحتسب جلسة جديدة، ولم تتغير نسبة الإجابات الصحيحة من المحاولة الأولى ولا نتيجة المراجعة.</div><button class="btn primary block" data-act="afterReinforce">العودة إلى المراجعة</button><button class="btn block" data-act="go" data-arg="home">العودة للرئيسية</button></div>`; }
@@ -1390,12 +1390,57 @@ function trialLog(ex){
   const rec=Object.assign({code:TS.code,seq:++TS.seq,date:dk(),kind:isS?'S':'RM',id:isS?String(RUN.n):`${RUN.k}.${RUN.mi+1}`,nq:ids.length,sec:Math.round(SESSION_SECS-RUN.secsLeft),est:Math.round(estSession(ids,130,.25)),completed:false,timeout:false,exited:false,resumed:!!RUN.resumed,wrong:RUN.wrong||0,ft:qs.filter(q=>q[1]).length,qs,dev:TS.device,ver:DATA.bankVersion,dry:!!RUN.trial},ex);
   TS.records.push(rec); TS.last=rec.seq; tsave(); trialSend(rec);
 }
+/* كل مشارك يكتب في مساره الخاص trial/<معرّفه>/… فقط. القواعد المعلنة عند النشر تمنع غيره من قراءته أو تعديله، والمشرف وحده يقرأ الكل. */
+async function trialUid(){ const u=await window.claude.use('user'); if(!u) return null; return await u.id(); }
 async function trialSend(rec){
   try{
     if(!(window.claude&&window.claude.use)) throw 0;
-    const db=await window.claude.use('db'); if(!db) throw 0;
-    await db.doc(`trial/${rec.code}-${rec.seq}`).set(rec); rec.sent=true; tsave();
+    const db=await window.claude.use('db'); if(!db) throw 0; const uid=await trialUid(); if(!uid) throw 0;
+    await db.doc(`trial/${uid}/runs/${rec.code}-${rec.seq}`).set(Object.assign({},rec,{sent:undefined}));
+    await db.doc(`trial/${uid}`).set({code:rec.code,dev:TS.device,updated:new Date().toISOString(),runs:TS.records.length,ver:DATA.bankVersion}); rec.sent=true; tsave();
   }catch(e){ rec.sent=rec.sent||false; }
+}
+const FB={clarity:null,ease:null,duration:null,comment:''};
+function vTrialFb(){
+  const row=(k,lab,opts)=>`<div class="small bold" style="margin-top:8px">${lab}</div><div class="row" style="flex-wrap:wrap;gap:6px">${opts.map(([v,t])=>`<button class="pbtn ${String(FB[k])===String(v)?'on':''}" data-act="fbPick" data-arg="${k}|${v}">${t}</button>`).join('')}</div>`;
+  return `<div class="screen">${head('رأيك في التجربة','ثلاثة أسئلة قصيرة وحقل للملاحظات')}
+   <div class="card">${row('clarity','وضوح الأسئلة',[[1,'١ غير واضحة'],[2,'٢'],[3,'٣'],[4,'٤'],[5,'٥ واضحة جدًا']])}
+   ${row('ease','سهولة استخدام التطبيق',[[1,'١ صعب'],[2,'٢'],[3,'٣'],[4,'٤'],[5,'٥ سهل جدًا']])}
+   ${row('duration','مدة الجلسات (ثلاث دقائق)',[['قصيرة','قصيرة'],['مناسبة','مناسبة'],['طويلة','طويلة']])}
+   <label for="fbc" class="small bold" style="margin-top:10px">ملاحظاتك ومقترحاتك (دون معلومات شخصية)</label>
+   <textarea id="fbc" maxlength="600" rows="5" style="font:inherit;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)">${esc(FB.comment)}</textarea></div>
+   <div class="note small">لا نسجل اسمك ولا بريدك. لا يطّلع على ملاحظتك مشاركون آخرون.</div>
+   <button class="btn primary block" data-act="fbSend">إرسال رأيي</button><button class="btn block ghost" data-act="back">رجوع</button></div>`;
+}
+async function fbSubmit(){
+  FB.comment=($('#fbc')||{}).value||FB.comment;
+  const rec={code:TS.code,dev:TS.device,date:new Date().toISOString(),clarity:FB.clarity,ease:FB.ease,duration:FB.duration,comment:FB.comment,ver:DATA.bankVersion};
+  if(!rec.clarity&&!rec.ease&&!rec.duration&&!rec.comment) return toast('اختر تقييمًا واحدًا على الأقل أو اكتب ملاحظة.');
+  TS.feedback=rec; tsave();
+  try{ const db=await window.claude.use('db'); const uid=db&&await trialUid(); if(!uid) throw 0; await db.doc(`trial/${uid}/feedback/final`).set(rec); await db.doc(`trial/${uid}`).set({code:TS.code,dev:TS.device,updated:rec.date,runs:TS.records.length,ver:DATA.bankVersion}); toast('شكرًا لك. وصل رأيك.'); }
+  catch(e){ openSheet(`<h3>تعذّر الإرسال التلقائي</h3><p class="small">انسخ النص التالي وأرسله إلى من دعاك إلى التجربة.</p><textarea readonly rows="7" style="width:100%;direction:rtl;font:inherit">${esc(JSON.stringify(rec,null,1))}</textarea><button class="btn block" data-act="closeSheet">إغلاق</button>`); }
+}
+/* لوحة نتائج المشاركين: تظهر للمالك والمحررين فقط (يقرؤها المشرف، ولا تُعرض للمشاركين ولا تُقرأ لهم) */
+let ADM=null;
+function vTrialAdm(){
+  setTimeout(admLoad,0);
+  return `<div class="screen">${head('نتائج المشاركين','للمشرف فقط')}<div id="admbox"><p class="small muted">جارٍ التحميل…</p></div><button class="btn block ghost" data-act="back">رجوع</button></div>`;
+}
+async function admLoad(){
+  const box=$('#admbox'); if(!box) return;
+  try{
+    const u=await window.claude.use('user'); if(!u||!(await u.canEdit())){box.innerHTML='<div class="note">هذه اللوحة للمشرف فقط.</div>';return;}
+    const db=await window.claude.use('db'); if(!db) throw 0;
+    const people=(await db.collection('trial').get()).docs; const rows=[]; let nRuns=0;
+    const legacy={};
+    for(const p of people){ const d=p.data(); if(d&&d.kind){(legacy[d.code]=legacy[d.code]||[]).push(d); continue;} const runs=(await db.doc(`trial/${p.id}`).collection('runs').get()).docs.map(x=>x.data()); const fb=(await db.doc(`trial/${p.id}`).collection('feedback').get()).docs.map(x=>x.data())[0]||null; nRuns+=runs.length; rows.push({d,runs,fb}); }
+    for(const c in legacy){ nRuns+=legacy[c].length; rows.push({d:{code:c+' (سجلات قديمة)',dev:legacy[c][0].dev},runs:legacy[c],fb:null}); }
+    const med=a=>{a=a.filter(x=>x!=null).sort((x,y)=>x-y);return a.length?a[Math.floor(a.length/2)]:'—';};
+    const S_=rows.flatMap(r=>r.runs.filter(x=>x.kind==='S'));
+    box.innerHTML=`<div class="stat3"><div class="mini"><b>${ar(rows.length)}</b><span>مشاركون</span></div><div class="mini"><b>${ar(nRuns)}</b><span>سجلات</span></div><div class="mini"><b>${ar(rows.filter(r=>r.fb).length)}</b><span>أبدوا رأيهم</span></div></div>
+     <div class="card"><div class="kv"><div><span>وسيط زمن الجلسة (ث)</span><b>${ar(med(S_.map(x=>x.sec)))}</b></div><div><span>جلسات انتهى وقتها</span><b>${ar(S_.filter(x=>x.timeout).length)}</b></div><div><span>وسيط وضوح الأسئلة (١–٥)</span><b>${ar(med(rows.map(r=>r.fb&&r.fb.clarity)))}</b></div><div><span>وسيط سهولة الاستعمال</span><b>${ar(med(rows.map(r=>r.fb&&r.fb.ease)))}</b></div></div></div>
+     ${rows.map(r=>`<div class="card"><div class="row between"><b style="direction:ltr">${esc(r.d.code||'')}</b><span class="pill">${esc(r.d.dev||'')}</span></div><p class="tiny muted">${ar(r.runs.length)} سجلات · جلسات مكتملة ${ar(r.runs.filter(x=>x.kind==='S'&&x.completed).length)}</p>${r.fb?`<p class="small">وضوح ${ar(r.fb.clarity||'—')} · سهولة ${ar(r.fb.ease||'—')} · المدة ${esc(r.fb.duration||'—')}</p><p class="small">${esc(r.fb.comment||'')}</p>`:'<p class="tiny muted">لم يُرسل رأيًا نهائيًا بعد.</p>'}${r.runs.filter(x=>x.survey&&x.survey.comment).map(x=>`<p class="tiny">${x.kind==='S'?'ج'+esc(x.id):'م'+esc(x.id)}: ${esc(x.survey.comment)}</p>`).join('')}</div>`).join('')||'<p class="small muted">لا بيانات بعد.</p>'}`;
+  }catch(e){ box.innerHTML='<div class="note">تعذّر تحميل البيانات (قد لا تكون مسجلًا الدخول بحساب المالك).</div>'; }
 }
 const recOf=seq=>TS.records.find(r=>r.seq===seq);
 function csvOf(){
@@ -1405,6 +1450,7 @@ function csvOf(){
 }
 function vTrialIntro(){
   if(!TS.code){TS.code=genCode();tsave();}
+  setTimeout(async()=>{try{const u=await window.claude.use('user'); if(u&&await u.canEdit()){const l=document.getElementById('admlink'); if(l) l.hidden=false;}}catch(e){}},0);
   return `<div class="screen">
    <div class="celebrate"><div class="medal">${ico('books')}</div><span class="pill warn">تجربة مغلقة</span><h1 class="h-title">أهلًا بك في التجربة</h1></div>
    <div class="card"><p>نجرّب <b>الجلسات الأولى</b> من «بَرْد اليقين» لنعرف: هل الزمن مناسب؟ وهل الأسئلة واضحة؟ وهل التطبيق سهل؟ <b>التجربة لا تختبرك أنت.</b> أجب بطبيعتك، وأخبرنا حين يشق عليك شيء.</p></div>
@@ -1413,7 +1459,8 @@ function vTrialIntro(){
    <div class="card" style="gap:10px"><label for="tcode" class="small bold">رمزك في التجربة (غيّره إذا أعطاك المشرف رمزًا)</label><input id="tcode" value="${esc(TS.code)}" maxlength="12" style="font:inherit;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);direction:ltr;text-align:center">
     <label for="tdev" class="small bold">الجهاز الذي تستعمله</label><select id="tdev" style="font:inherit;padding:10px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink)"><option value="">اختر</option><option value="هاتف">هاتف</option><option value="لوحي">جهاز لوحي</option><option value="حاسوب">حاسوب</option></select>
     <label class="row small" style="gap:8px;align-items:flex-start"><input type="checkbox" id="tok" style="margin-top:6px;width:20px;height:20px"><span>أوافق على تسجيل هذه البيانات غير الشخصية لأغراض التجربة فقط.</span></label></div>
-   <button class="btn primary block" id="tgo" data-act="trialStart">ابدأ التجربة</button></div>`;
+   <button class="btn primary block" id="tgo" data-act="trialStart">ابدأ التجربة</button><button class="link" id="admlink" data-act="go" data-arg="trialadm" hidden>نتائج المشاركين (للمشرف)</button></div>`;
+  
 }
 function surveyCard(seq){
   const r=recOf(seq); if(!r) return ''; const s=r.survey||{};
@@ -1438,6 +1485,8 @@ function vTrialRes(){
    <button class="btn block ghost" data-act="tsWipe">مسح بياناتي من هذا الجهاز</button></div>`;
 }
 Object.assign(A,{
+  fbPick:g=>{const [k,v]=g.split('|'); FB[k]=(k==='duration')?v:+v; FB.comment=($('#fbc')||{}).value||FB.comment; paint();},
+  fbSend:()=>fbSubmit(),
   trialStart:()=>{const code=($('#tcode').value||'').trim()||TS.code, dev=$('#tdev').value, ok=$('#tok').checked; if(!ok) return toast('نحتاج موافقتك على تسجيل البيانات غير الشخصية لنبدأ.'); if(!dev) return toast('اختر نوع الجهاز من فضلك.'); TS.code=code.slice(0,12);TS.device=dev;TS.consent=true;tsave(); S.seen.zad=false; go('splash',{},{back:true});},
   tsPick:g=>{const [seq,k,v]=g.split('|');const r=recOf(+seq);if(!r)return;r.survey=r.survey||{};r.survey[k]=(k==='ease')?+v:v;tsave();trialSend(r);paint();},
   tsSaveNote:g=>{const r=recOf(+g);if(!r)return;r.survey=r.survey||{};r.survey.comment=($('#tcm')||{}).value||'';tsave();trialSend(r);toast('شكرًا، حُفظت ملاحظتك.');},
