@@ -1,0 +1,68 @@
+<title>تقرير المرحلة ٦</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600;700&family=Amiri:wght@400;700&display=swap">
+<style>
+/* Layout concept: an audit report — verdict first, evidence tables after, one column with wide tables scrolling inside their own boxes. */
+:root{--bg:#EAF0ED;--surface:#FAFCFB;--surface-2:#DFE9E6;--ink:#0D2829;--ink-2:#4A6362;--line:#CCDBD7;--brand:#0C6A62;--brand-soft:#D3EAE5;--night:#14304A;--night-ink:#EAF2F7;--gold:#A9781F;--gold-soft:#F1E6CC;--ok:#2A7B58;--ok-soft:#D9EFE3;--redo:#BE4F3A;--redo-soft:#F5DBD4;--font-ui:"IBM Plex Sans Arabic","Segoe UI",Tahoma,sans-serif;--font-display:"Amiri","Traditional Arabic",serif}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#081415;--surface:#112527;--surface-2:#183033;--ink:#E5F0EE;--ink-2:#9BB5B2;--line:#25403F;--brand:#4CC0B1;--brand-soft:#133836;--night:#0E2236;--night-ink:#E4EEF5;--gold:#DCAE55;--gold-soft:#3A2F17;--ok:#5DC796;--ok-soft:#153A2A;--redo:#EE8B74;--redo-soft:#43221B;color-scheme:dark}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font-ui);font-size:15.5px;line-height:1.8;direction:rtl;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:20px 60px;font-variant-numeric:tabular-nums}
+.wrap{max-width:900px;margin-inline:auto;display:flex;flex-direction:column;gap:26px}
+h1,h2,h3,p,ul,ol{margin:0}
+a{color:var(--brand);font-weight:600}
+.hero{background:var(--night);color:var(--night-ink);border-radius:22px;padding:24px 22px;display:flex;flex-direction:column;gap:10px}
+.hero small{color:#9FC0CF}
+.hero h1{font-size:30px;line-height:1.4;text-wrap:balance}
+.verdict{border:2px solid var(--gold);background:var(--gold-soft);border-radius:18px;padding:16px 18px;display:flex;flex-direction:column;gap:8px}
+.verdict h2{font-size:21px}
+section{display:flex;flex-direction:column;gap:12px}
+h2{font-size:23px;line-height:1.4;text-wrap:balance}
+h3{font-size:17px;margin-top:4px}
+.lead{color:var(--ink-2)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+@media (max-width:640px){.grid4{grid-template-columns:1fr 1fr}}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:10px 12px}
+.stat b{display:block;font-size:26px;line-height:1.2}
+.stat span{font-size:12.5px;color:var(--ink-2)}
+.tw{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:640px;font-size:13.5px;line-height:1.65}
+th,td{padding:8px 10px;text-align:start;border-bottom:1px solid var(--line);vertical-align:top}
+th{background:var(--surface-2);font-weight:600;font-size:12.5px}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:center;white-space:nowrap}
+td.bad{background:var(--redo-soft);color:var(--redo);font-weight:700}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;direction:ltr;unicode-bidi:isolate;font-size:12px;white-space:nowrap}
+.tiny{font-size:12px;color:var(--ink-2)}
+.pill{display:inline-block;border-radius:999px;padding:0 9px;font-size:12px;background:var(--surface-2);color:var(--ink-2);white-space:nowrap}
+.pill.ok{background:var(--ok-soft);color:var(--ok)}.pill.warn{background:var(--gold-soft);color:var(--gold)}.pill.redo{background:var(--redo-soft);color:var(--redo)}
+td.aya{font-family:var(--font-display);font-size:18px;line-height:2}
+.callout{border-inline-start:4px solid var(--brand);background:var(--brand-soft);border-radius:10px;padding:10px 14px;font-size:14.5px}
+.callout.warn{border-color:var(--gold);background:var(--gold-soft)}
+.callout.stop{border-color:var(--redo);background:var(--redo-soft)}
+ul.tight,ol.tight{padding-inline-start:22px;display:flex;flex-direction:column;gap:4px}
+</style></head><body><div class="wrap"><header class="hero"><small>بَرْد اليقين · المجموعة ١ · «جاهزة للعرض على المشرف العلمي»</small><h1>تقرير المرحلة ٦: ملاحظات التجربة الفعلية</h1><p>لكل ملاحظة الإجراء المتخذ، ثم نتائج الاختبار</p></header>
+<section><h2>الملاحظات والإجراءات</h2><div class="tw"><table><thead><tr><th>الملاحظة</th><th>الإجراء</th></tr></thead><tbody>
+<tr><td>بطاقة الكتاب البيضاء في مقدمة البرنامج</td><td>حُذفت، وحُلّت محلها العبارة المقترحة (التأصيلي والتحصيني)، وبقيت الروابط وزر البدء.</td></tr>
+<tr><td>إطار أخضر على خيار قبل الإجابة</td><td>السبب: <code>:hover</code> يعلق بعد اللمس. حُصر في <code>(hover:hover) and (pointer:fine)</code>، وأُزيل مخطط التركيز غير المقصود، ولا اختيار تلقائيًّا.</td></tr>
+<tr><td>«عرض الملخص» قبل الإجابة</td><td>زر داخل بطاقة السؤال في صف الوسم، وما زال متاحًا بعد الإجابة الصحيحة والخاطئة.</td></tr>
+<tr><td>«الإيمان بالرسل» تبدو تابعة لما قبلها</td><td>كانت نقطة واحدة في الملخص تضم «لقاء الله» و«الرسل»، فصارتا فقرتين بالمستوى نفسه، وكذلك «تكذيبه» و«شتمه». لا إزاحة في القارئ. النص حرفيًا بلا تغيير.</td></tr>
+<tr><td>مربع «قواعد الجلسة»</td><td>حُذف من مقدمة الجلسات، ويعمل نظام التصحيح والتكرار كما هو.</td></tr>
+<tr><td>«النص المرجعي… اضغط للاطلاع»</td><td>أُلغي الطي. يُعرض النص مباشرة في بطاقة كل سؤال.</td></tr>
+<tr><td>إرشاد القراءة في بداية المجموعة</td><td>بطاقة اختيارية تُعرض مرة واحدة، مع رابط الكتاب وفتح الملخص النصي، وصفحات الملخص ٤–٨، و«صفحات الكتاب الأصلي قيد التحقق».</td></tr>
+<tr><td>شرح نظام العشر جلسات والمراجعة</td><td>عند أول استخدام (قبل الجلسة ١) مع زر «إرشاد القراءة وشرح التعلم» للرجوع.</td></tr>
+<tr><td>لا زر لإعادة السؤال الخاطئ بعد المراجعة</td><td>زر «مراجعة السؤال الذي أخطأت فيه» أو «الأسئلة…»، وبطاقة مماثلة في تبويب المراجعة. شرح الشاشة: الاجتياز لا يتم إلا بتصحيح كل الخطأ، فلا أخطاء إلزامية معلّقة.</td></tr>
+</tbody></table></div></section><section><h2>نتائج الاختبارات</h2><div class="tw"><table><thead><tr><th>الحالة</th><th>النتيجة</th></tr></thead><tbody>
+<tr><td>مقدمة البرنامجين: العبارة الدقيقة، بلا بطاقة، الروابط وزر البدء</td><td>نجح</td></tr>
+<tr><td>الخيارات قبل الإجابة متطابقة: عند بدء الجلسة، وبعد الانتقال بين الأسئلة، وبعد إعادة فتح التطبيق، ومع جهاز لمس ومؤشر فوق خيار</td><td>نجح (محاكاة اللمس في Chromium)</td></tr>
+<tr><td>«عرض الملخص» قبل الإجابة وبعد الصحيحة وفي شاشة الخطأ، توقف المؤقت، العودة إلى السؤال نفسه، لا أثر في التقدم</td><td>نجح</td></tr>
+<tr><td>القارئ: التسع نقاط (بالله…الإحسان) في مستوى واحد، «الرسل» مستقلة، «تكذيبه» و«شتمه» مستقلتان</td><td>نجح</td></tr>
+<tr><td>مقدمات الجلسات العشر بلا «قواعد الجلسة»</td><td>نجح</td></tr>
+<tr><td>أسئلة الآيات والأحاديث الأربعة والعشرون: النص ظاهر مباشرة في بطاقة السؤال ولا عنصر مطوي</td><td>نجح</td></tr>
+<tr><td>بطاقة إرشاد القراءة: مرة واحدة، رجوع إليها، النص والصفحات، نطاق متحقق بالقالب المطلوب، لا أثر في المؤشرات</td><td>نجح</td></tr>
+<tr><td>مراجعة ١٩ من ٢٠ ثم ١٨ من ٢٠: نتيجة المحاولة الأولى وكل المؤشرات ثابتة، إعادة السؤال حتى الصواب، وضع «تثبيت» لا «متقن»، حفظ الحالة بعد إعادة الفتح</td><td>نجح (٤٦ فحصًا)</td></tr>
+<tr><td>إعادة تشغيل اختبارات الانحدار: المسار الكامل (٣٣)، الواجهة (٣٠)، الجلسات المرنة (١٧)، التجربة المغلقة (٢٠)، القارئ (٤٨)، قراءة الملخص (١٨)، التحميل (٢٨)</td><td>نجحت</td></tr>
+</tbody></table></div>
+<div class="callout warn"><b>لم يُختبر.</b> هاتف iOS أو Android حقيقي (جُرّب بمحاكاة اللمس فقط، فسلوك hover العالق عولج بسببه المعروف ولم يُرَ على جهاز)، ومشاركون حقيقيون، وفتح رابطي الكتابين، وحفظ ملف PDF بخدمة الحفظ الحقيقية.</div></section>
+<section><h2>ما يحتاج قرارك</h2><ul><li>النص المرجعي الدائم يرفع زمن الجلستين ٧ و١٠ لقارئ بطيء فوق ثلاث دقائق (تقدير ١٨٨ و١٨٢ ثانية). أُبقيا كما هما لتقيسهما التجربة.</li><li>على هاتف ٣٦٠×٦٤٠ يحتاج ٢٣ سؤالًا إلى تمرير.</li><li>ما زال المعلق: تشكيل الآيات، وأرقام صفحات الكتاب الأصلي، وحقوق النشر.</li></ul></section></div></body></html>

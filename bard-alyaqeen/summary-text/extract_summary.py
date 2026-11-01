@@ -160,6 +160,23 @@ for pn in PAGES:
             b['runs']=runs(b['chars']); del b['chars']
             b.pop('vdone',None); b.pop('_nv',None)
     if vq: raise SystemExit(f'page {pn}: {len(vq)} verse(s) not consumed')
+# فصل المسائل المستقلة: حين تضم نقطة واحدة في الـPDF مسألتين تبدأ الثانية بعنوان عريض بعد نقطة جملة، تُعرض كل منهما فقرةً مستقلة بالمستوى نفسه (النص بلا تغيير)
+splits=[]
+nb=[]
+for blk in blocks:
+    if blk['kind']!='bullet': nb.append(blk); continue
+    runs=blk['runs']; cut=None
+    for i in range(1,len(runs)):
+        prev=''.join(r['t'] for r in runs[:i]).rstrip()
+        if runs[i]['b'] and prev.endswith('.') and runs[i]['t'].lstrip()[:1] and len(prev)>12: cut=i; break
+    if cut is None: nb.append(blk); continue
+    first=dict(blk); second=dict(blk)
+    first['runs']=[dict(r) for r in runs[:cut]]; first['runs'][-1]['t']=first['runs'][-1]['t'].rstrip()
+    second['runs']=[dict(r) for r in runs[cut:]]; second['runs'][0]['t']=second['runs'][0]['t'].lstrip()
+    second['split_from_previous']=True
+    splits.append(dict(page=blk['page'],before=''.join(r['t'] for r in runs)[:60],second_starts=''.join(r['t'] for r in second['runs'])[:30]))
+    nb.append(first); nb.append(second)
+blocks=nb
 # تصحيحات موثّقة: مواضع فُقد فيها حرف أو علامة من طبقة النص في الـPDF، وثبتت صحتها بصورة الصفحة وباستخراج pdftotext المستقل
 PATCHES=[(5,'إيماًا','إيمانًا','فُقد حرف النون والتنوين في طبقة النص؛ صورة الصفحة ٥ وpdftotext تثبتان «إيمانًا»'),
  (6,'ربّا','ربًّا','فُقد التنوين المقترن بالشدة؛ صورة الصفحة ٦ تثبت «ربًّا» في موضعين'),
@@ -185,5 +202,5 @@ for blk in blocks:
     else: blk['topic']=cur_topic
 # إضافة معرّفات
 for i,b in enumerate(blocks): b['id']='b%03d'%(i+1); b['end']=b.get('end',b['page'])
-json.dump(dict(source=dict(id='zad-sum-1',sha256=sha,pages=PAGES,total_pages=len(pdf.pages),title='ملخص كتاب «زاد العباد»'),topics=topics,blocks=blocks,verses=vlog,patches=plog),open(OUT,'w',encoding='utf8'),ensure_ascii=False,indent=1)
+json.dump(dict(source=dict(id='zad-sum-1',sha256=sha,pages=PAGES,total_pages=len(pdf.pages),title='ملخص كتاب «زاد العباد»'),topics=topics,blocks=blocks,verses=vlog,patches=plog,splits=splits),open(OUT,'w',encoding='utf8'),ensure_ascii=False,indent=1)
 print(len(blocks),'blocks',len(vlog),'verses', all(v['matches'] for v in vlog))
