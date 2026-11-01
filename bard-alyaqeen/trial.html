@@ -380,6 +380,14 @@ h1,h2,h3,h4,p{margin:0}
 .rd-img img{max-width:100%}
 @media (prefers-reduced-motion:reduce){.rd-focus{animation:none;background:var(--gold-soft)}}
 
+/* تعريف البرنامجين في الشاشة الافتتاحية */
+.splash{gap:10px}
+.splash .progs{display:flex;flex-direction:column;gap:8px;width:100%;max-width:330px;margin:4px 0 2px}
+.splash .pr{border:1px solid rgba(143,211,200,.28);background:rgba(143,211,200,.07);border-radius:14px;padding:8px 14px;text-align:center}
+.splash .pr h2{font-family:var(--font-display);font-size:19px;line-height:1.4;color:#8FD3C8;margin:0}
+.splash .pr p{color:#B9D1DD;font-size:13px;line-height:1.7;margin:2px 0 0;text-wrap:balance}
+@media (max-height:700px){.splash{padding:20px 22px;gap:6px}.splash .logo{width:56px;height:56px}.splash h1{font-size:40px}.splash .tag{font-size:13px;line-height:1.7}.splash .pr{padding:5px 12px}.splash .pr h2{font-size:17px}.splash .pr p{font-size:12px;line-height:1.55}}
+
 .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .tabs[hidden]{display:none!important}
 </style>
@@ -670,7 +678,7 @@ function vSplash(){
   else if(c.due){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.groupSize)} من أصل ${ar(c.groupSize)}. المراجعة الشاملة جاهزة.`;btn=['go','review','ابدأ المراجعة الشاملة'];}
   else if(c.inGroup>0&&n){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.inGroup)} من أصل ${ar(c.groupSize)}، ويمكنك متابعة الجلسة ${ar(n)}.`;btn=authored(n)?['intro',n,`تابع الجلسة ${ar(n)}`]:['go','home','تابع التعلم'];}
   else if(c.sessionsDone>0){msg='أهلًا بعودتك.';btn=['go','home','تابع التعلم'];}
-  return `<div class="splash"><div class="logo">${MARK}</div><h1>بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'تجربة مغلقة · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
+  return `<div class="splash"><div class="logo">${MARK}</div><h1>بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><div class="progs"><div class="pr"><h2>البرنامج التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>البرنامج التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'تجربة مغلقة · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
 }
 
 /* ===== 2. الرئيسية ===== */
