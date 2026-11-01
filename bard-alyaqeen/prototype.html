@@ -338,7 +338,9 @@ h1,h2,h3,h4,p{margin:0}
 .pv{touch-action:pan-x pan-y pinch-zoom;overscroll-behavior:contain}
 /* زر عرض الملخص داخل بطاقة السؤال */
 .qcard .tag{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.qcard .qsum{margin-inline-start:auto;font-size:13px;min-height:32px;padding:2px 8px}
+.qsum{display:flex;align-items:center;justify-content:center;gap:6px;width:100%;min-height:40px;margin-top:10px;padding:6px 12px;border:0;border-radius:12px;background:var(--brand-soft);color:var(--brand);font:600 13.5px/1.4 var(--font-ui);cursor:pointer;-webkit-tap-highlight-color:transparent}
+.qsum:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+.sumread.sl .qsum{width:auto;margin-top:2px}
 .booklink{font-size:12.5px;font-weight:600;color:var(--brand);text-decoration:underline;text-underline-offset:3px}
 
 /* ===== قارئ الملخص النصي ===== */
@@ -623,7 +625,7 @@ const bk=(q)=>q.bookRef||{book:'زاد العباد',page:null};
 const topicOfQ=q=>PLAN.unitOf[PLAN.sessions[sessionOfQ(q.id)].unit].t;
 const bookKey=nm=>Object.keys(BOOKS).find(k=>BOOKS[k].name===nm);
 const bookLinkA=nm=>{const k=bookKey(nm),L=k&&BOOK_LINKS[k];return L?`<a class="booklink" href="${esc(L)}" target="_blank" rel="noopener" title="يفتح صفحة الكتاب العامة، لا الصفحة المحددة">فتح الكتاب</a>`:'';};
-const refStudent=q=>`<span>كتاب «${esc(bk(q).book)}»</span><span>موضوع «${esc(topicOfQ(q))}»</span>${bk(q).page?`<span>ص${ar(bk(q).page)}</span>`:'<span class="pend">الصفحة قيد التحقق</span>'}${bookLinkA(bk(q).book)}`;
+const refStudent=q=>`<span>كتاب «${esc(bk(q).book)}»</span><span>موضوع «${esc(topicOfQ(q))}»</span>${bk(q).page?`<span>ص${ar(bk(q).page)}</span>`:'<span class="pend">الصفحة قيد التحقق</span>'}`;
 const refInternal=q=>REVIEWER?`<div class="internal"><b>للمراجع العلمي فقط:</b> ملخص زاد العباد ص${ar(q.src.sp)} · ${esc(q.src.locus)} · بداية الموضوع في الكتاب ص${ar(q.src.bp)} (غير متحقق منها) · إصدار الملخص ${esc(q.src.version||'')}${q.review?` · قرار المراجعة: ${esc(q.review.decision)} · صحة المعلومة: ${esc(q.review.info)}`:''}</div>`:'';
 const pg=t=>REVIEWER?t:'';
 function nassFigure(n){return `<figure class="nass ${n.k==='آية'?'ayah':'hadith'}"><figcaption><span class="pill">${n.label?esc(n.label):(n.k==='آية'?'آية':'حديث')}</span><span class="cite">${esc(n.c)}</span></figcaption><blockquote>${esc(n.t)}</blockquote>${REVIEWER&&n.verify?`<div class="internal">${esc(n.verify)}${n.tm?` · التشكيل المقترح غير المعتمد: ${esc(n.tm)}`:''}</div>`:''}</figure>`;}
@@ -719,14 +721,14 @@ function vPrograms(){
    <div class="card prog"><div class="row between"><span class="pill ok">البرنامج الأول</span>${DEMO_PILL()}</div><div><h3>البرنامج التأصيلي</h3><p class="src">${PROG1}</p></div>
     <p class="small muted">٧ أقسام · ${ar(PLAN.units.length)} موضوعًا · نحو ${ar(PLAN.total)} جلسة و${ar(PLAN.reviews)} مراجعة (تقدير مبدئي لم يُعتمد)</p>
     <div class="row between small"><span>الإنجاز (تقدير)</span><b>${PLAN_FINAL?'':'≈ '}${pct(c.progress)}</b></div>${meter(c.progress)}
-    <button class="btn primary block" data-act="enter" data-arg="zad:sections">فتح الأقسام والوحدات</button><button class="link" data-act="bookIntro" data-arg="zad">عن الكتاب</button></div>
+    <button class="btn primary block" data-act="enter" data-arg="zad:sections">فتح الأقسام والوحدات</button></div>
    <div class="card prog locked"><div class="row"><div class="lockbadge">${ico(ui.unlocked?'unlock':'lock')}</div><div class="grow"><span class="pill warn">${ui.unlocked?'مفتوح (محاكاة)':'مقفل'}</span><h3 style="margin-top:4px">البرنامج التحصيني</h3><p class="src">${PROG2}</p></div></div>
     <div class="req"><b class="small">شروط الفتح</b><ul>
      <li>${stIcon(c.sessionsLeft===0?'mastered':'learning',18)}<span>إكمال جميع جلسات البرنامج التأصيلي بعد اعتمادها (نحو ${C_SESS(PLAN.total)}، وأُكمل ${ar(c.sessionsDone)})</span></li>
      <li>${stIcon(c.reviewsLeft===0?'mastered':'learning',18)}<span>اجتياز جميع المراجعات العشرية (نحو ${C_REV(PLAN.reviews)}، واجتيز ${ar(c.reviewsDone)})</span></li>
      <li>${stIcon('none',18)}<span>لا يُحتسب الإنجاز إلا من جلسات أُجيبت كل أسئلتها إجابة صحيحة</span></li></ul></div>
     ${meter(c.unlockPct,'gold')}<p class="small muted">المتبقي تقريبًا: ${C_SESS(c.sessionsLeft)} و${C_REV(c.reviewsLeft)} (أعداد تقديرية).</p>
-    <button class="btn block" data-act="go" data-arg="tahsini">اطّلع على فصوله الستة والثلاثين</button><button class="link" data-act="bookIntro" data-arg="maraqi">عن الكتاب</button></div>
+    <button class="btn block" data-act="go" data-arg="tahsini">اطّلع على فصوله الستة والثلاثين</button></div>
   </div>`;
 }
 function vTahsini(){
@@ -760,14 +762,12 @@ function groupReadRange(k){ if(k!==1||typeof RD==='undefined'||!RD) return null;
 function vGroupIntro(){
   const k=ui.params.k||1, n=ui.params.n, view=!!ui.params.view, rng=groupReadRange(k), v=readingRange(k).verified, L=BOOK_LINKS.zad;
   const sum=rng?`من الصفحة (${ar(rng[0])}) إلى الصفحة (${ar(rng[1])})`:'';
-  const line=v&&rng?`للاستفادة بصورة أفضل من البرنامج، نقترح قراءة الصفحات التالية من الكتاب الأصلي: من الصفحة (${ar(v.from)}) إلى الصفحة (${ar(v.to)})، أو قراءة ملخصه ${sum}.`
-    :rng?`للاستفادة بصورة أفضل من البرنامج، نقترح قراءة الكتاب الأصلي (صفحات الكتاب الأصلي قيد التحقق)، أو قراءة ملخصه ${sum}.`
-    :`للاستفادة بصورة أفضل من البرنامج، نقترح قراءة الكتاب الأصلي (صفحات الكتاب الأصلي قيد التحقق). وتُحدَّد صفحات ملخص هذه المجموعة حين يُحوَّل.`;
+  const line=rng?`للاستفادة بصورة أفضل من البرنامج، نقترح قراءة ملخص المجموعة ${sum}.`:`للاستفادة بصورة أفضل من البرنامج، تُتاح قراءة ملخص المجموعة حين يُحوَّل نصه.`;
   return `<div class="screen">${view?`<button class="back" data-act="back">${ico('back')} رجوع</button>`:'<div></div>'}
    <div class="celebrate"><div class="medal">${ico('books')}</div><h1 class="h-title">المجموعة ${ar(k)}</h1></div>
    ${(k===1||view)?`<div class="card"><h3 style="margin-bottom:6px">كيف يعمل التعلم؟</h3><p class="small">${SYS_TEXT}</p></div>`:''}
    <div class="card"><div class="row between"><h3>إرشاد القراءة</h3><span class="pill info">اختياري</span></div><p class="small">${line}</p><p class="tiny muted">القراءة اختيارية تمامًا، وليست شرطًا لبدء الجلسات أو اجتيازها، ولا تدخل في مؤشرات الإنجاز والإتقان.</p>
-    ${L?`<a class="btn block" href="${esc(L)}" target="_blank" rel="noopener">الاطلاع على الكتاب الأصلي</a>`:''}${rng?`<button class="btn block" data-act="sumRead" data-arg="all">فتح الملخص النصي</button>`:''}</div>
+    ${rng?`<button class="btn block" data-act="sumRead" data-arg="all">فتح الملخص النصي</button>`:''}</div>
    <button class="btn primary block" data-act="gintroGo" data-arg="${k}:${n||0}:${view?1:0}">${view?'رجوع':'ابدأ التعلم مباشرة'}</button></div>`;
 }
 function groupCard(c){return `<div class="card grp"><div class="row between"><h3>المجموعة ${ar(c.reviewsDone+1)}</h3><span class="pill ${c.due?'ok':''}">${ar(c.inGroup)} من ${ar(c.groupSize)} جلسات مكتملة</span></div>${groupDots(c)}<p class="small" role="status">${groupMsg(c)}</p><button class="link" data-act="gintro" data-arg="${c.reviewsDone+1}">إرشاد القراءة وشرح التعلم</button></div>`;}
@@ -984,7 +984,7 @@ function vQuestion(){
     return `<button class="opt ${cls}" data-act="answer" data-arg="${i}" ${cur.answered!=null?'disabled':''}><span class="l">${LET[i]}</span><span>${esc(q.options[orig])}</span></button>`;}).join('');
   const fb=cur.answered!=null&&cur.ok?`<div class="fb ok"><div class="row"><b style="font-size:16px">إجابة صحيحة</b>${(RUN.local[cur.id]&&RUN.local[cur.id].first===true)||RUN.kind==='R'&&RUN.items[cur.id]&&RUN.items[cur.id].first?'<span class="pill ok">من المحاولة الأولى</span>':'<span class="pill warn">بعد التصحيح</span>'}</div><div class="body small">${esc(q.quote)}</div><div class="ref">${refStudent(q)}</div>${refInternal(q)}<button class="btn primary block cta-sticky" data-act="next">${RUN.queue.length?'التالي':'إنهاء'}</button></div>`:'';
   return `<div class="screen">${runHead()}${trialRibbon}
-   <div class="qcard"><div class="tag"><span class="pill">${esc(PLAN.unitOf[PLAN.sessions[sessionOfQ(cur.id)].unit].t)}</span>${cur.retry?'<span class="pill warn">إعادة: أجب بنفسك</span>':''}<button class="link qsum" data-act="sumRead" data-arg="q:${q.id}">عرض الملخص</button></div>${nassHtml(q,cur.nassSeen)}<p class="qtext">${esc(q.text)}</p></div>
+   <div class="qcard"><div class="tag"><span class="pill">${esc(PLAN.unitOf[PLAN.sessions[sessionOfQ(cur.id)].unit].t)}</span>${cur.retry?'<span class="pill warn">إعادة: أجب بنفسك</span>':''}</div>${nassHtml(q,cur.nassSeen)}<p class="qtext">${esc(q.text)}</p><button class="qsum" data-act="sumRead" data-arg="q:${q.id}" aria-label="قراءة شرح السؤال من الملخص"><span aria-hidden="true">📖</span> قراءة شرح السؤال من الملخص</button></div>
    <div class="opts" role="group" aria-label="الخيارات">${opts}</div>${fb}</div>`;
 }
 
@@ -1014,7 +1014,7 @@ function vTimeout0(){
 }
 
 function sumCard(n){ return authored(n)?`<div class="sumread sl"><button class="link" data-act="sumRead" data-arg="s:${n}">عرض الملخص</button></div>`:''; }
-function sumLink(q){return `<div class="sumread sl"><button class="link" data-act="sumRead" data-arg="q:${q.id}">عرض الملخص</button></div>`;}
+function sumLink(q){return `<div class="sumread sl"><button class="qsum" data-act="sumRead" data-arg="q:${q.id}" aria-label="قراءة شرح السؤال من الملخص"><span aria-hidden="true">📖</span> قراءة شرح السؤال من الملخص</button></div>`;}
 
 /* ===== 8. إكمال الجلسة ===== */
 function delta(label,a,b){return `<div class="d"><span>${label}</span><span><span class="muted">${a}</span> <span class="arrow">←</span> <b>${b}</b></span></div>`;}
@@ -1346,8 +1346,8 @@ function openReader(o){
     <div class="rd-head"><span class="pill info">ملخص «زاد العباد» · ${pgs.length?`ص${fmtPages(pgs)}`:''}</span><h2 class="rd-title">${RDS.all?'ملخص المجموعة ١':esc(titles.join(' · '))}</h2><p class="tiny muted">القراءة اختيارية ولا تؤثر في الإنجاز أو الإتقان. المؤقت متوقف أثناء القراءة.</p></div>
     <article class="rd-art" lang="ar" dir="rtl">${html}</article>
     ${RDS.all?'':`<button class="btn block" data-act="rdMore">عرض بقية صفحات الملخص (ص٤–٨)</button>`}
-    <div class="rd-foot"><p class="tiny muted">نص منقول من ملخص «زاد العباد» كما هو. الآيات بنص مجمع الملك فهد (الإملائي) بلا تشكيل مؤقتًا، وتشكيلها في ملف PDF الأصلي معلّق للمراجعة. ملف PDF الأصلي متاح للتحميل.</p>${REVIEWER?`<div class="internal tiny">إصدار الملخص: zad-sum-1 · بصمة SHA-256 ${esc(RD.source.sha256.slice(0,16))}… · ${ar(RD.patches.length)} تصحيحات نقل موثّقة · ${ar(RD.blocks.length)} كتلة.</div>`:''}${dlBtn('zad','btn block')}</div></div>`);
-  $('#sheetLayer .sheet').classList.add('full','reader'); probeDownloads();
+    <div class="rd-foot"><p class="tiny muted">نص منقول من ملخص «زاد العباد» كما هو. الآيات بنص مجمع الملك فهد (الإملائي) بلا تشكيل مؤقتًا، وتشكيلها في ملف PDF الأصلي معلّق للمراجعة.</p>${REVIEWER?`<div class="internal tiny">إصدار الملخص: zad-sum-1 · بصمة SHA-256 ${esc(RD.source.sha256.slice(0,16))}… · ${ar(RD.patches.length)} تصحيحات نقل موثّقة · ${ar(RD.blocks.length)} كتلة.</div>`:''}</div></div>`);
+  $('#sheetLayer .sheet').classList.add('full','reader');
   const body=$('#rdBody');
   // التمرير إلى موضع السؤال إن وُجد، وإلا إلى أول موضوع للجلسة
   let target=null;
