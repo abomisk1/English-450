@@ -52,10 +52,15 @@ OPEN={ # مسائل علمية مفتوحة صرّح بها في التقاري�
  's8q5':'يقتبس قول «الملائكة بنات الله» لزومًا؛ هل يُبدَّل بصياغة أخف؟'}
 dec={}
 if opt('--decisions'):
-    import openpyxl
-    wb=openpyxl.load_workbook(opt('--decisions')); ws=wb['الأسئلة']; hd=[c.value for c in ws[1]]
+    f=opt('--decisions')
+    if f.endswith('.csv'):
+        import csv
+        rows_=list(csv.reader(open(f,encoding='utf-8-sig',newline=''))); hd=rows_[0]; it=rows_[1:]
+    else:
+        import openpyxl
+        wb=openpyxl.load_workbook(f); ws=wb['الأسئلة']; hd=[c.value for c in ws[1]]; it=ws.iter_rows(min_row=2,values_only=True)
     ix={h:i for i,h in enumerate(hd)}
-    for row in ws.iter_rows(min_row=2,values_only=True):
+    for row in it:
         if row[ix['المعرّف']]: dec[row[ix['المعرّف']]]=dict(status=row[ix['حالة المراجعة العلمية']],decision=row[ix['قرار المشرف العلمي']] or '',note=row[ix['ملاحظات المشرف']] or '')
 Q=[]; seq=0
 for s in B['sessions']:
@@ -206,4 +211,9 @@ for i,w in enumerate([8,50,16,30],1): w2.column_dimensions[openpyxl.utils.get_co
 w3=wb.create_sheet('ملخص'); w3.sheet_view.rightToLeft=True
 for row in [['السجل','بَرْد اليقين — سجل المراجعة العلمية'],['الإصدار',VERSION],['تاريخ الإصدار',ISSUE],['إصدار بنك الأسئلة',B.get('bankVersion')],['إصدار ملخص زاد العباد','zad-sum-1'],['بصمة SHA-256',sha],['الأسئلة المُعدّة',len(Q)],['مواضع المراجعة العشرية',len(slots)],['أسئلة البرنامج التحصيني','لم تُعدّ بعد'],['ملاحظة','عدّل الأعمدة: حالة المراجعة العلمية، قرار المشرف العلمي، ملاحظات المشرف. ثم أعد الإصدار بـ build_record.py --decisions هذا الملف.']]: w3.append(row)
 w3.column_dimensions['A'].width=28; w3.column_dimensions['B'].width=90
-wb.save(HERE+'/record.xlsx'); print('ok',len(Q),'questions; located-page mismatches:',[r['id'] for r in Q if r['pages_consistent'] is False],'; none located:',[r['id'] for r in Q if not r['located_pages']])
+wb.save(HERE+'/record.xlsx')
+import csv
+with open(HERE+'/record.csv','w',encoding='utf-8-sig',newline='') as fh:
+    cw=csv.writer(fh)
+    for row in ws.iter_rows(values_only=True): cw.writerow(['' if v is None else v for v in row])
+print('ok',len(Q),'questions; located-page mismatches:',[r['id'] for r in Q if r['pages_consistent'] is False],'; none located:',[r['id'] for r in Q if not r['located_pages']])
