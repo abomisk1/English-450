@@ -1,0 +1,7 @@
+{
+  "name": "bard-alyaqeen-external-trial",
+  "private": true,
+  "type": "module",
+  "description": "استضافة التجربة الخارجية المحدودة لـ«بَرْد اليقين» على Netlify (دوال + Blobs).",
+  "dependencies": { "@netlify/blobs": "^8.2.0" }
+}
