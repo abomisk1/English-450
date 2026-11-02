@@ -722,9 +722,9 @@ function vHome(){
   return `<div class="screen">
    <div class="row between"><div class="row"><div class="mark">${MARK}</div><div><div class="display" style="font-size:24px;line-height:1.2">بَرْد اليقين</div><div class="h-sub">السلام عليكم</div></div></div>${DEMO_PILL()}</div>
    <div class="next"><span class="lab">${st.lab}</span><h2>${st.title}</h2>${st.meta?`<p class="meta">${st.meta}</p>`:''}<button class="btn block" data-act="${st.btn[0]}" data-arg="${st.btn[1]}">${st.btn[2]}</button>${st.alt?`<button class="btn block ghost" data-act="${st.alt[0]}" data-arg="${st.alt[1]}">${st.alt[2]}</button>`:''}</div>
-   ${TRIAL?`<div class="card" style="gap:6px"><div class="row between"><b class="small">التجربة المغلقة</b><span class="pill" style="direction:ltr">${esc(TS.code||'')}</span></div><p class="tiny muted">تُسجَّل بياناتك غير الشخصية عند كل جلسة. بعد كل جلسة يمكنك إبداء رأيك باختصار.</p><button class="link" data-act="go" data-arg="trialres">نتائج التجربة وإرسالها (${ar(TS.records.length)})</button><button class="link" data-act="go" data-arg="trialfb">أبدِ رأيك في التجربة</button></div>`:''}
    ${groupCard(c,true)}
    ${S.mode==='demo'?'<div class="ribbon"><b>بيانات توضيحية.</b> سُجّلت أحداثًا تجريبية (إجابات وجلسات ومراجعات) ثم حُسبت منها هذه المؤشرات بالقواعد نفسها. لا تخص طالبًا حقيقيًا.</div>':''}
+   <div class="card prog unlockcard"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح المسار التحصيني</h3></div></div>${meter(c.unlockPct,'gold')}<div class="kv"><div><span>جلسات متبقية</span><b>${PLAN_FINAL?'':'≈ '}${ar(c.sessionsLeft)}</b></div><div><span>مراجعات متبقية</span><b>${PLAN_FINAL?'':'≈ '}${ar(c.reviewsLeft)}</b></div></div>${PLAN_FINAL?'':'<p class="tiny muted">تقديري: خطة الجلسات والمراجعات لم تُعتمد نهائيًا.</p>'}</div>
   </div>`;
 }
 
