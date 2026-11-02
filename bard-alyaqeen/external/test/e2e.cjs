@@ -49,6 +49,36 @@ let pass=0,fail=0; const ok=(c,m)=>{ if(c){pass++;console.log('PASS',m);}else{fa
   await A.p.goto(B+'/'); await A.p.waitForTimeout(300); ok(await A.p.evaluate(()=>typeof BANK==='object'),'returning participant (cookie) opens the app without re-entering the code');
   const fresh=await mk(); await fresh.p.goto(B+'/'); ok(await fresh.p.evaluate(()=>!document.querySelector('#view')&&/رمز الدعوة/.test(document.body.innerText)),'a visitor without the code or cookie only sees the invite page');
   await fresh.p.fill('input[name=k]',INV); await fresh.p.click('button'); await fresh.p.waitForTimeout(600); ok(await fresh.p.evaluate(()=>typeof BANK==='object'),'typing the invite code on the invite page opens the app');
+  // 6 ملف PDF: يُخفى الزر ما دام الملف غير منشور، ويعمل التنزيل حين يُنشر
+  const fs=require('fs'), path=require('path'); const FD=path.join(__dirname,'../app/files');
+  const goIntro=async(X,id)=>{ await X.p.evaluate(id=>{S.seen.zad=false;S.seen.maraqi=false;go('bookintro',{id,then:'home'})},id); await X.p.waitForTimeout(700); };
+  r=await fetch(B+'/files/summary-zad.pdf'); ok(r.status===401,'/files without invite cookie: 401');
+  const ck=(await (async()=>{const rr=await fetch(B+'/?k='+INV,{redirect:'manual'});return rr.headers.get('set-cookie').split(';')[0];})());
+  r=await fetch(B+'/files/summary-zad.pdf',{headers:{cookie:ck}}); ok(r.status===404,'PDF not in the deployment: 404 (nothing served)');
+  await goIntro(A,'zad'); ok(await A.p.evaluate(()=>{const e=document.querySelector('[data-dl="zad"]');return !!e&&e.hidden}),'PDF not published: the download button stays hidden (no inactive button)');
+  const pdf=Buffer.from('%PDF-1.4\n1 0 obj<</Type/Catalog/Pages 2 0 R>>endobj\n2 0 obj<</Type/Pages/Kids[3 0 R]/Count 1>>endobj\n3 0 obj<</Type/Page/Parent 2 0 R/MediaBox[0 0 200 200]>>endobj\ntrailer<</Root 1 0 R>>\n%%EOF\n');
+  fs.writeFileSync(path.join(FD,'summary-zad.pdf'),pdf);
+  try{
+    r=await fetch(B+'/files/summary-zad.pdf',{headers:{cookie:ck}}); ok(r.status===200&&/application\/pdf/.test(r.headers.get('content-type'))&&/attachment/.test(r.headers.get('content-disposition'))&&(await r.arrayBuffer()).byteLength===pdf.length,'PDF published: served only with the invite cookie, application/pdf, Content-Disposition: attachment, exact bytes');
+    r=await fetch(B+'/files/summary-zad.pdf',{method:'HEAD',headers:{cookie:ck}}); ok(r.status===200,'HEAD works');
+    for(const bad of ['/files/../package.json','/files/%2e%2e/package.json','/files/other.pdf','/files/summary-zad.pdf/../../x']){ const rr=await fetch(B+bad,{headers:{cookie:ck}}); if(rr.status===200&&bad!=='/files/summary-zad.pdf/../../x') {ok(false,'traversal '+bad);} }
+    ok((await fetch(B+'/files/other.pdf',{headers:{cookie:ck}})).status===404,'only the two allowed file names are served; traversal attempts do not leak files');
+    await goIntro(A,'zad'); ok(await A.p.evaluate(()=>{const e=document.querySelector('[data-dl="zad"]');return !!e&&!e.hidden}),'PDF published: the button appears on the zad path intro');
+    const [dl]=await Promise.all([A.p.waitForEvent('download',{timeout:8000}),A.p.click('[data-dl="zad"]')]);
+    const tmp=await dl.path(); console.log('   dl:',JSON.stringify(dl.suggestedFilename()),tmp&&fs.statSync(tmp).size,pdf.length); ok(/\.pdf$/.test(dl.suggestedFilename())&&fs.readFileSync(tmp).equals(pdf),'tapping the button downloads the exact PDF file ('+dl.suggestedFilename()+')');
+    ok(!(await A.p.evaluate(()=>/تعذّر تحميل/.test(document.body.innerText))),'no error message after download');
+    await goIntro(A,'maraqi'); ok(await A.p.evaluate(()=>{const e=document.querySelector('[data-dl="maraqi"]');return !!e&&e.hidden}),'maraqi PDF not published: its button stays hidden while zad shows');
+    await A.p.evaluate(()=>{S.seen.zad=true;S.seen.maraqi=true;go('home');A.sumRead('all')}); await A.p.waitForTimeout(300); ok(!(await A.p.evaluate(()=>!!document.querySelector('[data-dl]'))),'no PDF button inside the text reader');
+    await A.p.evaluate(()=>{closeSheet();go('home')});
+  } finally { try{fs.unlinkSync(path.join(FD,'summary-zad.pdf'));}catch(e){} }
+  // 7 المسميات ولوحة المؤشرات
+  const N=await mk(); await N.p.goto(B+'/?k='+INV); await N.p.waitForTimeout(500); const sp=await N.p.evaluate(()=>({h1:document.querySelector('.splash h1').textContent,two:document.querySelector('.splash .two').textContent,pr:[...document.querySelectorAll('.splash .pr h2')].map(x=>x.textContent),tag:document.querySelector('.splash .tag').textContent}));
+  ok(sp.h1==='برنامج بَرْد اليقين'&&sp.two==='يحتوي برنامج بَرْد اليقين على مسارين:'&&sp.pr.join('|')==='المسار التأصيلي|المسار التحصيني'&&/^رحلةٌ علمية/.test(sp.tag),'live build: new title, the two-paths sentence, «المسار التأصيلي/التحصيني»');
+  await N.p.evaluate(()=>{S.seen.zad=true;S.gintro={1:true};TS.consent=true;TS.code='P-ZZZZ';TS.device='هاتف';save();seedDemo(3,0);go('home')}); await N.p.waitForTimeout(200);
+  ok(await N.p.evaluate(()=>!document.querySelector('.tiles')&&!document.querySelector('.chips3')&&/قياس مستوى التقدم/.test(document.querySelector('#view').innerText)),'home: separate indicator cards removed; one «قياس مستوى التقدم» card');
+  await N.p.click('[data-act="go"][data-arg="progress"]'); await N.p.waitForTimeout(200); const pt=await N.p.evaluate(()=>document.querySelector('#view').innerText);
+  ok(['نسبة إنجاز المسار','نسبة الإتقان','الجلسات المكتملة','موعد المراجعة القادمة','دقيقة تعلم','الإنجاز اليومي','الاستمرارية','لم يُقَس بعد'].every(w=>pt.includes(w)),'progress panel shows every indicator (completed/remaining sessions, next review, minutes, daily goal, streak) and «لم يُقَس بعد» when not measurable');
+  await N.p.click('.btn.primary[data-arg="home"]'); await N.p.waitForTimeout(150); ok(await N.p.evaluate(()=>ui.screen)==='home','back button returns to the home page');
   ok([A,Bp,adm,bad,fresh].every(x=>x.p.errs.length===0),'no page errors '+[A,Bp,adm].map(x=>x.p.errs.join('|')).join(''));
   console.log(`\nPASS=${pass} FAIL=${fail}`); await b.close(); server.close(); process.exit(fail?1:0);
 })().catch(e=>{console.log('CRASH',e.message);process.exit(1)});

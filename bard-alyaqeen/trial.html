@@ -388,6 +388,15 @@ h1,h2,h3,h4,p{margin:0}
 .splash .pr p{color:#B9D1DD;font-size:13px;line-height:1.7;margin:2px 0 0;text-wrap:balance}
 @media (max-height:700px){.splash{padding:20px 22px;gap:6px}.splash .logo{width:56px;height:56px}.splash h1{font-size:40px}.splash .tag{font-size:13px;line-height:1.7}.splash .pr{padding:5px 12px}.splash .pr h2{font-size:17px}.splash .pr p{font-size:12px;line-height:1.55}}
 
+.splash h1{font-size:46px}
+.splash .two{color:#EAF2F7;font-size:14px;font-weight:600;margin:6px 0 0}
+@media (max-height:700px){.splash h1{font-size:36px}.splash .two{font-size:13px;margin:2px 0 0}}
+.progbtn{display:flex;flex-direction:row;align-items:center;gap:12px;width:100%;text-align:start;cursor:pointer;border:1.5px solid var(--brand);background:var(--surface);font:inherit;color:inherit;padding:14px 16px;border-radius:18px}
+.progbtn b{display:block;font-size:17px;color:var(--brand)}
+.progbtn .pb-ic{flex:none;width:44px;height:44px;border-radius:14px;background:var(--brand-soft);color:var(--brand);display:grid;place-items:center}
+.progbtn .pb-go{flex:none;color:var(--brand);transform:none}
+@media (max-height:600px){.splash{padding:12px 18px;gap:4px}.splash .logo{width:40px;height:40px}.splash h1{font-size:30px;line-height:1.2}.splash .tag{font-size:12px;line-height:1.55}.splash .two{font-size:12px}.splash .progs{gap:5px;margin:2px 0}.splash .pr{padding:4px 10px}.splash .pr h2{font-size:15px}.splash .pr p{font-size:11px;line-height:1.45}.splash .btn{padding:10px}.splash .foot{font-size:10px}}
+
 .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .tabs[hidden]{display:none!important}
 </style>
@@ -640,14 +649,14 @@ function nassFigure(n){return `<figure class="nass ${n.k==='آية'?'ayah':'hadi
 /* النص الطويل يُعرض كاملًا عند أول ظهور في الجلسة، ثم يبقى متاحًا للاطلاع بلا تكرار: seen = مجموعة نصوص عُرضت سابقًا */
 function nassHtml(q){ if(!q.nass) return ''; return q.nass.map(n=>nassFigure(n)).join(''); }
 const DEMO_PILL=()=>S.mode==='demo'?'<span class="pill demo">بيانات توضيحية</span>':'';
-const PROG1='استُفيدت مادة هذا البرنامج من كتاب زاد العباد';
-const PROG2='استُفيدت مادة هذا البرنامج من كتاب مراقي الوعي';
+const PROG1='استُفيدت مادة هذا المسار من كتاب زاد العباد';
+const PROG2='استُفيدت مادة هذا المسار من كتاب مراقي الوعي';
 const SECN={};DATA.zad.sections.forEach(s=>SECN[s.i]=s.n);
 
 /* ===== التنقل ===== */
 const ui={screen:'splash',params:{},stack:[],sec:'aqeeda',grp:null,ach:'days',unlocked:false,rvTrial:false};
-const TABS=[['home','الرئيسية','home'],['programs','البرامج','books'],['review','المراجعة','review'],['ach','إنجازاتي','chart'],['src','المصدر','doc']];
-const TABSCREENS=new Set(['trialres','trialfb','trialadm','home','programs','review','ach','src','sections','tahsini']);
+const TABS=[['home','الرئيسية','home'],['programs','المسارات','books'],['review','المراجعة','review'],['ach','إنجازاتي','chart'],['src','المصدر','doc']];
+const TABSCREENS=new Set(['progress','trialres','trialfb','trialadm','home','programs','review','ach','src','sections','tahsini']);
 const RUNSCREENS=new Set(['question','wrong','timeout']);
 function go(screen,params={},opts={}){
   if(TRIAL&&!TS.consent&&screen!=='splash'&&screen!=='trialintro'&&screen!=='trialadm') screen='trialintro';
@@ -659,7 +668,7 @@ function go(screen,params={},opts={}){
 }
 function back(){ const p=ui.stack.pop(); if(p) go(p[0],p[1],{back:true}); else go('home',{},{back:true}); }
 function paint(){
-  const R={trialintro:vTrialIntro,trialres:vTrialRes,trialfb:vTrialFb,trialadm:vTrialAdm,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vAch,src:vSrc,secdone:vSecDone,progdone:vProgDone};
+  const R={trialintro:vTrialIntro,progress:vProgress,trialres:vTrialRes,trialfb:vTrialFb,trialadm:vTrialAdm,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vAch,src:vSrc,secdone:vSecDone,progdone:vProgDone};
   $('#view').innerHTML=(R[ui.screen]||vHome)();
   const showTabs=TABSCREENS.has(ui.screen);
   $('#tabs').hidden=!showTabs;
@@ -678,7 +687,7 @@ function vSplash(){
   else if(c.due){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.groupSize)} من أصل ${ar(c.groupSize)}. المراجعة الشاملة جاهزة.`;btn=['go','review','ابدأ المراجعة الشاملة'];}
   else if(c.inGroup>0&&n){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.inGroup)} من أصل ${ar(c.groupSize)}، ويمكنك متابعة الجلسة ${ar(n)}.`;btn=authored(n)?['intro',n,`تابع الجلسة ${ar(n)}`]:['go','home','تابع التعلم'];}
   else if(c.sessionsDone>0){msg='أهلًا بعودتك.';btn=['go','home','تابع التعلم'];}
-  return `<div class="splash"><div class="logo">${MARK}</div><h1>بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><div class="progs"><div class="pr"><h2>البرنامج التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>البرنامج التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'نسخة تجريبية · المحتوى العلمي لم يُعتمد نهائيًا · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
+  return `<div class="splash"><div class="logo">${MARK}</div><h1>برنامج بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><p class="two">يحتوي برنامج بَرْد اليقين على مسارين:</p><div class="progs"><div class="pr"><h2>المسار التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>المسار التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'نسخة تجريبية · المحتوى العلمي لم يُعتمد نهائيًا · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
 }
 
 /* ===== 2. الرئيسية ===== */
@@ -688,7 +697,7 @@ function nextStep(c){
   if(pending){const left=new Set(S.sessions[pending].resume).size;return {lab:'استئناف جلسة محفوظة',title:`الجلسة ${ar(pending)}: ${esc(BANK.bySession[pending].title)}`,meta:`بقي ${C_Q(left)} لم تُتقن بعد`,btn:['intro',pending,'استأنف الجلسة']};}
   if(c.due) return {lab:'مراجعة مستحقة',title:'المراجعة العشرية جاهزة',meta:`أكملت ${C_SESS(GROUP*(c.reviewsDone+1))}. تُفتح الجلسة التالية بعد إتمام المراجعة.`,btn:['go','review','ابدأ المراجعة']};
   const n=nextSessionNo();
-  if(n==null) return {lab:'اكتمل البرنامج',title:'أتممت جلسات البرنامج التأصيلي',meta:'',btn:['go','progdone','عرض الإنجاز']};
+  if(n==null) return {lab:'اكتمل البرنامج',title:'أتممت جلسات المسار التأصيلي',meta:'',btn:['go','progdone','عرض الإنجاز']};
   const u=PLAN.unitOf[PLAN.sessions[n].unit];
   if(authored(n)) return {lab:'خطوتك التالية',title:`الجلسة ${ar(n)}: ${esc(BANK.bySession[n].title)}`,meta:`${esc(SECN[PLAN.sessions[n].sec])} · ${esc(u.t)} · ${C_Q(qidsOf(n).length)} · ٣ دقائق كحد أقصى`,btn:['intro',n,'ابدأ الجلسة']};
   return {lab:'خطوتك التالية',title:`الجلسة ${ar(n)}: ${esc(u.t)}`,meta:'أسئلة هذه الجلسة لم تُعدّ علميًا بعد، فلا تُفتح في هذا النموذج. الجلسات المعتمدة فقط هي ١–١٠.',btn:['go','sections','تصفّح الموضوعات'],alt:['intro',1,'تدرّب على جلسة معتمدة']};
@@ -705,34 +714,40 @@ function vHome(){
    <div class="next"><span class="lab">${st.lab}</span><h2>${st.title}</h2>${st.meta?`<p class="meta">${st.meta}</p>`:''}<button class="btn block" data-act="${st.btn[0]}" data-arg="${st.btn[1]}">${st.btn[2]}</button>${st.alt?`<button class="btn block ghost" data-act="${st.alt[0]}" data-arg="${st.alt[1]}">${st.alt[2]}</button>`:''}</div>
    ${TRIAL?`<div class="card" style="gap:6px"><div class="row between"><b class="small">التجربة المغلقة</b><span class="pill" style="direction:ltr">${esc(TS.code||'')}</span></div><p class="tiny muted">تُسجَّل بياناتك غير الشخصية عند كل جلسة. بعد كل جلسة يمكنك إبداء رأيك باختصار.</p><button class="link" data-act="go" data-arg="trialres">نتائج التجربة وإرسالها (${ar(TS.records.length)})</button><button class="link" data-act="go" data-arg="trialfb">أبدِ رأيك في التجربة</button></div>`:''}
    ${groupCard(c)}
+   <button class="card progbtn" data-act="go" data-arg="progress"><span class="pb-ic">${ico('chart')}</span><span class="grow"><b>قياس مستوى التقدم</b><span class="small muted">نسبة الإنجاز والإتقان والجلسات والمراجعة والاستمرارية في مكان واحد</span></span><span class="pb-go">${ico('back')}</span></button>
+   <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>فتح المسار التحصيني</h3><p class="src">${PROG2}</p></div><button class="i" style="position:static;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2)" data-act="info" data-arg="unlock" aria-label="كيف يُحسب فتح البرنامج">؟</button></div>${meter(c.unlockPct,'gold')}<p class="small muted">يُفتح عند إتمام كل جلسات المسار التأصيلي ومراجعاته. المتبقي: نحو ${C_SESS(c.sessionsLeft)} و${C_REV(c.reviewsLeft)} (تقدير مبدئي).</p></div>
+   ${S.mode==='demo'?'<div class="ribbon"><b>بيانات توضيحية.</b> سُجّلت أحداثًا تجريبية (إجابات وجلسات ومراجعات) ثم حُسبت منها هذه المؤشرات بالقواعد نفسها. لا تخص طالبًا حقيقيًا.</div>':''}
+  </div>`;
+}
+
+function vProgress(){
+  const c=calc(); const rvTxt=c.due?'جاهزة الآن':C_SESS(c.toNext);
+  return `<div class="screen">${head('قياس مستوى التقدم','كل رقم هنا محسوب من إجاباتك الفعلية')}
    <div class="tiles">
-    ${tile('progress','نسبة إنجاز البرنامج',(PLAN_FINAL?'':'≈ ')+pct(c.progress),`${ar(c.points)} نقطة من نحو ${ar(PLAN.points)} (تقدير مبدئي)`,c.progress)}
+    ${tile('progress','نسبة إنجاز المسار',(PLAN_FINAL?'':'≈ ')+pct(c.progress),`${ar(c.points)} نقطة من نحو ${ar(PLAN.points)} (تقدير مبدئي)`,c.progress)}
     ${tile('mastery','نسبة الإتقان',c.mastery==null?null:pct(c.mastery),c.mastery==null?'يبدأ القياس بعد أول مراجعة عشرية':`قيس على ${C_Q(c.reviewedN)} خضعت للمراجعة`,c.mastery,'ok')}
     ${tile('sessions','الجلسات المكتملة',`${ar(c.sessionsDone)}<small class="muted" style="font-size:14px;font-weight:500"> / ≈${ar(PLAN.total)}</small>`,`بقي نحو ${C_SESS(c.sessionsLeft)} (تقدير)`,c.sessionsDone/PLAN.total*100)}
-    ${tile('next','موعد المراجعة القادمة',rvTxt,c.due?'أكمل المراجعة لفتح الجلسات التالية':`بعد الجلسة ${ar(c.nextAt)} من البرنامج`,c.due?100:c.inGroup/c.groupSize*100,'gold')}
+    ${tile('next','موعد المراجعة القادمة',rvTxt,c.due?'أكمل المراجعة لفتح الجلسات التالية':`بعد الجلسة ${ar(c.nextAt)} من المسار`,c.due?100:c.inGroup/c.groupSize*100,'gold')}
    </div>
    <div class="chips3">
     <button class="mini" data-act="info" data-arg="streak" style="border:0"><b>${ar(c.streak)}</b><span>الاستمرارية (أيام)</span></button>
     <button class="mini" data-act="info" data-arg="today" style="border:0"><b>${ar(c.todaySessions)}/${ar(S.goal)}</b><span>الإنجاز اليومي</span></button>
     <button class="mini" data-act="info" data-arg="time" style="border:0"><b>${ar(c.minutes)}</b><span>دقيقة تعلم</span></button>
    </div>
-   <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>فتح البرنامج التحصيني</h3><p class="src">${PROG2}</p></div><button class="i" style="position:static;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2)" data-act="info" data-arg="unlock" aria-label="كيف يُحسب فتح البرنامج">؟</button></div>${meter(c.unlockPct,'gold')}<p class="small muted">يُفتح عند إتمام كل جلسات البرنامج التأصيلي ومراجعاته. المتبقي: نحو ${C_SESS(c.sessionsLeft)} و${C_REV(c.reviewsLeft)} (تقدير مبدئي).</p></div>
-   ${S.mode==='demo'?'<div class="ribbon"><b>بيانات توضيحية.</b> سُجّلت أحداثًا تجريبية (إجابات وجلسات ومراجعات) ثم حُسبت منها هذه المؤشرات بالقواعد نفسها. لا تخص طالبًا حقيقيًا.</div>':''}
-  </div>`;
+   <button class="btn primary block" data-act="go" data-arg="home">العودة إلى الصفحة الرئيسية</button></div>`;
 }
-
-/* ===== 3. البرنامجان ===== */
+/* ===== 3. المساران ===== */
 function vPrograms(){
   const c=calc();
   return `<div class="screen">
-   <div><h1 class="h-title">البرنامجان</h1><p class="h-sub">يُتعلَّم البرنامجان بالترتيب، ولا يُفتح الثاني قبل إتقان الأول.</p></div>
-   <div class="card prog"><div class="row between"><span class="pill ok">البرنامج الأول</span>${DEMO_PILL()}</div><div><h3>البرنامج التأصيلي</h3><p class="src">${PROG1}</p></div>
+   <div><h1 class="h-title">المساران</h1><p class="h-sub">يُتعلَّم المساران بالترتيب، ولا يُفتح الثاني قبل إتقان الأول.</p></div>
+   <div class="card prog"><div class="row between"><span class="pill ok">المسار الأول</span>${DEMO_PILL()}</div><div><h3>المسار التأصيلي</h3><p class="src">${PROG1}</p></div>
     <p class="small muted">٧ أقسام · ${ar(PLAN.units.length)} موضوعًا · نحو ${ar(PLAN.total)} جلسة و${ar(PLAN.reviews)} مراجعة (تقدير مبدئي لم يُعتمد)</p>
     <div class="row between small"><span>الإنجاز (تقدير)</span><b>${PLAN_FINAL?'':'≈ '}${pct(c.progress)}</b></div>${meter(c.progress)}
     <button class="btn primary block" data-act="enter" data-arg="zad:sections">فتح الأقسام والوحدات</button></div>
-   <div class="card prog locked"><div class="row"><div class="lockbadge">${ico(ui.unlocked?'unlock':'lock')}</div><div class="grow"><span class="pill warn">${ui.unlocked?'مفتوح (محاكاة)':'مقفل'}</span><h3 style="margin-top:4px">البرنامج التحصيني</h3><p class="src">${PROG2}</p></div></div>
+   <div class="card prog locked"><div class="row"><div class="lockbadge">${ico(ui.unlocked?'unlock':'lock')}</div><div class="grow"><span class="pill warn">${ui.unlocked?'مفتوح (محاكاة)':'مقفل'}</span><h3 style="margin-top:4px">المسار التحصيني</h3><p class="src">${PROG2}</p></div></div>
     <div class="req"><b class="small">شروط الفتح</b><ul>
-     <li>${stIcon(c.sessionsLeft===0?'mastered':'learning',18)}<span>إكمال جميع جلسات البرنامج التأصيلي بعد اعتمادها (نحو ${C_SESS(PLAN.total)}، وأُكمل ${ar(c.sessionsDone)})</span></li>
+     <li>${stIcon(c.sessionsLeft===0?'mastered':'learning',18)}<span>إكمال جميع جلسات المسار التأصيلي بعد اعتمادها (نحو ${C_SESS(PLAN.total)}، وأُكمل ${ar(c.sessionsDone)})</span></li>
      <li>${stIcon(c.reviewsLeft===0?'mastered':'learning',18)}<span>اجتياز جميع المراجعات العشرية (نحو ${C_REV(PLAN.reviews)}، واجتيز ${ar(c.reviewsDone)})</span></li>
      <li>${stIcon('none',18)}<span>لا يُحتسب الإنجاز إلا من جلسات أُجيبت كل أسئلتها إجابة صحيحة</span></li></ul></div>
     ${meter(c.unlockPct,'gold')}<p class="small muted">المتبقي تقريبًا: ${C_SESS(c.sessionsLeft)} و${C_REV(c.reviewsLeft)} (أعداد تقديرية).</p>
@@ -741,8 +756,8 @@ function vPrograms(){
 }
 function vTahsini(){
   const M=DATA.maraqi, open=ui.unlocked;
-  return `<div class="screen">${head('البرنامج التحصيني',PROG2)}
-   ${open?'<div class="ribbon"><b>محاكاة.</b> هكذا يبدو البرنامج بعد فتحه. لا توجد أسئلة معتمدة لهذا الكتاب في النموذج.</div>':`<div class="note">${ico('lock','ico" style="width:16px;height:16px;vertical-align:-3px;display:inline-block')} مقفل. يُفتح بعد إتمام البرنامج التأصيلي بجلساته ومراجعاته. الفصول مرتبة كما وردت في الكتاب.</div>`}
+  return `<div class="screen">${head('المسار التحصيني',PROG2)}
+   ${open?'<div class="ribbon"><b>محاكاة.</b> هكذا يبدو البرنامج بعد فتحه. لا توجد أسئلة معتمدة لهذا الكتاب في النموذج.</div>':`<div class="note">${ico('lock','ico" style="width:16px;height:16px;vertical-align:-3px;display:inline-block')} مقفل. يُفتح بعد إتمام المسار التأصيلي بجلساته ومراجعاته. الفصول مرتبة كما وردت في الكتاب.</div>`}
    ${M.axes.map((a,ai)=>`<div class="card axis"><div class="row between"><h3>${esc(a)}</h3><span class="pill">${ar(M.chapters.filter(x=>x.axis===ai).length)} فصول</span></div>
      <div>${M.chapters.filter(x=>x.axis===ai).map(x=>`<div class="chap"><span class="no">${ar(x.n)}</span><div class="grow"><div>${esc(x.title)}</div>${REVIEWER?`<div class="tiny muted">الكتاب ص${ar(x.pages[0])}–${ar(x.pages[1])} (من الملخص)</div>`:''}</div>${open?'<span class="pill info">قيد الإعداد</span>':`<span class="muted">${ico('lock','ico" style="width:16px;height:16px')}</span>`}</div>`).join('')}</div></div>`).join('')}
    <p class="tiny muted">المحاور الثمانية تجميع موضوعي للتيسير، وليست من تقسيم المؤلف. مقدمة المؤلف والوصية الخاتمة خارج الفصول الستة والثلاثين (قرار معلّق).</p></div>`;
@@ -784,13 +799,17 @@ function groupCard(c){return `<div class="card grp"><div class="row between"><h3
 function dlBtn(id,cls='btn block'){return SUMFILES[id]?`<button class="${cls}" data-dl="${id}" data-act="dlSummary" data-arg="${id}" hidden>تحميل الملخص (PDF) <span class="pill info">نسخة للمراجعة الخاصة</span></button>`:'';}
 /* لا يظهر زر التحميل إلا بعد التأكد من توفر ملف الملخص وإمكانية الحفظ في هذه البيئة */
 function probeDownloads(){ setTimeout(async()=>{ try{ const els=[...document.querySelectorAll('[data-dl]')]; if(!els.length) return; const d=await window.claude.use('downloads'); if(!d) return;
-  for(const el of els){ const id=el.dataset.dl; try{ const r=await fetch(SUMFILES[id].file,{cache:'no-store'}); if(r.ok){ try{r.body&&r.body.cancel();}catch(e){} el.hidden=false; } }catch(e){} } }catch(e){} },0); }
-async function dlSummary(id){ const f=SUMFILES[id]; if(!f) return; try{ const d=await window.claude.use('downloads'); if(!d) throw 0; const r=await fetch(f.file,{cache:'no-store'}); if(!r.ok) throw 0; const b=await r.blob(); await d.save({filename:f.name,data:b}); }catch(e){ if(e&&e.code==='declined') return; toast('تعذّر تحميل الملخص من هذه البيئة.'); } }
+  for(const el of els){ const id=el.dataset.dl; try{ const r=await fetch(SUMFILES[id].file,{cache:'no-store'}); if(r.ok&&/pdf/i.test(r.headers.get('content-type')||'')){ try{r.body&&r.body.cancel();}catch(e){} el.hidden=false; } }catch(e){} } }catch(e){} },0); }
+async function dlSummary(id){ const f=SUMFILES[id]; if(!f) return;
+  try{
+    if(window.__directDownload){ const a=document.createElement('a'); a.href=f.file; a.download=f.name; a.rel='noopener'; document.body.appendChild(a); a.click(); a.remove(); return; }
+    const d=await window.claude.use('downloads'); if(!d) throw 0; const r=await fetch(f.file,{cache:'no-store'}); if(!r.ok) throw 0; const b=await r.blob(); await d.save({filename:f.name,data:b});
+  }catch(e){ if(e&&e.code==='declined') return; toast('تعذّر تحميل الملخص. حاول مرة أخرى بعد قليل.'); } }
 function vBookIntro(){
   const id=ui.params.id, B=BOOKS[id], first=!S.seen[id], then=ui.params.then, L=BOOK_LINKS[id];
   probeDownloads();
   return `<div class="screen">${first?'<div></div>':`<button class="back" data-act="back">${ico('back')} رجوع</button>`}
-   <div class="celebrate"><div class="medal">${ico('books')}</div><span class="pill">${id==='zad'?'البرنامج التأصيلي':'البرنامج التحصيني'}</span><h1 class="h-title">${id==='zad'?'البرنامج التأصيلي':'البرنامج التحصيني'}</h1></div>
+   <div class="celebrate"><div class="medal">${ico('books')}</div><span class="pill">${id==='zad'?'المسار التأصيلي':'المسار التحصيني'}</span><h1 class="h-title">${id==='zad'?'المسار التأصيلي':'المسار التحصيني'}</h1></div>
    <p class="small muted">${id==='zad'?PROG1:PROG2}. يمكنك الاطلاع على أصل الكتاب أو تحميل ملخصه من الروابط أدناه.</p>
    ${L?`<a class="btn block" href="${esc(L)}" target="_blank" rel="noopener">الاطلاع على الكتاب الأصلي <span class="pill info">اختياري</span></a>`:''}
    ${dlBtn(id)}
@@ -1038,7 +1057,7 @@ function vComplete0(){
     return `<div class="screen">${R.trial?'<div class="ribbon"><b>تجربة بلا احتساب.</b> لم تُسجَّل هذه النتيجة. تُحتسب المراجعة حين تكون مستحقة.</div>':''}
      <div class="celebrate"><div class="ring" style="--p:${pc||0}"><div><div><b>${ar(R.ok)}/${ar(R.tot)}</b><div class="tiny muted">من المحاولة الأولى</div></div></div></div><h1 class="h-title">اجتزت المراجعة العشرية</h1><p class="h-sub">الاجتياز مشروط بالإجابة الصحيحة عن كل الأسئلة، وقد تحقق: لا توجد أسئلة إلزامية معلّقة. وأداء المحاولة الأولى مؤشر مستقل: ${ar(R.ok)} من ${ar(R.tot)}.</p></div>
      ${bad.length?`<div class="card"><h3 style="margin-bottom:6px">أسئلة يُنصح بإعادة تثبيتها (${ar(bad.length)})</h3><p class="small muted">أخطأتَ فيها عند أول محاولة وصحّحتَها أثناء المراجعة، فلا يلزمك شيء لإكمال المراجعة. إعادة التثبيت اختيارية: لا تُعدّ جلسة، ولا تغيّر نسبة الإجابات الصحيحة من المحاولة الأولى.</p><div class="lst">${bad.map(id=>`<div class="li">${stIcon((S.reinf||{})[id]?'consolidate':'redo',18)}<span class="grow">${esc(BANK.byId[id].text)}</span></div>`).join('')}</div>${R.trial?'':`<button class="btn block" data-act="reinforce" style="margin-top:8px">${bad.length>1?'مراجعة الأسئلة التي أخطأت فيها':'مراجعة السؤال الذي أخطأت فيه'}</button>`}</div>`:'<div class="note">كل الأسئلة صحيحة من المحاولة الأولى، ولا شيء يحتاج إلى إعادة تثبيت.</div>'}
-     ${R.trial?'':`<div class="card"><h3 style="margin-bottom:6px">ما الذي تغيّر؟</h3><div class="delta">${delta('نسبة الإتقان',b.mastery==null?'لم يُقَس بعد':pct(b.mastery),pct(a.mastery))}${delta('المراجعات المكتملة',ar(b.reviewsDone),ar(a.reviewsDone))}${delta('نسبة إنجاز البرنامج',pct(b.progress),pct(a.progress))}${delta('موعد المراجعة القادمة',b.due?'مستحقة':C_SESS(b.toNext),a.due?'مستحقة':C_SESS(a.toNext))}</div></div>
+     ${R.trial?'':`<div class="card"><h3 style="margin-bottom:6px">ما الذي تغيّر؟</h3><div class="delta">${delta('نسبة الإتقان',b.mastery==null?'لم يُقَس بعد':pct(b.mastery),pct(a.mastery))}${delta('المراجعات المكتملة',ar(b.reviewsDone),ar(a.reviewsDone))}${delta('نسبة إنجاز المسار',pct(b.progress),pct(a.progress))}${delta('موعد المراجعة القادمة',b.due?'مستحقة':C_SESS(b.toNext),a.due?'مستحقة':C_SESS(a.toNext))}</div></div>
      <div class="note">فُتحت المجموعة التالية من الجلسات.</div>`}
      ${R.trial?'<button class="btn primary block" data-act="afterRun">متابعة</button>':`${contBtn(a,false)}<div class="row" style="gap:8px"><button class="btn block" data-act="endLearning">إنهاء التعلم الآن</button><button class="btn block" data-act="afterRun">العودة للرئيسية</button></div>`}</div>`;
   }
@@ -1050,7 +1069,7 @@ function vComplete0(){
    <div class="celebrate"><div class="ring" style="--p:100"><div><div><b>${ar(tot)}/${ar(tot)}</b><div class="tiny muted">أُتقنت كلها</div></div></div></div><h1 class="h-title">اكتملت الجلسة ${ar(R.n)}</h1><p class="h-sub">${esc(BANK.bySession[R.n]?BANK.bySession[R.n].title:'')}</p></div>
    <div class="stat3"><div class="mini"><b>${ar(ft)}/${ar(tot)}</b><span>من المحاولة الأولى</span></div><div class="mini"><b>${ar(R.wrong)}</b><span>إعادات</span></div><div class="mini"><b>${mmss(used)}</b><span>الوقت</span></div></div>
    ${ft<tot?'<div class="note small">الأسئلة التي تصحّحت بعد الخطأ تُحتسب مكتملة داخل الجلسة، لكنها لا ترفع نسبة المحاولة الأولى. يُثبَّت إتقانها في المراجعة العشرية.</div>':''}
-   ${R.practice?'':`<div class="card"><h3 style="margin-bottom:6px">ما الذي تغيّر؟</h3><div class="delta">${delta('نسبة إنجاز البرنامج',pct(b.progress),pct(a.progress))}${delta('الجلسات المكتملة',ar(b.sessionsDone),ar(a.sessionsDone))}${delta('الإجابة من المحاولة الأولى',b.firstTry==null?'لم يُقَس بعد':pct(b.firstTry),a.firstTry==null?'لم يُقَس بعد':pct(a.firstTry))}${delta('المراجعة بعد',a.due?'—':C_SESS(b.toNext),a.due?'مستحقة الآن':C_SESS(a.toNext))}${delta('الإنجاز اليومي',`${ar(b.todaySessions)}/${ar(S.goal)}`,`${ar(a.todaySessions)}/${ar(S.goal)}`)}</div></div>
+   ${R.practice?'':`<div class="card"><h3 style="margin-bottom:6px">ما الذي تغيّر؟</h3><div class="delta">${delta('نسبة إنجاز المسار',pct(b.progress),pct(a.progress))}${delta('الجلسات المكتملة',ar(b.sessionsDone),ar(a.sessionsDone))}${delta('الإجابة من المحاولة الأولى',b.firstTry==null?'لم يُقَس بعد':pct(b.firstTry),a.firstTry==null?'لم يُقَس بعد':pct(a.firstTry))}${delta('المراجعة بعد',a.due?'—':C_SESS(b.toNext),a.due?'مستحقة الآن':C_SESS(a.toNext))}${delta('الإنجاز اليومي',`${ar(b.todaySessions)}/${ar(S.goal)}`,`${ar(a.todaySessions)}/${ar(S.goal)}`)}</div></div>
    <div class="note small">نسبة الإتقان تبقى «لم يُقَس بعد» إلى أن تُراجَع هذه الأسئلة في مراجعة عشرية.</div>`}
    ${R.practice?'':`<div class="card grp"><div class="row between"><h3>المجموعة ${ar(a.reviewsDone+1)}</h3><span class="pill ${a.due?'ok':''}">${ar(a.inGroup)} من ${ar(a.groupSize)} جلسات مكتملة</span></div>${groupDots(a)}<p class="small" role="status">${groupMsg(a)}</p></div>`}
    ${sumCard(R.n)}
@@ -1122,14 +1141,14 @@ function vAch(){
    <div class="card"><h3 style="margin-bottom:4px">الموضوعات المتقنة</h3><div class="lst">${mastered.length?mastered.map(li).join(''):'<p class="small muted">لا موضوع متقنًا بعد. يثبت الإتقان بعد المراجعة العشرية.</p>'}</div></div>
    <div class="card"><h3 style="margin-bottom:4px">تحتاج إلى مراجعة</h3><div class="lst">${need.length?need.map(li).join(''):'<p class="small muted">لا موضوعات بانتظار المراجعة.</p>'}</div></div>
    <div class="card"><h3 style="margin-bottom:4px">نتائج المراجعات العشرية</h3>${rv.length?`<div class="lst">${rv.map(k=>`<div class="rv"><span>المراجعة ${ar(k)}</span><span><b>${ar(S.reviews[k].ok)}/${ar(S.reviews[k].tot)}</b> <span class="muted">${pct(S.reviews[k].ok/S.reviews[k].tot*100)}</span></span></div>`).join('')}</div><p class="small muted" style="margin-top:6px">المجموع: ${ar(rvOk)} من ${ar(rvTot)} من المحاولة الأولى (${pct(rvOk/rvTot*100)}).</p>`:'<p class="small muted">لا مراجعات مكتملة بعد.</p>'}</div>
-   <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح البرنامج التحصيني</h3></div></div>${meter(c.unlockPct,'gold')}<div class="kv"><div><span>جلسات متبقية</span><b>${ar(c.sessionsLeft)}</b></div><div><span>مراجعات متبقية</span><b>${ar(c.reviewsLeft)}</b></div><div><span>الوقت المستثمر</span><b>${ar(c.minutes)} دقيقة</b></div><div><span>أيام متتالية</span><b>${ar(c.streak)}</b></div></div></div>
+   <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح المسار التحصيني</h3></div></div>${meter(c.unlockPct,'gold')}<div class="kv"><div><span>جلسات متبقية</span><b>${ar(c.sessionsLeft)}</b></div><div><span>مراجعات متبقية</span><b>${ar(c.reviewsLeft)}</b></div><div><span>الوقت المستثمر</span><b>${ar(c.minutes)} دقيقة</b></div><div><span>أيام متتالية</span><b>${ar(c.streak)}</b></div></div></div>
   </div>`;
 }
 
 /* ===== المصدر والتوثيق ===== */
 function vSrc(){
   const qs=Object.values(BANK.byId), RG=DATA.register;
-  const books=`<div class="card"><h3>مصدرا المحتوى</h3><div class="legend" style="margin-top:8px"><div class="it">${stIcon('mastered',18)}<div><b>كتاب «زاد العباد»</b><span>البرنامج التأصيلي. إعداد القسم العلمي بمؤسسة الدرر السنية، الطبعة الأولى ١٤٤١هـ.</span></div></div><div class="it">${stIcon('mastered',18)}<div><b>كتاب «مراقي الوعي»</b><span>البرنامج التحصيني. تأليف أ.د. صالح بن عبد العزيز بن عثمان سندي.</span></div></div></div></div>`;
+  const books=`<div class="card"><h3>مصدرا المحتوى</h3><div class="legend" style="margin-top:8px"><div class="it">${stIcon('mastered',18)}<div><b>كتاب «زاد العباد»</b><span>المسار التأصيلي. إعداد القسم العلمي بمؤسسة الدرر السنية، الطبعة الأولى ١٤٤١هـ.</span></div></div><div class="it">${stIcon('mastered',18)}<div><b>كتاب «مراقي الوعي»</b><span>المسار التحصيني. تأليف أ.د. صالح بن عبد العزيز بن عثمان سندي.</span></div></div></div></div>`;
   if(!REVIEWER) return `<div class="screen"><div><h1 class="h-title">المصادر</h1><p class="h-sub">كل مسألة في الأسئلة تُحال إلى الكتاب الأصلي</p></div>${books}
    <div class="note small">تظهر مع كل سؤال إحالة إلى الكتاب والموضوع. وتُضاف رقم الصفحة الأصلية بعد التحقق منها من الكتاب نفسه، ولا يُكتب رقم لم يُتحقق منه.</div>
    <div class="stat3"><div class="mini"><b>${ar(qs.length)}</b><span>سؤالًا بنصوصه وإحالاته</span></div><div class="mini"><b>${ar(qs.filter(q=>q.nass).length)}</b><span>سؤالًا يعرض آية أو حديثًا</span></div><div class="mini"><b>${ar(qs.filter(q=>!bk(q).page).length)}</b><span>صفحة قيد التحقق</span></div></div></div>`;
@@ -1159,11 +1178,11 @@ function vProgDone(){
   const r=withSim(PLAN.total,PLAN.reviews,c=>c);
   return `<div class="screen">${head('إتمام البرنامج','')}
    <div class="ribbon"><b>محاكاة.</b> أرقام هذه الشاشة ولّدها المحرك من سجل تجريبي يكمل كل جلسات البرنامج ومراجعاته.</div>
-   <div class="celebrate unlockfx"><div class="medal">${ico('unlock')}</div><h1 class="h-title">أتممت البرنامج التأصيلي</h1><p class="h-sub">${PROG1}</p></div>
+   <div class="celebrate unlockfx"><div class="medal">${ico('unlock')}</div><h1 class="h-title">أتممت المسار التأصيلي</h1><p class="h-sub">${PROG1}</p></div>
    <div class="stat3"><div class="mini"><b>${ar(r.sessionsDone)}</b><span>جلسة</span></div><div class="mini"><b>${ar(r.reviewsDone)}</b><span>مراجعة</span></div><div class="mini"><b>${pct(r.progress)}</b><span>الإنجاز</span></div></div>
    <div class="card"><div class="kv"><div><span>نسبة الإتقان</span><b>${pct(r.mastery)}</b></div><div><span>الإجابة من المحاولة الأولى</span><b>${pct(r.firstTry)}</b></div><div><span>الوقت المستثمر</span><b>${ar(Math.round(r.minutes/60))} ساعة</b></div></div></div>
-   <div class="card prog"><div class="row"><div class="lockbadge" style="background:var(--ok-soft);color:var(--ok)">${ico('unlock')}</div><div class="grow"><span class="pill ok">فُتح</span><h3 style="margin-top:4px">البرنامج التحصيني</h3><p class="src">${PROG2}</p></div></div><p class="small muted">٣٦ فصلًا بترتيبها في الكتاب.</p></div>
-   <button class="btn primary block" data-act="unlockSim">ابدأ البرنامج التحصيني</button></div>`;
+   <div class="card prog"><div class="row"><div class="lockbadge" style="background:var(--ok-soft);color:var(--ok)">${ico('unlock')}</div><div class="grow"><span class="pill ok">فُتح</span><h3 style="margin-top:4px">المسار التحصيني</h3><p class="src">${PROG2}</p></div></div><p class="small muted">٣٦ فصلًا بترتيبها في الكتاب.</p></div>
+   <button class="btn primary block" data-act="unlockSim">ابدأ المسار التحصيني</button></div>`;
 }
 
 function contBtn(a,practice){
@@ -1198,7 +1217,7 @@ function statesHtml(){return `<div class="legend">${ST_ORDER.map(k=>`<div class=
 function showInfo(key){
   const c=calc(); const nm='لم يُقَس بعد';
   const I={
-   progress:{t:'نسبة إنجاز البرنامج',f:'(الجلسات المكتملة × ١ + المراجعات المكتملة × ٤) ÷ إجمالي النقاط المخططة',kv:[['الجلسات المكتملة',ar(c.sessionsDone)],['المراجعات المكتملة',ar(c.reviewsDone)],['النقاط المنجزة',ar(c.points)],['إجمالي النقاط',`${ar(PLAN.points)} (${ar(PLAN.total)} + ${ar(PLAN.reviews)}×${ar(REVIEW_WEIGHT)})`],['النتيجة',pct(c.progress)]],n:'إجمالي النقاط تقدير مبدئي، لأن عدد الجلسات لم يُعتمد بعد، فالنسبة تتغير حين يُضبط. القراءة الاختيارية لا تدخل فيها. الأوزان ثابتة. الجلسة نقطة، والمراجعة العشرية أربع نقاط. لا تُحتسب جلسة انتهى وقتها قبل إتقان أسئلتها. هذا مقياس إنجاز المحتوى، وهو غير الإتقان.'},
+   progress:{t:'نسبة إنجاز المسار',f:'(الجلسات المكتملة × ١ + المراجعات المكتملة × ٤) ÷ إجمالي النقاط المخططة',kv:[['الجلسات المكتملة',ar(c.sessionsDone)],['المراجعات المكتملة',ar(c.reviewsDone)],['النقاط المنجزة',ar(c.points)],['إجمالي النقاط',`${ar(PLAN.points)} (${ar(PLAN.total)} + ${ar(PLAN.reviews)}×${ar(REVIEW_WEIGHT)})`],['النتيجة',pct(c.progress)]],n:'إجمالي النقاط تقدير مبدئي، لأن عدد الجلسات لم يُعتمد بعد، فالنسبة تتغير حين يُضبط. القراءة الاختيارية لا تدخل فيها. الأوزان ثابتة. الجلسة نقطة، والمراجعة العشرية أربع نقاط. لا تُحتسب جلسة انتهى وقتها قبل إتقان أسئلتها. هذا مقياس إنجاز المحتوى، وهو غير الإتقان.'},
    mastery:{t:'نسبة الإتقان',f:'الأسئلة المجابة صحيحًا من المحاولة الأولى في آخر مراجعة لها ÷ الأسئلة التي خضعت لمراجعة عشرية',kv:[['متقنة',ar(c.okQ)],['خضعت للمراجعة',ar(c.reviewedN)],['أُكملت في جلسات',ar(c.studied)],['النتيجة',c.mastery==null?nm:pct(c.mastery)]],n:'لا تُقاس قبل أول مراجعة عشرية فتظهر «لم يُقَس بعد». لا ترتفع بتكرار السؤال داخل الجلسة. القياس على عينة (سؤالان من كل جلسة): قرار معلّق هل يشمل كل الأسئلة.'},
    group:{t:'تقدم المجموعة الحالية',f:'الجلسات المكتملة في المجموعة الحالية ÷ حجم المجموعة (١٠، وتقل في المجموعة الأخيرة)',kv:[['المجموعة',ar(c.reviewsDone+1)],['مكتملة',ar(c.inGroup)],['حجم المجموعة',ar(c.groupSize)]],n:'عدد ثابت لا يعتمد على تقدير. يبدأ من الصفر بعد اجتياز المراجعة.'},
    rvFirst:{t:'الصواب من المحاولة الأولى في المراجعات',f:'الأسئلة الصحيحة عند أول عرض في المراجعات ÷ الأسئلة المعروضة فيها',kv:[['صحيحة من أول عرض',ar(c.rvOk)],['المعروضة',ar(c.rvTot)],['النتيجة',c.rvFirstTry==null?nm:pct(c.rvFirstTry)]],n:'مؤشر مستقل. اجتياز المراجعة مشروط بالإجابة الصحيحة عن كل الأسئلة ولو بعد التصحيح، ولا يتوقف على هذه النسبة.'},
@@ -1208,14 +1227,14 @@ function showInfo(key){
    streak:{t:'الاستمرارية',f:`أيام متتابعة بلغ فيها وقت التعلم الفعلي ${ar(DAY_MIN_SECS)} ثانية فأكثر`,kv:[['الأيام المتتابعة',ar(c.streak)],['اليوم',c.todayOk?'تحقق':'لم يتحقق بعد']],n:'مؤشر تحفيزي فقط، لا يدخل في الحكم على الإتقان العلمي.'},
    today:{t:'الإنجاز اليومي',f:'الجلسات المكتملة اليوم مقابل الهدف اليومي',kv:[['مكتملة اليوم',ar(c.todaySessions)],['الهدف',ar(S.goal)]],n:'الهدف الافتراضي جلستان، وقابل للتعديل في النسخة الإنتاجية.'},
    time:{t:'الوقت المستثمر',f:'مجموع ثواني التعلم الفعلي أثناء الأسئلة ÷ ٦٠',kv:[['الثواني',ar(c.secs)],['الدقائق',ar(c.minutes)]],n:'لا يشمل الوقت خارج الجلسة، ويتوقف العداد حين تخرج من الصفحة.'},
-   unlock:{t:'فتح البرنامج التحصيني',f:'يُفتح عند بلوغ نقاط البرنامج التأصيلي ١٠٠٪',kv:[['المنجز',pct(c.unlockPct)],['جلسات متبقية',ar(c.sessionsLeft)],['مراجعات متبقية',ar(c.reviewsLeft)]],n:'يشترط إكمال كل الجلسات واجتياز كل المراجعات، لا بعضها.'}
+   unlock:{t:'فتح المسار التحصيني',f:'يُفتح عند بلوغ نقاط المسار التأصيلي ١٠٠٪',kv:[['المنجز',pct(c.unlockPct)],['جلسات متبقية',ar(c.sessionsLeft)],['مراجعات متبقية',ar(c.reviewsLeft)]],n:'يشترط إكمال كل الجلسات واجتياز كل المراجعات، لا بعضها.'}
   };
   if(key==='states') return openSheet(`<h3>حالات الإتقان الخمس</h3><p class="small muted">تُحسب لكل وحدة (موضوع) من سجل الأسئلة والمراجعات.</p>${statesHtml()}<button class="btn block" data-act="closeSheet">إغلاق</button>`);
   const i=I[key]; openSheet(`<h3>${i.t}</h3><div class="formula">${i.f}</div><div class="kv">${i.kv.map(([a,b])=>`<div><span>${a}</span><b>${b}</b></div>`).join('')}</div><p class="small muted">${i.n}</p><button class="btn block" data-act="closeSheet">إغلاق</button>`);
 }
 
 /* ===== لوحة العرض (خارج الهاتف) ===== */
-const JUMPS=[['splash','الشاشة الافتتاحية'],['home','الرئيسية ولوحة المؤشرات'],['programs','البرنامجان وقفل التحصيني'],['sections','الأقسام والفصول والوحدات'],['intro','الجلسة والعداد الزمني'],['question','السؤال والخيارات'],['wrong','معالجة الإجابة الخاطئة'],['complete','إكمال الجلسة ونتائجها'],['review','مراجعة آخر عشر جلسات'],['ach','الإنجازات والمؤشرات'],['secdone','إتمام القسم'],['progdone','إتمام البرنامج']];
+const JUMPS=[['splash','الشاشة الافتتاحية'],['home','الرئيسية ولوحة المؤشرات'],['programs','المساران وقفل التحصيني'],['sections','الأقسام والفصول والوحدات'],['intro','الجلسة والعداد الزمني'],['question','السؤال والخيارات'],['wrong','معالجة الإجابة الخاطئة'],['complete','إكمال الجلسة ونتائجها'],['review','مراجعة آخر عشر جلسات'],['ach','الإنجازات والمؤشرات'],['secdone','إتمام القسم'],['progdone','إتمام البرنامج']];
 function buildPanel(){
   $('#panel').innerHTML=`<div class="brand"><div class="mark">${MARK}</div><div><b>بَرْد اليقين</b><small>نموذج أولي تفاعلي للمراجعة والاعتماد</small></div></div>
   <h3>بيانات العرض</h3><div class="pbtns"><button class="pbtn" data-act="demo" data-arg="new" data-demo="new">طالب جديد</button><button class="pbtn" data-act="demo" data-arg="mid" data-demo="mid">منتصف الرحلة (٢٣ جلسة)</button><button class="pbtn" data-act="demo" data-arg="due" data-demo="due">مراجعة مستحقة (٢٠ جلسة)</button><button class="pbtn" data-act="demo" data-arg="two" data-demo="two">جلستان من ١٠</button><button class="pbtn" data-act="demo" data-arg="ten" data-demo="ten">١٠ جلسات (مراجعة أولى مستحقة)</button></div>
