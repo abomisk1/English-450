@@ -397,6 +397,12 @@ h1,h2,h3,h4,p{margin:0}
 .progbtn .pb-go{flex:none;color:var(--brand);transform:none}
 @media (max-height:600px){.splash{padding:12px 18px;gap:4px}.splash .logo{width:40px;height:40px}.splash h1{font-size:30px;line-height:1.2}.splash .tag{font-size:12px;line-height:1.55}.splash .two{font-size:12px}.splash .progs{gap:5px;margin:2px 0}.splash .pr{padding:4px 10px}.splash .pr h2{font-size:15px}.splash .pr p{font-size:11px;line-height:1.45}.splash .btn{padding:10px}.splash .foot{font-size:10px}}
 
+/* شريط التنقل: تسمية «قياس مستوى التقدم» تلتف على سطرين دون اقتطاع */
+.tab{min-width:0}
+.tab span{display:block;line-height:1.25;text-align:center;overflow-wrap:anywhere}
+@media (max-width:400px){.tab{font-size:10px;padding:5px 1px}.tab svg{width:21px;height:21px}}
+.grp .meter{margin:8px 0}
+
 .ico{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}
 .tabs[hidden]{display:none!important}
 </style>
@@ -649,16 +655,20 @@ function nassFigure(n){return `<figure class="nass ${n.k==='آية'?'ayah':'hadi
 /* النص الطويل يُعرض كاملًا عند أول ظهور في الجلسة، ثم يبقى متاحًا للاطلاع بلا تكرار: seen = مجموعة نصوص عُرضت سابقًا */
 function nassHtml(q){ if(!q.nass) return ''; return q.nass.map(n=>nassFigure(n)).join(''); }
 const DEMO_PILL=()=>S.mode==='demo'?'<span class="pill demo">بيانات توضيحية</span>':'';
+const ORD_G=['الأولى','الثانية','الثالثة','الرابعة','الخامسة','السادسة','السابعة','الثامنة','التاسعة','العاشرة'];
+const GRP_LBL=k=>ORD_G[k-1]||ar(k);
+const sessLbl=n=>`الجلسة رقم ${ar(((n-1)%GROUP)+1)} من المجموعة ${GRP_LBL(Math.ceil(n/GROUP))}`;
 const PROG1='استُفيدت مادة هذا المسار من كتاب زاد العباد';
 const PROG2='استُفيدت مادة هذا المسار من كتاب مراقي الوعي';
 const SECN={};DATA.zad.sections.forEach(s=>SECN[s.i]=s.n);
 
 /* ===== التنقل ===== */
 const ui={screen:'splash',params:{},stack:[],sec:'aqeeda',grp:null,ach:'days',unlocked:false,rvTrial:false};
-const TABS=[['home','الرئيسية','home'],['programs','المسارات','books'],['review','المراجعة','review'],['ach','إنجازاتي','chart'],['src','المصدر','doc']];
+const TABS=[['home','الرئيسية','home'],['programs','المسارات','books'],['review','المراجعة','review'],['progress','قياس مستوى التقدم','chart'],['src','المصدر','doc']];
 const TABSCREENS=new Set(['progress','trialres','trialfb','trialadm','home','programs','review','ach','src','sections','tahsini']);
 const RUNSCREENS=new Set(['question','wrong','timeout']);
 function go(screen,params={},opts={}){
+  if(screen==='ach') screen='progress';
   if(TRIAL&&!TS.consent&&screen!=='splash'&&screen!=='trialintro'&&screen!=='trialadm') screen='trialintro';
   if(!opts.back && ui.screen && ui.screen!==screen && !['splash','question','wrong','timeout','complete','intro'].includes(ui.screen)) ui.stack.push([ui.screen,ui.params]);
   if(ui.stack.length>20) ui.stack.shift();
@@ -668,7 +678,7 @@ function go(screen,params={},opts={}){
 }
 function back(){ const p=ui.stack.pop(); if(p) go(p[0],p[1],{back:true}); else go('home',{},{back:true}); }
 function paint(){
-  const R={trialintro:vTrialIntro,progress:vProgress,trialres:vTrialRes,trialfb:vTrialFb,trialadm:vTrialAdm,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vAch,src:vSrc,secdone:vSecDone,progdone:vProgDone};
+  const R={trialintro:vTrialIntro,progress:vProgress,ach:vProgress,trialres:vTrialRes,trialfb:vTrialFb,trialadm:vTrialAdm,bookintro:vBookIntro,groupintro:vGroupIntro,splash:vSplash,home:vHome,programs:vPrograms,tahsini:vTahsini,sections:vSections,intro:vIntro,question:vQuestion,wrong:vWrong,timeout:vTimeout,complete:vComplete,review:vReview,ach:vProgress,src:vSrc,secdone:vSecDone,progdone:vProgDone};
   $('#view').innerHTML=(R[ui.screen]||vHome)();
   const showTabs=TABSCREENS.has(ui.screen);
   $('#tabs').hidden=!showTabs;
@@ -693,14 +703,14 @@ function vSplash(){
 /* ===== 2. الرئيسية ===== */
 function nextStep(c){
   const pending=Object.keys(S.sessions).map(Number).find(n=>S.sessions[n].resume&&!S.sessions[n].done&&authored(n));
-  if(RUN&&!RUN.finished&&!RUN.practice&&!(RUN.kind==='S'&&RUN.expired)) return {lab:'استئناف',title:RUN.kind==='R'?'المراجعة العشرية قيد التنفيذ':`الجلسة ${ar(RUN.n)} قيد التنفيذ`,meta:`بقي ${C_Q(new Set(RUN.queue).size)}`,btn:['resumeRun','','تابع الآن']};
-  if(pending){const left=new Set(S.sessions[pending].resume).size;return {lab:'استئناف جلسة محفوظة',title:`الجلسة ${ar(pending)}: ${esc(BANK.bySession[pending].title)}`,meta:`بقي ${C_Q(left)} لم تُتقن بعد`,btn:['intro',pending,'استأنف الجلسة']};}
-  if(c.due) return {lab:'مراجعة مستحقة',title:'المراجعة العشرية جاهزة',meta:`أكملت ${C_SESS(GROUP*(c.reviewsDone+1))}. تُفتح الجلسة التالية بعد إتمام المراجعة.`,btn:['go','review','ابدأ المراجعة']};
+  if(RUN&&!RUN.finished&&!RUN.practice&&!(RUN.kind==='S'&&RUN.expired)) return {lab:'استئناف',title:RUN.kind==='R'?'المراجعة العشرية قيد التنفيذ':sessLbl(RUN.n),meta:`${RUN.kind==='S'&&authored(RUN.n)?'<b>'+esc(BANK.bySession[RUN.n].title)+'</b><br>':''}بقي ${C_Q(new Set(RUN.queue).size)}`,btn:['resumeRun','','تابع الآن']};
+  if(pending){const left=new Set(S.sessions[pending].resume).size;return {lab:'استئناف جلسة محفوظة',title:sessLbl(pending),meta:`<b>${esc(BANK.bySession[pending].title)}</b><br>بقي ${C_Q(left)} لم تُتقن بعد`,btn:['intro',pending,'استأنف الجلسة']};}
+  if(c.due) return {lab:'مراجعة مستحقة',title:`مراجعة المجموعة ${GRP_LBL(c.reviewsDone+1)}`,meta:`أكملت ${C_SESS(GROUP*(c.reviewsDone+1))}. تُفتح الجلسة التالية بعد إتمام المراجعة.`,btn:['go','review','ابدأ المراجعة']};
   const n=nextSessionNo();
-  if(n==null) return {lab:'اكتمل البرنامج',title:'أتممت جلسات المسار التأصيلي',meta:'',btn:['go','progdone','عرض الإنجاز']};
+  if(n==null) return {lab:'اكتمل المسار',title:'أتممت جلسات المسار التأصيلي',meta:'',btn:['go','progdone','عرض الإنجاز']};
   const u=PLAN.unitOf[PLAN.sessions[n].unit];
-  if(authored(n)) return {lab:'خطوتك التالية',title:`الجلسة ${ar(n)}: ${esc(BANK.bySession[n].title)}`,meta:`${esc(SECN[PLAN.sessions[n].sec])} · ${esc(u.t)} · ${C_Q(qidsOf(n).length)} · ٣ دقائق كحد أقصى`,btn:['intro',n,'ابدأ الجلسة']};
-  return {lab:'خطوتك التالية',title:`الجلسة ${ar(n)}: ${esc(u.t)}`,meta:'أسئلة هذه الجلسة لم تُعدّ علميًا بعد، فلا تُفتح في هذا النموذج. الجلسات المعتمدة فقط هي ١–١٠.',btn:['go','sections','تصفّح الموضوعات'],alt:['intro',1,'تدرّب على جلسة معتمدة']};
+  if(authored(n)) return {lab:'خطوتك التالية',title:sessLbl(n),meta:`<b>${esc(BANK.bySession[n].title)}</b><br>الموضوع: ${esc(u.t)} · ${C_Q(qidsOf(n).length)} · ٣ دقائق كحد أقصى`,btn:['intro',n,'ابدأ الجلسة']};
+  return {lab:'خطوتك التالية',title:sessLbl(n),meta:`${esc(u.t)}<br>أسئلة هذه الجلسة لم تُعدّ علميًا بعد، فلا تُفتح في هذا النموذج. الجلسات المعتمدة فقط هي ١–١٠.`,btn:['go','sections','تصفّح الموضوعات'],alt:['intro',1,'تدرّب على جلسة معتمدة']};
 }
 function tile(key,lab,val,cap,m,cls=''){
   const nm=val==null;
@@ -713,29 +723,11 @@ function vHome(){
    <div class="row between"><div class="row"><div class="mark">${MARK}</div><div><div class="display" style="font-size:24px;line-height:1.2">بَرْد اليقين</div><div class="h-sub">السلام عليكم</div></div></div>${DEMO_PILL()}</div>
    <div class="next"><span class="lab">${st.lab}</span><h2>${st.title}</h2>${st.meta?`<p class="meta">${st.meta}</p>`:''}<button class="btn block" data-act="${st.btn[0]}" data-arg="${st.btn[1]}">${st.btn[2]}</button>${st.alt?`<button class="btn block ghost" data-act="${st.alt[0]}" data-arg="${st.alt[1]}">${st.alt[2]}</button>`:''}</div>
    ${TRIAL?`<div class="card" style="gap:6px"><div class="row between"><b class="small">التجربة المغلقة</b><span class="pill" style="direction:ltr">${esc(TS.code||'')}</span></div><p class="tiny muted">تُسجَّل بياناتك غير الشخصية عند كل جلسة. بعد كل جلسة يمكنك إبداء رأيك باختصار.</p><button class="link" data-act="go" data-arg="trialres">نتائج التجربة وإرسالها (${ar(TS.records.length)})</button><button class="link" data-act="go" data-arg="trialfb">أبدِ رأيك في التجربة</button></div>`:''}
-   ${groupCard(c)}
-   <button class="card progbtn" data-act="go" data-arg="progress"><span class="pb-ic">${ico('chart')}</span><span class="grow"><b>قياس مستوى التقدم</b><span class="small muted">نسبة الإنجاز والإتقان والجلسات والمراجعة والاستمرارية في مكان واحد</span></span><span class="pb-go">${ico('back')}</span></button>
-   <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>فتح المسار التحصيني</h3><p class="src">${PROG2}</p></div><button class="i" style="position:static;width:24px;height:24px;border-radius:50%;border:1px solid var(--line);background:var(--surface-2)" data-act="info" data-arg="unlock" aria-label="كيف يُحسب فتح البرنامج">؟</button></div>${meter(c.unlockPct,'gold')}<p class="small muted">يُفتح عند إتمام كل جلسات المسار التأصيلي ومراجعاته. المتبقي: نحو ${C_SESS(c.sessionsLeft)} و${C_REV(c.reviewsLeft)} (تقدير مبدئي).</p></div>
+   ${groupCard(c,true)}
    ${S.mode==='demo'?'<div class="ribbon"><b>بيانات توضيحية.</b> سُجّلت أحداثًا تجريبية (إجابات وجلسات ومراجعات) ثم حُسبت منها هذه المؤشرات بالقواعد نفسها. لا تخص طالبًا حقيقيًا.</div>':''}
   </div>`;
 }
 
-function vProgress(){
-  const c=calc(); const rvTxt=c.due?'جاهزة الآن':C_SESS(c.toNext);
-  return `<div class="screen">${head('قياس مستوى التقدم','كل رقم هنا محسوب من إجاباتك الفعلية')}
-   <div class="tiles">
-    ${tile('progress','نسبة إنجاز المسار',(PLAN_FINAL?'':'≈ ')+pct(c.progress),`${ar(c.points)} نقطة من نحو ${ar(PLAN.points)} (تقدير مبدئي)`,c.progress)}
-    ${tile('mastery','نسبة الإتقان',c.mastery==null?null:pct(c.mastery),c.mastery==null?'يبدأ القياس بعد أول مراجعة عشرية':`قيس على ${C_Q(c.reviewedN)} خضعت للمراجعة`,c.mastery,'ok')}
-    ${tile('sessions','الجلسات المكتملة',`${ar(c.sessionsDone)}<small class="muted" style="font-size:14px;font-weight:500"> / ≈${ar(PLAN.total)}</small>`,`بقي نحو ${C_SESS(c.sessionsLeft)} (تقدير)`,c.sessionsDone/PLAN.total*100)}
-    ${tile('next','موعد المراجعة القادمة',rvTxt,c.due?'أكمل المراجعة لفتح الجلسات التالية':`بعد الجلسة ${ar(c.nextAt)} من المسار`,c.due?100:c.inGroup/c.groupSize*100,'gold')}
-   </div>
-   <div class="chips3">
-    <button class="mini" data-act="info" data-arg="streak" style="border:0"><b>${ar(c.streak)}</b><span>الاستمرارية (أيام)</span></button>
-    <button class="mini" data-act="info" data-arg="today" style="border:0"><b>${ar(c.todaySessions)}/${ar(S.goal)}</b><span>الإنجاز اليومي</span></button>
-    <button class="mini" data-act="info" data-arg="time" style="border:0"><b>${ar(c.minutes)}</b><span>دقيقة تعلم</span></button>
-   </div>
-   <button class="btn primary block" data-act="go" data-arg="home">العودة إلى الصفحة الرئيسية</button></div>`;
-}
 /* ===== 3. المساران ===== */
 function vPrograms(){
   const c=calc();
@@ -793,7 +785,7 @@ function vGroupIntro(){
     ${rng?`<button class="btn block" data-act="sumRead" data-arg="all">فتح الملخص النصي</button>`:''}</div>
    <button class="btn primary block" data-act="gintroGo" data-arg="${k}:${n||0}:${view?1:0}">${view?'رجوع':'ابدأ التعلم مباشرة'}</button></div>`;
 }
-function groupCard(c){return `<div class="card grp"><div class="row between"><h3>المجموعة ${ar(c.reviewsDone+1)}</h3><span class="pill ${c.due?'ok':''}">${ar(c.inGroup)} من ${ar(c.groupSize)} جلسات مكتملة</span></div>${groupDots(c)}<p class="small" role="status">${groupMsg(c)}</p><button class="link" data-act="gintro" data-arg="${c.reviewsDone+1}">إرشاد القراءة وشرح التعلم</button></div>`;}
+function groupCard(c,compact=false){return `<div class="card grp"><div class="row between"><h3>المجموعة ${GRP_LBL(c.reviewsDone+1)}</h3><span class="pill ${c.due?'ok':''}">${ar(c.inGroup)} من ${ar(c.groupSize)} جلسات مكتملة</span></div>${compact?meter(c.inGroup/c.groupSize*100):groupDots(c)}<p class="small" role="status">${groupMsg(c)}</p><button class="link" data-act="gintro" data-arg="${c.reviewsDone+1}">إرشاد القراءة وشرح التعلم</button></div>`;}
 
 /* ===== بطاقة تعريف الكتاب (عند أول دخول لكل برنامج) ===== */
 function dlBtn(id,cls='btn block'){return SUMFILES[id]?`<button class="${cls}" data-dl="${id}" data-act="dlSummary" data-arg="${id}" hidden>تحميل الملخص (PDF) <span class="pill info">نسخة للمراجعة الخاصة</span></button>`:'';}
@@ -1119,7 +1111,7 @@ function lineChart(d,label){
   const xl=d.map((x,i)=>(d.length<=7||i%2===(d.length-1)%2)?`<text x="${xc(f,i,d.length)+f.bw/2}" y="${f.H-5}" text-anchor="middle">${x.lab}</text>`:'').join('');
   return `<svg class="chart" viewBox="0 0 ${f.W} ${f.H}" role="img" aria-label="${label}">${[0,50,100].map(v=>`<line class="gridl" x1="${f.L}" x2="${f.W-f.Rr}" y1="${y(v)}" y2="${y(v)}" ${v===50?'stroke-dasharray="3 4"':''}/><text x="${f.W-2}" y="${y(v)+3}" text-anchor="end">${ar(v)}</text>`).join('')}<path class="line" d="${path}"/>${dots}${last?`<text x="${last.cx}" y="${y(last.v)-9}" text-anchor="middle" style="fill:var(--ink);font-weight:600">${pct(last.v)}</text>`:''}${xl}</svg>`;
 }
-function vAch(){
+function vProgress(){
   const c=calc(), us=unitStatuses(), d=ui.ach==='days'?seriesDays(14):seriesWeeks(6);
   const has=Object.values(S.days).some(x=>x.sessions>0);
   const counts={};Object.values(us).forEach(v=>counts[v]=(counts[v]||0)+1); const started=PLAN.units.length-(counts.none||0);
@@ -1128,19 +1120,21 @@ function vAch(){
   const mastered=PLAN.units.filter(u=>us[u.i]==='mastered').slice(0,5), need=[...PLAN.units.filter(u=>us[u.i]==='redo'),...PLAN.units.filter(u=>us[u.i]==='consolidate')].slice(0,6);
   const li=u=>`<div class="li">${stIcon(us[u.i],18)}<div class="grow">${esc(u.t)}<div class="tiny muted">${esc(SECN[u.sec])} · ${ST[us[u.i]].t}</div></div></div>`;
   const rv=Object.keys(S.reviews).map(Number).sort((a,b)=>b-a); const rvOk=rv.reduce((a,k)=>a+S.reviews[k].ok,0), rvTot=rv.reduce((a,k)=>a+S.reviews[k].tot,0);
-  return `<div class="screen"><div class="row between"><div><h1 class="h-title">إنجازاتي</h1><p class="h-sub">كل رقم هنا محسوب من إجاباتك الفعلية</p></div>${DEMO_PILL()}</div>
-   ${indicatorsCard(c,us)}
-   <div class="card"><div class="row between"><h3>التقدم العام (تقدير)</h3><b style="font-size:22px">${PLAN_FINAL?'':'≈ '}${pct(c.progress)}</b></div>${meter(c.progress)}<p class="small muted" style="margin-top:6px">${PLAN_FINAL?'':'النسبة مقسومة على عدد تقديري للجلسات لم يُعتمد بعد، فتتغير حين يُضبط. '}إنجاز المحتوى (${C_SESS(c.sessionsDone)} و${C_REV(c.reviewsDone)}) منفصل عن الإتقان. المنجَز قد لا يكون متقنًا بعد.</p></div>
+  return `<div class="screen"><div class="row between"><div><h1 class="h-title">قياس مستوى التقدم</h1><p class="h-sub">كل رقم هنا محسوب من إجاباتك الفعلية</p></div>${DEMO_PILL()}</div>
+   ${indicatorsSci(c,us)}
+   <div class="card"><div class="row between"><h3>نسبة إنجاز المسار (تقدير)</h3><b style="font-size:22px">${PLAN_FINAL?'':'≈ '}${pct(c.progress)}</b></div>${meter(c.progress)}<p class="small muted" style="margin-top:6px">${PLAN_FINAL?'':'النسبة مقسومة على عدد تقديري للجلسات لم يُعتمد بعد، فتتغير حين يُضبط. '}إنجاز المحتوى (${C_SESS(c.sessionsDone)} و${C_REV(c.reviewsDone)}) منفصل عن الإتقان. المنجَز قد لا يكون متقنًا بعد.</p></div>
    <div class="card"><div class="row between"><h3>الإتقان</h3><button class="link" data-act="info" data-arg="mastery">كيف يُحسب؟</button></div>
     <div class="stat3" style="margin-top:8px"><div class="mini"><b>${c.mastery==null?'—':pct(c.mastery)}</b><span>${c.mastery==null?'لم يُقَس بعد':'نسبة الإتقان'}</span></div><div class="mini"><b>${c.firstTry==null?'—':pct(c.firstTry)}</b><span>${c.firstTry==null?'لم يُقَس بعد':'من المحاولة الأولى'}</span></div><div class="mini"><b>${ar(c.ftOk)}</b><span>سؤالًا من المحاولة الأولى</span></div></div>
     <div style="height:12px"></div><div class="row between small"><span>حالة الوحدات التي بدأتها (${ar(started)})</span></div><div style="height:6px"></div>${started?`<div class="stack" role="img" aria-label="توزيع حالات الوحدات">${stack}</div>`:'<div class="meter none"></div><p class="tiny muted" style="margin-top:6px">تظهر الحالات بعد أول جلسة.</p>'}
     <div class="legend" style="margin-top:10px">${order.map(k=>`<div class="it">${stIcon(k,16)}<div><b style="font-weight:500">${ST[k].t}</b></div><span style="margin-inline-start:auto;font-weight:600;color:var(--ink)">${ar(counts[k]||0)}</span></div>`).join('')}</div></div>
+   ${indicatorsAct(c)}
    <div class="card"><div class="row between"><h3>تطور الأداء</h3><div class="tabs2" role="tablist"><button class="${ui.ach==='days'?'on':''}" data-act="achTab" data-arg="days">أيام</button><button class="${ui.ach==='weeks'?'on':''}" data-act="achTab" data-arg="weeks">أسابيع</button></div></div>
     ${has?`<p class="small muted" style="margin:8px 0 2px">الجلسات المكتملة ${ui.ach==='days'?'يوميًا':'أسبوعيًا'}</p>${barChart(d,'الجلسات المكتملة')}<p class="small muted" style="margin:8px 0 2px">الإجابة من المحاولة الأولى (٪)</p>${lineChart(d,'نسبة المحاولة الأولى')}<p class="tiny muted">الفراغ يعني أن العينة أقل من ${C_Q(MIN_FT_SAMPLE)}. الوقت يسير من اليمين إلى اليسار.</p>`:'<p class="small muted" style="margin-top:8px">يظهر الرسم بعد أول جلسة مكتملة.</p>'}</div>
    <div class="card"><h3 style="margin-bottom:8px">تقدم كل قسم</h3><div style="display:flex;flex-direction:column;gap:10px">${DATA.zad.sections.map(s=>{const dn=c.secDone[s.i]||0,pl=PLAN.secPlanned[s.i];return `<div class="sbar"><div class="top"><span>${esc(s.n)}</span><span class="muted">${ar(dn)} من نحو ${ar(pl)} · <b style="color:var(--ink)">${pct(dn/pl*100)}</b></span></div>${meter(dn/pl*100)}</div>`;}).join('')}</div></div>
    <div class="card"><h3 style="margin-bottom:4px">الموضوعات المتقنة</h3><div class="lst">${mastered.length?mastered.map(li).join(''):'<p class="small muted">لا موضوع متقنًا بعد. يثبت الإتقان بعد المراجعة العشرية.</p>'}</div></div>
-   <div class="card"><h3 style="margin-bottom:4px">تحتاج إلى مراجعة</h3><div class="lst">${need.length?need.map(li).join(''):'<p class="small muted">لا موضوعات بانتظار المراجعة.</p>'}</div></div>
+   <div class="card"><h3 style="margin-bottom:4px">الموضوعات التي تحتاج إلى إعادة تثبيت</h3><div class="lst">${need.length?need.map(li).join(''):'<p class="small muted">لا موضوعات تحتاج إلى إعادة تثبيت الآن.</p>'}</div></div>
    <div class="card"><h3 style="margin-bottom:4px">نتائج المراجعات العشرية</h3>${rv.length?`<div class="lst">${rv.map(k=>`<div class="rv"><span>المراجعة ${ar(k)}</span><span><b>${ar(S.reviews[k].ok)}/${ar(S.reviews[k].tot)}</b> <span class="muted">${pct(S.reviews[k].ok/S.reviews[k].tot*100)}</span></span></div>`).join('')}</div><p class="small muted" style="margin-top:6px">المجموع: ${ar(rvOk)} من ${ar(rvTot)} من المحاولة الأولى (${pct(rvOk/rvTot*100)}).</p>`:'<p class="small muted">لا مراجعات مكتملة بعد.</p>'}</div>
+   <p class="tiny muted">القراءة الاختيارية للكتابين لا تدخل في أي من هذه المؤشرات.</p>
    <div class="card prog"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح المسار التحصيني</h3></div></div>${meter(c.unlockPct,'gold')}<div class="kv"><div><span>جلسات متبقية</span><b>${ar(c.sessionsLeft)}</b></div><div><span>مراجعات متبقية</span><b>${ar(c.reviewsLeft)}</b></div><div><span>الوقت المستثمر</span><b>${ar(c.minutes)} دقيقة</b></div><div><span>أيام متتالية</span><b>${ar(c.streak)}</b></div></div></div>
   </div>`;
 }
@@ -1192,20 +1186,28 @@ function contBtn(a,practice){
   return `<button class="btn primary block" data-act="intro" data-arg="${n}">متابعة الجلسة التالية (${ar(n)})</button>`;
 }
 
-function indicatorsCard(c,us){
+function indicatorsSci(c,us){
   const cons=PLAN.units.filter(u=>us[u.i]==='consolidate').length, redo=PLAN.units.filter(u=>us[u.i]==='redo').length;
   const row=(k,lab,val,note,info)=>`<div class="ind"><div class="grow"><b>${lab}</b><span>${note}</span></div><div class="v">${val}</div>${info?`<button class="i" style="position:static" data-act="info" data-arg="${info}" aria-label="كيف يُحسب">؟</button>`:''}</div>`;
   const nm='لم يُقَس بعد';
-  return `<div class="card"><h3>المؤشرات الأساسية، كل منها مستقل</h3><div class="inds">
+  return `<div class="card"><h3>المؤشرات العلمية</h3><p class="tiny muted" style="margin:2px 0 4px">كل مؤشر مستقل عن غيره، ومحسوب من أدائك الفعلي.</p><div class="inds">
    ${row(0,'تقدم المجموعة الحالية',`${ar(c.inGroup)} من ${ar(c.groupSize)}`,'جلسات المجموعة التي أُكملت. عدد ثابت وليس تقديرًا.','group')}
-   ${row(0,'تقدم البرنامج كاملًا',(PLAN_FINAL?'':'≈ ')+pct(c.progress),'نقاط منجزة ÷ إجمالي تقديري لم يُعتمد بعد.','progress')}
-   ${row(0,'الجلسات المكتملة',ar(c.sessionsDone),'أُجيبت كل أسئلتها صحيحًا.','sessions')}
+   ${row(0,'نسبة إنجاز المسار',(PLAN_FINAL?'':'≈ ')+pct(c.progress),'نقاط منجزة ÷ إجمالي تقديري لم يُعتمد بعد.','progress')}
+   ${row(0,'الجلسات المكتملة',ar(c.sessionsDone),`أُجيبت كل أسئلتها صحيحًا. بقي نحو ${C_SESS(c.sessionsLeft)} (تقدير).`,'sessions')}
    ${row(0,'الإتقان المثبت بالمراجعات',c.mastery==null?nm:pct(c.mastery),c.mastery==null?'يبدأ بعد أول مراجعة عشرية.':`على ${C_Q(c.reviewedN)} خضعت للمراجعة.`,'mastery')}
    ${row(0,'الصواب من المحاولة الأولى في الجلسات',c.firstTry==null?nm:pct(c.firstTry),`${ar(c.ftOk)} من ${ar(c.ftTot)} عرضًا.`,'firstTry')}
    ${row(0,'الصواب من المحاولة الأولى في المراجعات',c.rvFirstTry==null?nm:pct(c.rvFirstTry),`${ar(c.rvOk)} من ${ar(c.rvTot)}. مستقل عن اجتياز المراجعة.`,'rvFirst')}
    ${row(0,'الجلسات المتبقية للمراجعة القادمة',c.due?'جاهزة':ar(c.toNext),c.due?'أكملها لفتح المجموعة التالية.':'بعد كل عشر جلسات.','next')}
-   ${row(0,'موضوعات تحتاج إلى تثبيت أو مراجعة',ar(cons+redo),`${ar(cons)} تحتاج إلى تثبيت · ${ar(redo)} تحتاج إلى إعادة مراجعة.`,'states')}
-  </div><p class="tiny muted" style="margin-top:6px">القراءة الاختيارية للكتابين لا تدخل في أي من هذه المؤشرات.</p></div>`;
+   ${row(0,'موضوعات تحتاج إلى إعادة تثبيت',ar(cons+redo),`${ar(cons)} تحتاج إلى تثبيت · ${ar(redo)} تحتاج إلى إعادة مراجعة.`,'states')}
+  </div></div>`;
+}
+function indicatorsAct(c){
+  const row=(lab,val,note,info)=>`<div class="ind"><div class="grow"><b>${lab}</b><span>${note}</span></div><div class="v">${val}</div><button class="i" style="position:static" data-act="info" data-arg="${info}" aria-label="كيف يُحسب">؟</button></div>`;
+  return `<div class="card"><h3>النشاط والاستمرارية</h3><p class="tiny muted" style="margin:2px 0 4px">تقيس انتظامك لا مستوى إتقانك.</p><div class="inds">
+   ${row('دقائق التعلم',ar(c.minutes),'الوقت الفعلي المستثمر في الجلسات والمراجعات.','time')}
+   ${row('الإنجاز اليومي',`${ar(c.todaySessions)}/${ar(S.goal)}`,'جلسات اليوم مقابل الهدف اليومي.','today')}
+   ${row('الاستمرارية',`${ar(c.streak)} يومًا`,'أيام التعلم المتتالية.','streak')}
+  </div></div>`;
 }
 
 /* ===== الأوراق السفلية والتعريفات ===== */
@@ -1234,7 +1236,7 @@ function showInfo(key){
 }
 
 /* ===== لوحة العرض (خارج الهاتف) ===== */
-const JUMPS=[['splash','الشاشة الافتتاحية'],['home','الرئيسية ولوحة المؤشرات'],['programs','المساران وقفل التحصيني'],['sections','الأقسام والفصول والوحدات'],['intro','الجلسة والعداد الزمني'],['question','السؤال والخيارات'],['wrong','معالجة الإجابة الخاطئة'],['complete','إكمال الجلسة ونتائجها'],['review','مراجعة آخر عشر جلسات'],['ach','الإنجازات والمؤشرات'],['secdone','إتمام القسم'],['progdone','إتمام البرنامج']];
+const JUMPS=[['splash','الشاشة الافتتاحية'],['home','الرئيسية'],['programs','المساران وقفل التحصيني'],['sections','الأقسام والفصول والوحدات'],['intro','الجلسة والعداد الزمني'],['question','السؤال والخيارات'],['wrong','معالجة الإجابة الخاطئة'],['complete','إكمال الجلسة ونتائجها'],['review','مراجعة آخر عشر جلسات'],['progress','قياس مستوى التقدم'],['secdone','إتمام القسم'],['progdone','إتمام البرنامج']];
 function buildPanel(){
   $('#panel').innerHTML=`<div class="brand"><div class="mark">${MARK}</div><div><b>بَرْد اليقين</b><small>نموذج أولي تفاعلي للمراجعة والاعتماد</small></div></div>
   <h3>بيانات العرض</h3><div class="pbtns"><button class="pbtn" data-act="demo" data-arg="new" data-demo="new">طالب جديد</button><button class="pbtn" data-act="demo" data-arg="mid" data-demo="mid">منتصف الرحلة (٢٣ جلسة)</button><button class="pbtn" data-act="demo" data-arg="due" data-demo="due">مراجعة مستحقة (٢٠ جلسة)</button><button class="pbtn" data-act="demo" data-arg="two" data-demo="two">جلستان من ١٠</button><button class="pbtn" data-act="demo" data-arg="ten" data-demo="ten">١٠ جلسات (مراجعة أولى مستحقة)</button></div>

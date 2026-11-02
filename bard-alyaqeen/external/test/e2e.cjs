@@ -75,10 +75,11 @@ let pass=0,fail=0; const ok=(c,m)=>{ if(c){pass++;console.log('PASS',m);}else{fa
   const N=await mk(); await N.p.goto(B+'/?k='+INV); await N.p.waitForTimeout(500); const sp=await N.p.evaluate(()=>({h1:document.querySelector('.splash h1').textContent,two:document.querySelector('.splash .two').textContent,pr:[...document.querySelectorAll('.splash .pr h2')].map(x=>x.textContent),tag:document.querySelector('.splash .tag').textContent}));
   ok(sp.h1==='برنامج بَرْد اليقين'&&sp.two==='يحتوي برنامج بَرْد اليقين على مسارين:'&&sp.pr.join('|')==='المسار التأصيلي|المسار التحصيني'&&/^رحلةٌ علمية/.test(sp.tag),'live build: new title, the two-paths sentence, «المسار التأصيلي/التحصيني»');
   await N.p.evaluate(()=>{S.seen.zad=true;S.gintro={1:true};TS.consent=true;TS.code='P-ZZZZ';TS.device='هاتف';save();seedDemo(3,0);go('home')}); await N.p.waitForTimeout(200);
-  ok(await N.p.evaluate(()=>!document.querySelector('.tiles')&&!document.querySelector('.chips3')&&/قياس مستوى التقدم/.test(document.querySelector('#view').innerText)),'home: separate indicator cards removed; one «قياس مستوى التقدم» card');
-  await N.p.click('[data-act="go"][data-arg="progress"]'); await N.p.waitForTimeout(200); const pt=await N.p.evaluate(()=>document.querySelector('#view').innerText);
-  ok(['نسبة إنجاز المسار','نسبة الإتقان','الجلسات المكتملة','موعد المراجعة القادمة','دقيقة تعلم','الإنجاز اليومي','الاستمرارية','لم يُقَس بعد'].every(w=>pt.includes(w)),'progress panel shows every indicator (completed/remaining sessions, next review, minutes, daily goal, streak) and «لم يُقَس بعد» when not measurable');
-  await N.p.click('.btn.primary[data-arg="home"]'); await N.p.waitForTimeout(150); ok(await N.p.evaluate(()=>ui.screen)==='home','back button returns to the home page');
+  ok(await N.p.evaluate(()=>!document.querySelector('.tiles')&&!document.querySelector('.chips3')&&!document.querySelector('.progbtn')&&!document.querySelector('.lockbadge')),'home: no separate indicator cards, no big progress card, no lock icon');
+  ok(await N.p.evaluate(()=>/الجلسة رقم ٤ من المجموعة الأولى/.test(document.querySelector('.next').innerText)),'home «خطوتك التالية»: «الجلسة رقم ٤ من المجموعة الأولى»');
+  ok(await N.p.evaluate(()=>[...document.querySelectorAll('.tab')].map(t=>t.innerText.replace(/\n/g,' ')).join('|'))==='الرئيسية|المسارات|المراجعة|قياس مستوى التقدم|المصدر','bottom bar: «قياس مستوى التقدم» replaces «إنجازاتي»');
+  await N.p.click('.tab:nth-child(4)'); await N.p.waitForTimeout(200); const pt=await N.p.evaluate(()=>document.querySelector('#view').innerText);
+  ok(['نسبة إنجاز المسار','الإتقان المثبت','الجلسات المكتملة','الجلسات المتبقية للمراجعة القادمة','الصواب من المحاولة الأولى','دقائق التعلم','الإنجاز اليومي','الاستمرارية','تحتاج إلى إعادة تثبيت'].every(w=>pt.includes(w)),'unified progress page (from the bottom tab) shows every indicator');
   ok([A,Bp,adm,bad,fresh].every(x=>x.p.errs.length===0),'no page errors '+[A,Bp,adm].map(x=>x.p.errs.join('|')).join(''));
   console.log(`\nPASS=${pass} FAIL=${fail}`); await b.close(); server.close(); process.exit(fail?1:0);
 })().catch(e=>{console.log('CRASH',e.message);process.exit(1)});
