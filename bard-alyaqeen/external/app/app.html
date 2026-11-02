@@ -512,7 +512,14 @@ function calc(){
     firstTry: ftTot>=MIN_FT_SAMPLE? ftOk/ftTot*100 : null, ftOk, ftTot,
     nextAt,due,toNext,inGroup,groupSize,streak,todayOk,todaySessions:today.sessions,minutes:Math.round(secs/60),secs,secDone,
     reviewsLeft:PLAN.reviews-reviewsDone, sessionsLeft:PLAN.total-sessionsDone, pointsLeft:PLAN.points-points,
-    unlockPct:Math.min(100,points/PLAN.points*100)};
+    unlockPct:Math.min(100,points/PLAN.points*100),
+    groupsLeft:groupRule({total:PLAN.total,sessionsDone,passed:reviewsDone}).remaining, groupsPct:groupRule({total:PLAN.total,sessionsDone,passed:reviewsDone}).pct};
+}
+/* قاعدة اجتياز المجموعة الموحدة للمسارين: المجموعة = عشر جلسات + مراجعة شاملة إلزامية.
+   لا تُحتسب مجتازة إلا بإكمال جلساتها واجتياز مراجعتها، ولا يُفتح ما بعدها قبل ذلك. تُستعمل لحساب «مجموعات متبقية». */
+function groupRule({total,sessionsDone,passed,size=GROUP}){
+  const groups=Math.ceil(total/size), p=Math.max(0,Math.min(passed,groups)), need=Math.min(size*(p+1),total);
+  return {groups,passed:p,remaining:groups-p,due:p<groups&&sessionsDone>=need,openUpTo:p<groups?need:total,pct:groups?p/groups*100:0};
 }
 function nextSessionNo(){ for(let n=1;n<=PLAN.total;n++){ if(!(S.sessions[n]&&S.sessions[n].done)) return n;} return null; }
 function gate(c){ // هل يتطلب البدء مراجعة أولًا؟
@@ -706,7 +713,7 @@ function vSplash(){
   const c=calc(), n=nextSessionNo(); const pending=Object.keys(S.sessions).map(Number).find(k=>S.sessions[k].resume&&!S.sessions[k].done&&authored(k));
   let msg='',btn=(S.seen.zad?['go','home','ابدأ التعلم']:['enter','zad:home','ابدأ التعلم']);
   if(pending){msg=`أهلًا بعودتك. لديك جلسة غير مكتملة: الجلسة ${ar(pending)}.`;btn=['intro',pending,`استأنف الجلسة ${ar(pending)}`];}
-  else if(c.due){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.groupSize)} من أصل ${ar(c.groupSize)}. المراجعة الشاملة جاهزة.`;btn=['go','review','ابدأ المراجعة الشاملة'];}
+  else if(c.due){msg='أهلًا بعودتك. أكملت جلسات هذه المجموعة، ويلزمك اجتياز مراجعتها الشاملة للانتقال إلى المجموعة التالية.';btn=['go','review','ابدأ مراجعة المجموعة'];}
   else if(c.inGroup>0&&n){msg=`أهلًا بعودتك. أكملت ${A_SESS(c.inGroup)} من أصل ${ar(c.groupSize)}، ويمكنك متابعة الجلسة ${ar(n)}.`;btn=authored(n)?['intro',n,`تابع الجلسة ${ar(n)}`]:['go','home','تابع التعلم'];}
   else if(c.sessionsDone>0){msg='أهلًا بعودتك.';btn=['go','home','تابع التعلم'];}
   return `<div class="splash"><div class="logo">${MARK}</div><h1>برنامج بَرْد اليقين</h1><p class="tag">رحلةٌ علمية تجمع بين الثقافة الشرعية والحصانة الفكرية، في محتوى تفاعلي ميسّر ومتدرّج؛ لبناء وعيٍ راسخ ويقينٍ ثابت.</p><p class="two">يحتوي برنامج بَرْد اليقين على مسارين:</p><div class="progs"><div class="pr"><h2>المسار التأصيلي</h2><p>لتأسيس المعرفة الشرعية في العقائد والأحكام والأخلاق والآداب، وغيرها من أبواب العلم الشرعي.</p></div><div class="pr"><h2>المسار التحصيني</h2><p>لتعزيز اليقين وبناء الوعي الفكري، وفهم الشبهات ومناهج التعامل معها.</p></div></div>${msg?`<p class="welcome" role="status">${msg}</p>`:''}<button class="btn" data-act="${btn[0]}" data-arg="${btn[1]}">${btn[2]}</button>${msg?'<button class="btn ghost2" data-act="go" data-arg="home">الرئيسية</button>':''}<p class="foot">${TRIAL?'نسخة تجريبية · المحتوى العلمي لم يُعتمد نهائيًا · غير مخصصة للنشر العام':'نسخة للمراجعة الخاصة · غير مخصصة للنشر العام'}</p></div>`;
@@ -717,7 +724,7 @@ function nextStep(c){
   const pending=Object.keys(S.sessions).map(Number).find(n=>S.sessions[n].resume&&!S.sessions[n].done&&authored(n));
   if(RUN&&!RUN.finished&&!RUN.practice&&!(RUN.kind==='S'&&RUN.expired)) return {lab:'استئناف',title:RUN.kind==='R'?'المراجعة العشرية قيد التنفيذ':sessLbl(RUN.n),meta:`${RUN.kind==='S'&&authored(RUN.n)?'<b>'+esc(BANK.bySession[RUN.n].title)+'</b><br>':''}بقي ${C_Q(new Set(RUN.queue).size)}`,btn:['resumeRun','','تابع الآن']};
   if(pending){const left=new Set(S.sessions[pending].resume).size;return {lab:'استئناف جلسة محفوظة',title:sessLbl(pending),meta:`<b>${esc(BANK.bySession[pending].title)}</b><br>بقي ${C_Q(left)} لم تُتقن بعد`,btn:['intro',pending,'استأنف الجلسة']};}
-  if(c.due) return {lab:'مراجعة مستحقة',title:`مراجعة المجموعة ${GRP_LBL(c.reviewsDone+1)}`,meta:`أكملت ${C_SESS(GROUP*(c.reviewsDone+1))}. تُفتح الجلسة التالية بعد إتمام المراجعة.`,btn:['go','review','ابدأ المراجعة']};
+  if(c.due) return {lab:'مراجعة مستحقة',title:`مراجعة المجموعة ${GRP_LBL(c.reviewsDone+1)}`,meta:'أكملت جلسات هذه المجموعة، ويلزمك اجتياز مراجعتها الشاملة للانتقال إلى المجموعة التالية.',btn:['go','review','ابدأ مراجعة المجموعة']};
   const n=nextSessionNo();
   if(n==null) return {lab:'اكتمل المسار',title:'أتممت جلسات المسار التأصيلي',meta:'',btn:['go','progdone','عرض الإنجاز']};
   const u=PLAN.unitOf[PLAN.sessions[n].unit];
@@ -736,7 +743,7 @@ function vHome(){
    <div class="next"><span class="lab">${st.lab}</span><h2>${st.title}</h2>${st.meta?`<p class="meta">${st.meta}</p>`:''}<button class="btn block" data-act="${st.btn[0]}" data-arg="${st.btn[1]}">${st.btn[2]}</button>${st.alt?`<button class="btn block ghost" data-act="${st.alt[0]}" data-arg="${st.alt[1]}">${st.alt[2]}</button>`:''}</div>
    ${groupCard(c,true)}
    ${S.mode==='demo'?'<div class="ribbon"><b>بيانات توضيحية.</b> سُجّلت أحداثًا تجريبية (إجابات وجلسات ومراجعات) ثم حُسبت منها هذه المؤشرات بالقواعد نفسها. لا تخص طالبًا حقيقيًا.</div>':''}
-   <div class="card prog unlockcard"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح المسار التحصيني</h3></div></div>${meter(c.unlockPct,'gold')}<div class="kv"><div><span>مجموعات متبقية</span><b>${ar(Math.ceil(c.sessionsLeft/GROUP))}</b></div><div><span>مراجعات متبقية</span><b>${ar(c.reviewsLeft)}</b></div></div>${PLAN_FINAL?'':'<p class="tiny muted">تقديري: خطة الجلسات والمراجعات لم تُعتمد نهائيًا.</p>'}</div>
+   <div class="card prog unlockcard"><div class="row"><div class="lockbadge">${ico('lock')}</div><div class="grow"><h3>ما تبقى لفتح المسار التحصيني</h3></div></div>${meter(c.groupsPct,'gold')}<div class="kv"><div><span>مجموعات متبقية</span><b>${ar(c.groupsLeft)}</b></div></div>${PLAN_FINAL?'':'<p class="tiny muted">تقديري: خطة المجموعات لم تُعتمد نهائيًا.</p>'}</div>
   </div>`;
 }
 
@@ -769,7 +776,7 @@ function vTahsini(){
 
 function groupDots(c){return `<div class="dots10" style="grid-template-columns:repeat(${c.groupSize},1fr)" role="img" aria-label="${ar(c.inGroup)} من ${ar(c.groupSize)} جلسات مكتملة">${Array.from({length:c.groupSize},(_,i)=>`<i class="${i<c.inGroup?'d':''}"></i>`).join('')}</div>`;}
 function groupMsg(c){const n=nextSessionNo();
-  if(c.due) return `أكملت ${A_SESS(c.groupSize)} من أصل ${ar(c.groupSize)}. تُفتح المراجعة الشاملة الآن، ولا تنتقل إلى المجموعة التالية إلا بعد إتقانها.`;
+  if(c.due) return 'أكملت جلسات هذه المجموعة، ويلزمك اجتياز مراجعتها الشاملة للانتقال إلى المجموعة التالية.';
   if(c.inGroup>0&&n) return `أكملت ${A_SESS(c.inGroup)} من أصل ${ar(c.groupSize)}، ويمكنك متابعة الجلسة ${ar(n)}.`;
   return n?`ابدأ الجلسة ${ar(n)}. كل جلسة مستقلة، ويمكنك التوقف بعد أي جلسة وإكمال البقية لاحقًا.`:'';}
 function readingBlock(k){
@@ -1062,7 +1069,7 @@ function vComplete0(){
      <div class="celebrate"><div class="ring" style="--p:${pc||0}"><div><div><b>${ar(R.ok)}/${ar(R.tot)}</b><div class="tiny muted">من المحاولة الأولى</div></div></div></div><h1 class="h-title">اجتزت المراجعة العشرية</h1><p class="h-sub">الاجتياز مشروط بالإجابة الصحيحة عن كل الأسئلة، وقد تحقق: لا توجد أسئلة إلزامية معلّقة. وأداء المحاولة الأولى مؤشر مستقل: ${ar(R.ok)} من ${ar(R.tot)}.</p></div>
      ${bad.length?`<div class="card"><h3 style="margin-bottom:6px">أسئلة يُنصح بإعادة تثبيتها (${ar(bad.length)})</h3><p class="small muted">أخطأتَ فيها عند أول محاولة وصحّحتَها أثناء المراجعة، فلا يلزمك شيء لإكمال المراجعة. إعادة التثبيت اختيارية: لا تُعدّ جلسة، ولا تغيّر نسبة الإجابات الصحيحة من المحاولة الأولى.</p><div class="lst">${bad.map(id=>`<div class="li">${stIcon((S.reinf||{})[id]?'consolidate':'redo',18)}<span class="grow">${esc(BANK.byId[id].text)}</span></div>`).join('')}</div>${R.trial?'':`<button class="btn block" data-act="reinforce" style="margin-top:8px">${bad.length>1?'مراجعة الأسئلة التي أخطأت فيها':'مراجعة السؤال الذي أخطأت فيه'}</button>`}</div>`:'<div class="note">كل الأسئلة صحيحة من المحاولة الأولى، ولا شيء يحتاج إلى إعادة تثبيت.</div>'}
      ${R.trial?'':`<div class="card"><h3 style="margin-bottom:6px">ما الذي تغيّر؟</h3><div class="delta">${delta('نسبة الإتقان',b.mastery==null?'لم يُقَس بعد':pct(b.mastery),pct(a.mastery))}${delta('المراجعات المكتملة',ar(b.reviewsDone),ar(a.reviewsDone))}${delta('نسبة إنجاز المسار',pct(b.progress),pct(a.progress))}${delta('موعد المراجعة القادمة',b.due?'مستحقة':C_SESS(b.toNext),a.due?'مستحقة':C_SESS(a.toNext))}</div></div>
-     <div class="note">فُتحت المجموعة التالية من الجلسات.</div>`}
+     <div class="note"><b>تهانينا!</b> اجتزت المجموعة ${GRP_LBL(R.k)}${(R.k<PLAN.reviews&&authored(GROUP*R.k+1))?`، وفُتحت المجموعة ${GRP_LBL(R.k+1)}.`:'. المجموعة التالية قيد الإعداد ولم تُفتح بعد في هذا النموذج.'}</div>`}
      ${R.trial?'<button class="btn primary block" data-act="afterRun">متابعة</button>':`${contBtn(a,false)}<div class="row" style="gap:8px"><button class="btn block" data-act="endLearning">إنهاء التعلم الآن</button><button class="btn block" data-act="afterRun">العودة للرئيسية</button></div>`}</div>`;
   }
   const ft=Object.values(R.local).filter(x=>x.first).length, tot=R.total, used=SESSION_SECS-R.secsLeft;
@@ -1097,7 +1104,7 @@ function vReview(){
     <div class="it">${stIcon('consolidate',18)}<div><b>سؤال لكل هدف علمي</b><span>٢٠ هدفًا أساسيًا للمجموعة. يُقدَّم ما أُخطئ فيه أولًا، وإلا يُدار بين أسئلة الهدف الواحد.</span></div></div>
     <div class="it">${stIcon('learning',18)}<div><b>جلسات مصغّرة</b><span>كل جلسة ٥ أسئلة وثلاث دقائق أو أقل، ويُحفظ التقدم بين الجلسات.</span></div></div>
     <div class="it">${stIcon('mastered',18)}<div><b>الإتقان بالمحاولة الأولى</b><span>الصواب بعد التصحيح يكمّل المراجعة ولا يثبّت الإتقان.</span></div></div></div></div>
-   ${resumable?'<button class="btn primary block" data-act="resumeRun">استأنف المراجعة</button>':c.due?'<button class="btn primary block" data-act="startReview">ابدأ المراجعة</button>':'<button class="btn night block" data-act="startTrial">جرّب المراجعة الآن (لا تُحتسب)</button>'}
+   ${resumable?'<button class="btn primary block" data-act="resumeRun">استأنف المراجعة</button>':c.due?'<button class="btn primary block" data-act="startReview">ابدأ مراجعة المجموعة</button>':'<button class="btn night block" data-act="startTrial">جرّب المراجعة الآن (لا تُحتسب)</button>'}
    ${c.due||resumable?'':`<p class="small muted" style="text-align:center">المراجعة الحقيقية تُفتح بعد الجلسة ${ar(c.nextAt)}.</p>`}
    ${reinfIds().length?`<div class="card"><h3 style="margin-bottom:6px">أسئلة يُنصح بإعادة تثبيتها (${ar(reinfIds().length)})</h3><p class="small muted">صحّحتَها أثناء المراجعة. إعادة تثبيتها اختيارية ولا تغيّر نتيجة المراجعة ولا نسبة المحاولة الأولى.</p><button class="btn block" data-act="reinforce">${reinfIds().length>1?'مراجعة الأسئلة التي أخطأت فيها':'مراجعة السؤال الذي أخطأت فيه'}</button></div>`:''}
    <div class="card"><h3 style="margin-bottom:6px">نتائج المراجعات السابقة</h3>${past.length?past.map(kk=>{const r=S.reviews[kk];return `<div class="rv"><span>المراجعة ${ar(kk)}</span><span><b>${ar(r.ok)}/${ar(r.tot)}</b> <span class="muted">من المحاولة الأولى · ${pct(r.ok/r.tot*100)}</span></span></div>`;}).join(''):'<p class="small muted">لا توجد مراجعات مكتملة بعد.</p>'}</div></div>`;
@@ -1193,7 +1200,7 @@ function vProgDone(){
 
 function contBtn(a,practice){
   if(practice) return '<button class="btn primary block" data-act="go" data-arg="sections">العودة إلى الأقسام</button>';
-  if(a.due) return '<button class="btn primary block" data-act="go" data-arg="review">ابدأ المراجعة الشاملة</button>';
+  if(a.due) return '<button class="btn primary block" data-act="go" data-arg="review">ابدأ مراجعة المجموعة</button>';
   const n=nextSessionNo(); if(n==null) return '<button class="btn primary block" data-act="go" data-arg="progdone">عرض إنجاز البرنامج</button>';
   return `<button class="btn primary block" data-act="intro" data-arg="${n}">متابعة الجلسة التالية (${ar(n)})</button>`;
 }
