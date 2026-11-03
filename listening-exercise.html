@@ -84,6 +84,28 @@
   table { width: 100%; border-collapse: collapse; margin: 12px 0; }
   th, td { padding: 10px; border: 1px solid var(--gray-300); text-align: center; }
   th { background: var(--green-100); color: var(--green-900); }
+
+  .overall { margin-top: 20px; }
+  .overall h3 { margin: 0 0 10px; color: var(--green-900); }
+  .overall-card {
+    display: flex; flex-wrap: wrap; gap: 12px;
+    background: var(--green-100);
+    border: 1px solid var(--green-500);
+    border-radius: 12px;
+    padding: 14px 16px;
+  }
+  .overall-item { flex: 1 1 200px; min-width: 0; }
+  .overall-label { font-size: .9rem; }
+  .overall-value { font-size: 1.6rem; font-weight: 700; color: var(--green-900); }
+  .overall-value small { font-size: 1rem; font-weight: 400; }
+  .guidance {
+    margin-top: 12px;
+    background: var(--green-50);
+    border: 1px solid var(--gray-300);
+    border-radius: 12px;
+    padding: 12px 16px;
+  }
+  .guidance strong { color: var(--green-900); }
 </style>
 </head>
 <body>
@@ -114,6 +136,22 @@
       <thead><tr><th>المحور</th><th>الدرجة من 20</th><th>التفسير</th></tr></thead>
       <tbody id="resultBody"></tbody>
     </table>
+
+    <div class="overall">
+      <h3>النتيجة العامة</h3>
+      <div class="overall-card">
+        <div class="overall-item">
+          <div class="overall-label">متوسط الدرجة</div>
+          <div class="overall-value"><span id="avgValue"></span> <small>من 20</small></div>
+        </div>
+        <div class="overall-item">
+          <div class="overall-label">التقييم العام</div>
+          <div class="overall-value" id="overallLevel"></div>
+        </div>
+      </div>
+      <div class="guidance" id="guidance"></div>
+    </div>
+
     <div class="actions"><button type="button" class="secondary" id="resetBtn">إعادة التمرين</button></div>
   </section>
 </div>
@@ -190,6 +228,15 @@ function interpret(total) {
   return "ممتاز";
 }
 
+// التوجيه المناسب لكل تقييم
+const GUIDANCE = {
+  "ممتاز":    "لديك مستوى عالٍ في مهارات الإنصات. حافظ على هذا المستوى، وواصل استخدام مهارات التركيز، الفهم، التذكر، والاستجابة الواعية أثناء التواصل مع الآخرين.",
+  "جيد جداً": "لديك مهارات إنصات قوية، وتحتاج فقط إلى تحسينات بسيطة في بعض الجوانب. راجع المحاور الأقل درجة وركّز على تطويرها.",
+  "جيد":      "لديك مستوى جيد في الإنصات، لكن توجد فرص واضحة للتحسين. حاول التركيز أكثر أثناء الحديث، وتجنب المقاطعة، وتأكد من فهم الرسالة قبل الرد.",
+  "متوسط":    "تحتاج إلى تطوير مهارات الإنصات لديك بشكل أكبر. ركّز على الانتباه للمتحدث، فهم الرسالة، تذكر النقاط المهمة، وعدم التسرع في الحكم أو الاستجابة.",
+  "ضعيف":     "تحتاج إلى تدريب أكبر على مهارات الإنصات. ابدأ بتحسين التركيز أثناء الحديث، وتجنب المشتتات، وأعطِ المتحدث فرصة كاملة للتعبير قبل الرد."
+};
+
 const quiz = document.getElementById("quiz");
 const showBtn = document.getElementById("showBtn");
 const hint = document.getElementById("hint");
@@ -243,13 +290,23 @@ showBtn.addEventListener("click", () => {
   }
 
   resultBody.innerHTML = "";
+  let grandTotal = 0; // مجموع درجات المحاور الستة
   AXES.forEach(axis => {
     // مجموع درجات عبارات المحور بعد تطبيق مفتاح التصحيح
     const total = axis.items.reduce((sum, n) => sum + scoreItem(n, getAnswer(n)), 0);
     const tr = document.createElement("tr");
     tr.innerHTML = `<td>${axis.name}</td><td>${total} / 20</td><td>${interpret(total)}</td>`;
     resultBody.appendChild(tr);
+    grandTotal += total;
   });
+
+  // المتوسط العام = مجموع درجات المحاور الستة ÷ 6 (يُعرض بخانة عشرية واحدة)
+  const average = grandTotal / AXES.length;
+  // التقييم العام: يُقرَّب المتوسط لأقرب عدد صحيح ثم يُطبَّق عليه نفس جدول الفئات
+  const level = interpret(Math.round(average));
+  document.getElementById("avgValue").textContent = average.toFixed(1);
+  document.getElementById("overallLevel").textContent = level;
+  document.getElementById("guidance").innerHTML = "<strong>التوجيه:</strong> " + GUIDANCE[level];
 
   resultBox.style.display = "block";
   resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
