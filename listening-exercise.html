@@ -228,6 +228,15 @@ function interpret(total) {
   return "ممتاز";
 }
 
+// التقييم العام حسب المتوسط الفعلي (بدون تقريب)
+function overallLevel(avg) {
+  if (avg < 9)  return "ضعيف";
+  if (avg < 13) return "متوسط";
+  if (avg < 17) return "جيد";
+  if (avg < 19) return "جيد جداً";
+  return "ممتاز";
+}
+
 // التوجيه المناسب لكل تقييم
 const GUIDANCE = {
   "ممتاز":    "لديك مستوى عالٍ في مهارات الإنصات. حافظ على هذا المستوى، وواصل استخدام مهارات التركيز، الفهم، التذكر، والاستجابة الواعية أثناء التواصل مع الآخرين.",
@@ -302,8 +311,8 @@ showBtn.addEventListener("click", () => {
 
   // المتوسط العام = مجموع درجات المحاور الستة ÷ 6 (يُعرض بخانة عشرية واحدة)
   const average = grandTotal / AXES.length;
-  // التقييم العام: يُقرَّب المتوسط لأقرب عدد صحيح ثم يُطبَّق عليه نفس جدول الفئات
-  const level = interpret(Math.round(average));
+  // التقييم العام: يُحدَّد من المتوسط الفعلي كما هو دون تقريب
+  const level = overallLevel(average);
   document.getElementById("avgValue").textContent = average.toFixed(1);
   document.getElementById("overallLevel").textContent = level;
   document.getElementById("guidance").innerHTML = "<strong>التوجيه:</strong> " + GUIDANCE[level];
