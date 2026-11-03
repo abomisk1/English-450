@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>تمرين: كيف ننصت للآخرين</title>
+<style>
+  :root {
+    --green-900: #1b4332;
+    --green-700: #2d6a4f;
+    --green-500: #40916c;
+    --green-100: #d8f3dc;
+    --green-50:  #f1faf3;
+    --gray-700:  #3a4a42;
+    --gray-300:  #cfd9d3;
+    --white:     #ffffff;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", Tahoma, "Noto Naskh Arabic", Arial, sans-serif;
+    background: var(--green-50);
+    color: var(--gray-700);
+    line-height: 1.8;
+  }
+  .container { max-width: 760px; margin: 0 auto; padding: 16px; }
+  header { text-align: center; padding: 24px 8px 8px; }
+  h1 { margin: 0 0 8px; font-size: 1.6rem; color: var(--green-900); }
+  .intro {
+    background: var(--white);
+    border-radius: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--gray-300);
+    margin-bottom: 16px;
+  }
+  .progress { position: sticky; top: 0; background: var(--green-50); padding: 8px 0; z-index: 5; }
+  .progress-bar { height: 8px; background: var(--gray-300); border-radius: 4px; overflow: hidden; }
+  .progress-fill { height: 100%; width: 0; background: var(--green-500); transition: width .2s; }
+  .progress-text { font-size: .9rem; margin-top: 4px; text-align: center; }
+
+  .question {
+    background: var(--white);
+    border: 1px solid var(--gray-300);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 12px;
+  }
+  .question.missing { border-color: #c0392b; box-shadow: 0 0 0 2px #f5c6c0; }
+  .q-text { margin: 0 0 10px; font-weight: 600; color: var(--green-900); }
+  .options { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .option input { position: absolute; opacity: 0; pointer-events: none; }
+  .option span {
+    display: block;
+    text-align: center;
+    padding: 8px 6px;
+    border: 1px solid var(--gray-300);
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: .92rem;
+    background: var(--white);
+  }
+  .option input:checked + span { background: var(--green-700); color: var(--white); border-color: var(--green-700); }
+  .option input:focus-visible + span { outline: 3px solid var(--green-500); outline-offset: 2px; }
+  @media (max-width: 420px) { .options { grid-template-columns: 1fr; } }
+
+  button {
+    font-family: inherit;
+    font-size: 1rem;
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--green-700);
+    color: var(--white);
+  }
+  button:hover:not(:disabled) { background: var(--green-900); }
+  button:disabled { background: var(--gray-300); color: #7a8a82; cursor: not-allowed; }
+  button.secondary { background: var(--white); color: var(--green-700); border: 1px solid var(--green-700); }
+  .actions { text-align: center; margin: 20px 0; }
+  .hint { text-align: center; font-size: .9rem; margin-top: 6px; }
+
+  #result { display: none; background: var(--white); border: 1px solid var(--gray-300); border-radius: 12px; padding: 16px; margin-bottom: 24px; }
+  #result h2 { margin-top: 0; color: var(--green-900); text-align: center; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { padding: 10px; border: 1px solid var(--gray-300); text-align: center; }
+  th { background: var(--green-100); color: var(--green-900); }
+</style>
+</head>
+<body>
+<div class="container">
+  <header>
+    <h1>تمرين: كيف ننصت للآخرين</h1>
+  </header>
+
+  <section class="intro">
+    ستجيب في هذا التمرين على ثلاثين عبارة تقيس أسلوبك في الإنصات. اختر لكل عبارة الإجابة الأقرب إلى حالك فعلاً، لا ما تتمنى أن تكون عليه. لا توجد إجابة صحيحة أو خاطئة، وتظهر لك نتيجتك بعد الإجابة على جميع العبارات.
+  </section>
+
+  <div class="progress">
+    <div class="progress-bar"><div class="progress-fill" id="fill"></div></div>
+    <div class="progress-text" id="progressText">تمت الإجابة على 0 من 30</div>
+  </div>
+
+  <form id="quiz" autocomplete="off"></form>
+
+  <div class="actions">
+    <button type="button" id="showBtn" disabled>إظهار النتيجة</button>
+    <div class="hint" id="hint">أجب على جميع العبارات لتفعيل الزر.</div>
+  </div>
+
+  <section id="result" aria-live="polite">
+    <h2>نتيجتك</h2>
+    <table>
+      <thead><tr><th>المحور</th><th>الدرجة من 20</th><th>التفسير</th></tr></thead>
+      <tbody id="resultBody"></tbody>
+    </table>
+    <div class="actions"><button type="button" class="secondary" id="resetBtn">إعادة التمرين</button></div>
+  </section>
+</div>
+
+<script>
+// ===== بيانات التمرين =====
+const QUESTIONS = [
+  "أفكر في أكثر من موضوع عندما يتحدث معي شخص آخر.",
+  "أحياناً لا أستطيع التعبير عن أفكاري بوضوح.",
+  "عندما أصمت للآخرين أركز كل اهتمامي على مراقبة ما يبدونه من مشاعر وانفعالات.",
+  "أتخذ القرار في إطار ما أعرفه من معلومات.",
+  "أرفض الرأي على الآخرين وألزمهم الفرصة للتعبير عن أفكارهم ووجهات نظرهم في حرية وصراحة.",
+  "الأمور تسير على ما يرام — فلماذا التغيير؟",
+  "أبتعد عن كل ما يمكن أن يشغلني عن الإنصات لحديث الطرف الآخر.",
+  "أركز انتباهي على النقاط الرئيسية في رسالة المتحدث.",
+  "أركز انتباهي على ما يقوله المتحدث فقط.",
+  "أنصت إلى رسالة الطرف الآخر بأكملها ولا أقاطعه حتى وإن كنت لا أتفق معه في الرأي.",
+  "أتجاوب مع المتحدث وأوضح له مدى استيعابي لما يقول.",
+  "لدي القدرة على ترتيب أفكاري والربط بين المعلومات.",
+  "أبذل جهدي لتجنب المعوقات التي تحول بيني وبين اتصالي بالآخرين بفاعلية.",
+  "أحاول تجميع وطلب المعلومات والحقائق حتى أستوعب الموقف بأفضل صورة ممكنة.",
+  "أحاول التعرف على الحالة النفسية للمتحدث بما يساعدني على تفسير ما يقول.",
+  "أعتقد أن الزمن كفيل بتغيير الأفراد والظروف المحيطة.",
+  "لدي القدرة على التركيز والانتباه وعدم التشتت أثناء إنصاتي للآخرين.",
+  "لدي القدرة على تذكر الأحداث حتى في المواقف الحرجة.",
+  "أراقب كل ما يبديه المتحدث من تعبيرات وإشارات غير لفظية وأربطها بما يقوله.",
+  "لا أستجيب بسرعة لوجهات نظر الآخرين وخاصة إذا كانت لا تتفق مع وجهة نظري.",
+  "أجد صعوبة في تذكر المعلومات التي أستمع إليها بعد مرور فترة من الوقت.",
+  "عندما أتحدث، أحاول تهيئة الظروف، والتخلص من كل شيء قد يتسبب في المقاطعة أو التشويش على حديثي معه.",
+  "أتعامل مع الآخرين بأسلوب صادق وصريح وواضح.",
+  "أتعامل مع الآخرين بأسلوب مقنع وملائم في الوقت المناسب.",
+  "أجد صعوبة في استيعاب رسالة المتحدث وفهم المقصود منها.",
+  "أحاول استيعاب كل ما يقال حتى وإن أدى الأمر إلى مقاطعة المتحدث، وأعرض عليه أكثر من مرة وجهة نظري قبل انتهائه من حديثه.",
+  "لا أتحدث إلا بعد انتهاء المتحدث تماماً من عرض ما يريد.",
+  "لدي القدرة على توقيت متى أتحدث، وماذا أقول.",
+  "لا أنشغل بالتفاصيل الدقيقة، وأهتم بالنقاط الرئيسية الهامة.",
+  "أستطيع بسهولة أن أتذكر الأحداث التي حدثت منذ أسابيع أو شهور مضت."
+];
+
+// الخيارات الأربعة (القيمة 1..4 ترتيبها كما في المفتاح المباشر)
+const OPTIONS = [
+  { label: "تنطبق تماماً",        value: 1 },
+  { label: "تنطبق إلى حد ما",     value: 2 },
+  { label: "لا تنطبق إلى حد ما",  value: 3 },
+  { label: "لا تنطبق إطلاقاً",    value: 4 }
+];
+
+// العبارات ذات التصحيح المباشر؛ الباقي تصحيحه عكسي
+const DIRECT = new Set([1, 2, 4, 6, 9, 16, 20, 21, 25, 26]);
+
+// المحاور: كل محور خمس عبارات (كل عبارة تبعد 6 عن السابقة)
+const AXES = [
+  { name: "استقبال الرسالة", items: [1, 7, 13, 19, 25] },
+  { name: "الاستيعاب",       items: [2, 8, 14, 20, 26] },
+  { name: "التفسير",         items: [3, 9, 15, 21, 27] },
+  { name: "التذكر",          items: [4, 10, 16, 22, 28] },
+  { name: "الاستجابة",       items: [5, 11, 17, 23, 29] },
+  { name: "التقييم",         items: [6, 12, 18, 24, 30] }
+];
+
+// ===== الدوال =====
+
+// درجة العبارة: مباشر = القيمة نفسها (1..4)، عكسي = 5 - القيمة (4..1)
+function scoreItem(num, value) {
+  return DIRECT.has(num) ? value : 5 - value;
+}
+
+// التفسير اللفظي حسب مجموع المحور (5 إلى 20)
+function interpret(total) {
+  if (total <= 8)  return "ضعيف";
+  if (total <= 12) return "متوسط";
+  if (total <= 16) return "جيد";
+  if (total <= 18) return "جيد جداً";
+  return "ممتاز";
+}
+
+const quiz = document.getElementById("quiz");
+const showBtn = document.getElementById("showBtn");
+const hint = document.getElementById("hint");
+const resultBox = document.getElementById("result");
+const resultBody = document.getElementById("resultBody");
+
+// بناء العبارات
+QUESTIONS.forEach((text, i) => {
+  const n = i + 1;
+  const div = document.createElement("div");
+  div.className = "question";
+  div.id = "q" + n;
+  const opts = OPTIONS.map(o =>
+    `<label class="option"><input type="radio" name="q${n}" value="${o.value}"><span>${o.label}</span></label>`
+  ).join("");
+  div.innerHTML = `<p class="q-text">${n}. ${text}</p><div class="options">${opts}</div>`;
+  quiz.appendChild(div);
+});
+
+// قراءة إجابة عبارة (null إذا لم تُجَب)
+function getAnswer(n) {
+  const el = quiz.querySelector(`input[name="q${n}"]:checked`);
+  return el ? Number(el.value) : null;
+}
+
+// تحديث شريط التقدم وتفعيل الزر عند اكتمال الإجابات
+function updateProgress() {
+  let answered = 0;
+  for (let n = 1; n <= 30; n++) if (getAnswer(n) !== null) answered++;
+  document.getElementById("fill").style.width = (answered / 30 * 100) + "%";
+  document.getElementById("progressText").textContent = `تمت الإجابة على ${answered} من 30`;
+  const done = answered === 30;
+  showBtn.disabled = !done;
+  hint.style.display = done ? "none" : "block";
+}
+
+quiz.addEventListener("change", (e) => {
+  e.target.closest(".question")?.classList.remove("missing");
+  updateProgress();
+});
+
+// حساب النتيجة وعرضها
+showBtn.addEventListener("click", () => {
+  // التحقق مرة أخرى من اكتمال جميع الإجابات
+  const missing = [];
+  for (let n = 1; n <= 30; n++) if (getAnswer(n) === null) missing.push(n);
+  if (missing.length) {
+    missing.forEach(n => document.getElementById("q" + n).classList.add("missing"));
+    document.getElementById("q" + missing[0]).scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+
+  resultBody.innerHTML = "";
+  AXES.forEach(axis => {
+    // مجموع درجات عبارات المحور بعد تطبيق مفتاح التصحيح
+    const total = axis.items.reduce((sum, n) => sum + scoreItem(n, getAnswer(n)), 0);
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${axis.name}</td><td>${total} / 20</td><td>${interpret(total)}</td>`;
+    resultBody.appendChild(tr);
+  });
+
+  resultBox.style.display = "block";
+  resultBox.scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+// إعادة التمرين: مسح الإجابات والنتيجة (لا يتم حفظ أي شيء)
+document.getElementById("resetBtn").addEventListener("click", () => {
+  quiz.reset();
+  quiz.querySelectorAll(".missing").forEach(q => q.classList.remove("missing"));
+  resultBody.innerHTML = "";
+  resultBox.style.display = "none";
+  updateProgress();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+});
+
+updateProgress();
+</script>
+</body>
+</html>
